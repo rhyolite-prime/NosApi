@@ -1,0 +1,8 @@
+//
+// Created by Emmanuel Addo-Odame on 19/05/2026.
+//
+
+#ifndef NOSAPI_WORKFLOWSTAGEDTO_H
+#define NOSAPI_WORKFLOWSTAGEDTO_H
+
+#endif //NOSAPI_WORKFLOWSTAGEDTO_H

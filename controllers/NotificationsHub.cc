@@ -1,16 +1,54 @@
 #include "NotificationsHub.h"
 
-void NotificationsHub::handleNewMessage(const WebSocketConnectionPtr& wsConnPtr, std::string &&message, const WebSocketMessageType &type)
-{
-    // write your application logic here
-}
+namespace nos::signalr {
 
-void NotificationsHub::handleNewConnection(const HttpRequestPtr &req, const WebSocketConnectionPtr& wsConnPtr)
-{
-    // write your application logic here
-}
+    std::mutex NotificationsHub::_connMutex;
+    std::unordered_set<WebSocketConnectionPtr> NotificationsHub::_connections;
 
-void NotificationsHub::handleConnectionClosed(const WebSocketConnectionPtr& wsConnPtr)
-{
-    // write your application logic here
+    void NotificationsHub::handleNewMessage(const WebSocketConnectionPtr& wsConnPtr, std::string &&message, const WebSocketMessageType &type)
+    {
+        LOG_DEBUG << "new message: " << message;
+        if (message == "notify-new-content") {
+            Json::Value reply;
+            reply["hasNewContent"] = true;
+            reply["ts"] = (Json::Int64)trantor::Date::now().microSecondsSinceEpoch();
+
+            Json::StreamWriterBuilder w;
+            std::string json = Json::writeString(w, reply);
+
+            broadcastMessage(json);
+        }
+    }
+
+    void NotificationsHub::handleNewConnection(const HttpRequestPtr &req, const WebSocketConnectionPtr& wsConnPtr)
+    {
+        LOG_DEBUG << "new connection!";
+
+        {
+            std::lock_guard<std::mutex> lock(_connMutex);
+            _connections.insert(wsConnPtr);
+        }
+
+        wsConnPtr->send("Welcome to NotificationsHub!");
+    }
+
+    void NotificationsHub::handleConnectionClosed(const WebSocketConnectionPtr& wsConnPtr)
+    {
+        LOG_DEBUG << "connection closed!";
+        {
+            std::lock_guard<std::mutex> lock(_connMutex);
+            _connections.erase(wsConnPtr);
+        }
+    }
+
+    void NotificationsHub::broadcastMessage(const std::string &msg) {
+        std::lock_guard<std::mutex> lock(_connMutex);
+
+        for (const auto &conn : _connections) {
+            if (conn && conn->connected()) {
+                conn->send(msg);
+            }
+        }
+    }
+
 }

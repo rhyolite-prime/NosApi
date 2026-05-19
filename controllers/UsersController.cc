@@ -1,6 +1,7 @@
 #include "UsersController.h"
 #include "dto/BaseApiResponse.h"
 #include "dto/UserDto.h"
+#include "plugins/NosApiPlugin.h"
 #include "services/users/UserService.h"
 
 Task<HttpResponsePtr> UsersController::getAll(HttpRequestPtr req) {
@@ -20,7 +21,9 @@ Task<HttpResponsePtr> UsersController::getAll(HttpRequestPtr req) {
 
     query = req->getParameter("query");
 
-    nos::services::UserService userService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &userService = plugin->getUserService();
+
     auto result = co_await userService.getAll(pageNo, pageSize, query);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -51,7 +54,9 @@ Task<HttpResponsePtr> UsersController::createUser(HttpRequestPtr req) {
         co_return resp;
     }
 
-    nos::services::UserService userService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &userService = plugin->getUserService();
+
     auto result = co_await userService.create(dto);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -82,7 +87,9 @@ Task<HttpResponsePtr> UsersController::updateUser(HttpRequestPtr req, std::strin
         co_return resp;
     }
 
-    nos::services::UserService userService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &userService = plugin->getUserService();
+
     auto result = co_await userService.update(dto, userId);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -92,7 +99,10 @@ Task<HttpResponsePtr> UsersController::updateUser(HttpRequestPtr req, std::strin
 }
 
 Task<HttpResponsePtr> UsersController::deleteUser(HttpRequestPtr req, std::string userId) {
-    nos::services::UserService userService;
+
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &userService = plugin->getUserService();
+
     auto result = co_await userService.deleteUser(userId);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
