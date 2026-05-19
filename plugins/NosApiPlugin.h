@@ -7,8 +7,12 @@
 #pragma once
 
 #include <drogon/plugins/Plugin.h>
+
+#include "services/access_levels/AccessLevelService.h"
+#include "services/roles/RoleService.h"
 #include "services/users/UserService.h"
 #include "services/user_groups/UserGroupService.h"
+#include "services/work_flows/WorkflowService.h"
 
 namespace nos::plugins {
 
@@ -26,12 +30,18 @@ namespace nos::plugins {
         /// It must be implemented by the user.
         void shutdown() override;
 
+        ::nos::services::RoleService &getRoleService() { return roleService_; }
         ::nos::services::UserService &getUserService() { return userService_; }
         ::nos::services::UserGroupService &getUserGroupService() { return userGroupService_; }
+        ::nos::services::AccessLevelService &getAccessLevelService() { return accessLevelService_; }
+        ::nos::services::WorkflowService &getWorkflowService() { return workflowService_; }
 
     private:
+        ::nos::services::RoleService roleService_;
         ::nos::services::UserService userService_;
         ::nos::services::UserGroupService userGroupService_;
+        ::nos::services::AccessLevelService accessLevelService_;
+        ::nos::services::WorkflowService workflowService_;
 
     };
 

@@ -1,8 +1,10 @@
 #include "RolesController.h"
 #include "dto/BaseApiResponse.h"
+#include "plugins/NosApiPlugin.h"
 #include "services/roles/RoleService.h"
 
 Task<HttpResponsePtr> RolesController::getAll(HttpRequestPtr req) {
+
     int pageNo = 1;
     int pageSize = 10;
     std::string query = "";
@@ -19,7 +21,9 @@ Task<HttpResponsePtr> RolesController::getAll(HttpRequestPtr req) {
 
     query = req->getParameter("query");
 
-    nos::services::RoleService roleService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &roleService = plugin->getRoleService();
+
     auto result = co_await roleService.getAll(pageNo, pageSize, query);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -50,7 +54,9 @@ Task<HttpResponsePtr> RolesController::createRole(HttpRequestPtr req) {
         co_return resp;
     }
 
-    nos::services::RoleService roleService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &roleService = plugin->getRoleService();
+
     auto result = co_await roleService.create(dto);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -81,7 +87,9 @@ Task<HttpResponsePtr> RolesController::updateRole(HttpRequestPtr req, std::strin
         co_return resp;
     }
 
-    nos::services::RoleService roleService;
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &roleService = plugin->getRoleService();
+
     auto result = co_await roleService.update(dto, roleId);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
@@ -91,7 +99,10 @@ Task<HttpResponsePtr> RolesController::updateRole(HttpRequestPtr req, std::strin
 }
 
 Task<HttpResponsePtr> RolesController::deleteRole(HttpRequestPtr req, std::string roleId) {
-    nos::services::RoleService roleService;
+
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &roleService = plugin->getRoleService();
+
     auto result = co_await roleService.deleteRole(roleId);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
