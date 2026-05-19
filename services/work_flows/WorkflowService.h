@@ -17,7 +17,7 @@ namespace nos::services {
 
         public:
 
-        // drogon::Task<dto::BaseApiResponse> getAll(int pageNo, int pageSize, const std::string &query);
+        //drogon::Task<dto::BaseApiResponse> getAll(int pageNo, int pageSize, const std::string &query);
         //
         // drogon::Task<dto::BaseApiResponse> create(const dto::WorkflowDto &workflowDto);
         //
