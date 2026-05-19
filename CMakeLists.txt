@@ -27,8 +27,8 @@ add_executable(${PROJECT_NAME} main.cc
         services/resources/ResourceService.h
         services/content/ContentService.h
         services/user_groups/UserGroupService.cc
-        services/work_flows/WorkFlowService.h
-        services/work_flows/WorkFlowService.cc
+        services/work_flows/WorkflowService.h
+        services/work_flows/WorkflowService.cc
         services/subscription_plans/SubscriptionPlanService.cc
         services/roles/RoleService.cc
         services/resources/ResourceService.cc
@@ -47,7 +47,11 @@ add_executable(${PROJECT_NAME} main.cc
         dto/RegisterUserPasskeysDto.h
         dto/RoleDto.h
         dto/UserGroupDto.h
-        dto/UserDto.h)
+        dto/UserDto.h
+        dto/AccessLevelDto.h
+        dto/WorkflowDto.h
+        dto/WorkflowStageDto.h
+        dto/WorkflowTransitionDto.h)
 
 # ##############################################################################
 # If you include the drogon source code locally in your project, use this method
