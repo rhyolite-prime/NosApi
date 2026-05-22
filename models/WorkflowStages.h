@@ -45,7 +45,6 @@ class WorkflowStages
     struct Cols
     {
         static const std::string _id;
-        static const std::string _asset_id;
         static const std::string _ordering;
         static const std::string _workflow_id;
         static const std::string _published;
@@ -115,16 +114,6 @@ class WorkflowStages
     ///Set the value of the column id
     void setId(const std::string &pId) noexcept;
     void setId(std::string &&pId) noexcept;
-
-    /**  For column asset_id  */
-    ///Get the value of the column asset_id, returns the default value if the column is null
-    const std::string &getValueOfAssetId() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getAssetId() const noexcept;
-    ///Set the value of the column asset_id
-    void setAssetId(const std::string &pAssetId) noexcept;
-    void setAssetId(std::string &&pAssetId) noexcept;
-    void setAssetIdToNull() noexcept;
 
     /**  For column ordering  */
     ///Get the value of the column ordering, returns the default value if the column is null
@@ -217,7 +206,7 @@ class WorkflowStages
     void setModifiedAtToNull() noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 12;  }
+    static size_t getColumnNumber() noexcept {  return 11;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -240,7 +229,6 @@ class WorkflowStages
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<std::string> id_;
-    std::shared_ptr<std::string> assetId_;
     std::shared_ptr<int32_t> ordering_;
     std::shared_ptr<std::string> workflowId_;
     std::shared_ptr<int32_t> published_;
@@ -262,7 +250,7 @@ class WorkflowStages
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[12]={ false };
+    bool dirtyFlag_[11]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -286,63 +274,58 @@ class WorkflowStages
         {
             needSelection=true;
         }
-        if(dirtyFlag_[1])
-        {
-            sql += "asset_id,";
-            ++parametersCount;
-        }
         sql += "ordering,";
         ++parametersCount;
-        if(!dirtyFlag_[2])
+        if(!dirtyFlag_[1])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[3])
+        if(dirtyFlag_[2])
         {
             sql += "workflow_id,";
             ++parametersCount;
         }
         sql += "published,";
         ++parametersCount;
-        if(!dirtyFlag_[4])
+        if(!dirtyFlag_[3])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[5])
+        if(dirtyFlag_[4])
         {
             sql += "title,";
             ++parametersCount;
         }
-        if(dirtyFlag_[6])
+        if(dirtyFlag_[5])
         {
             sql += "description,";
             ++parametersCount;
         }
         sql += "is_default,";
         ++parametersCount;
-        if(!dirtyFlag_[7])
+        if(!dirtyFlag_[6])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[8])
+        if(dirtyFlag_[7])
         {
             sql += "created_by,";
             ++parametersCount;
         }
         sql += "created_at,";
         ++parametersCount;
-        if(!dirtyFlag_[9])
+        if(!dirtyFlag_[8])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[10])
+        if(dirtyFlag_[9])
         {
             sql += "modified_by,";
             ++parametersCount;
         }
         sql += "modified_at,";
         ++parametersCount;
-        if(!dirtyFlag_[11])
+        if(!dirtyFlag_[10])
         {
             needSelection=true;
         }
@@ -371,28 +354,28 @@ class WorkflowStages
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[2])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[3])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[4])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[5])
         {
@@ -404,35 +387,30 @@ class WorkflowStages
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[7])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[8])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[9])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[10])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
-        }
-        if(dirtyFlag_[11])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

@@ -22,7 +22,7 @@ const std::string DigitalContents::Cols::_content_type = "\"content_type\"";
 const std::string DigitalContents::Cols::_introtext = "\"introtext\"";
 const std::string DigitalContents::Cols::_fulltext = "\"fulltext\"";
 const std::string DigitalContents::Cols::_primary_resource_id = "\"primary_resource_id\"";
-const std::string DigitalContents::Cols::_state = "\"state\"";
+const std::string DigitalContents::Cols::_status = "\"status\"";
 const std::string DigitalContents::Cols::_category_id = "\"category_id\"";
 const std::string DigitalContents::Cols::_ordering = "\"ordering\"";
 const std::string DigitalContents::Cols::_featured = "\"featured\"";
@@ -54,7 +54,7 @@ const std::vector<typename DigitalContents::MetaData> DigitalContents::metaData_
 {"introtext","std::string","text",0,0,0,0},
 {"fulltext","std::string","text",0,0,0,0},
 {"primary_resource_id","std::string","uuid",0,0,0,0},
-{"state","short","smallint",2,0,0,1},
+{"status","int32_t","integer",4,0,0,1},
 {"category_id","std::string","uuid",0,0,0,0},
 {"ordering","int32_t","integer",4,0,0,1},
 {"featured","short","smallint",2,0,0,1},
@@ -115,9 +115,9 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         {
             primaryResourceId_=std::make_shared<std::string>(r["primary_resource_id"].as<std::string>());
         }
-        if(!r["state"].isNull())
+        if(!r["status"].isNull())
         {
-            state_=std::make_shared<short>(r["state"].as<short>());
+            status_=std::make_shared<int32_t>(r["status"].as<int32_t>());
         }
         if(!r["category_id"].isNull())
         {
@@ -316,7 +316,7 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 8;
         if(!r[index].isNull())
         {
-            state_=std::make_shared<short>(r[index].as<short>());
+            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 9;
         if(!r[index].isNull())
@@ -560,7 +560,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            state_=std::make_shared<short>((short)pJson[pMasqueradingVector[8]].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -847,12 +847,12 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             primaryResourceId_=std::make_shared<std::string>(pJson["primary_resource_id"].asString());
         }
     }
-    if(pJson.isMember("state"))
+    if(pJson.isMember("status"))
     {
         dirtyFlag_[8]=true;
-        if(!pJson["state"].isNull())
+        if(!pJson["status"].isNull())
         {
-            state_=std::make_shared<short>((short)pJson["state"].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("category_id"))
@@ -1149,7 +1149,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            state_=std::make_shared<short>((short)pJson[pMasqueradingVector[8]].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -1435,12 +1435,12 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             primaryResourceId_=std::make_shared<std::string>(pJson["primary_resource_id"].asString());
         }
     }
-    if(pJson.isMember("state"))
+    if(pJson.isMember("status"))
     {
         dirtyFlag_[8] = true;
-        if(!pJson["state"].isNull())
+        if(!pJson["status"].isNull())
         {
-            state_=std::make_shared<short>((short)pJson["state"].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("category_id"))
@@ -1867,20 +1867,20 @@ void DigitalContents::setPrimaryResourceIdToNull() noexcept
     dirtyFlag_[7] = true;
 }
 
-const short &DigitalContents::getValueOfState() const noexcept
+const int32_t &DigitalContents::getValueOfStatus() const noexcept
 {
-    static const short defaultValue = short();
-    if(state_)
-        return *state_;
+    static const int32_t defaultValue = int32_t();
+    if(status_)
+        return *status_;
     return defaultValue;
 }
-const std::shared_ptr<short> &DigitalContents::getState() const noexcept
+const std::shared_ptr<int32_t> &DigitalContents::getStatus() const noexcept
 {
-    return state_;
+    return status_;
 }
-void DigitalContents::setState(const short &pState) noexcept
+void DigitalContents::setStatus(const int32_t &pStatus) noexcept
 {
-    state_ = std::make_shared<short>(pState);
+    status_ = std::make_shared<int32_t>(pStatus);
     dirtyFlag_[8] = true;
 }
 
@@ -2320,7 +2320,7 @@ const std::vector<std::string> &DigitalContents::insertColumns() noexcept
         "introtext",
         "fulltext",
         "primary_resource_id",
-        "state",
+        "status",
         "category_id",
         "ordering",
         "featured",
@@ -2435,9 +2435,9 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getState())
+        if(getStatus())
         {
-            binder << getValueOfState();
+            binder << getValueOfStatus();
         }
         else
         {
@@ -2850,9 +2850,9 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getState())
+        if(getStatus())
         {
-            binder << getValueOfState();
+            binder << getValueOfStatus();
         }
         else
         {
@@ -3125,13 +3125,13 @@ Json::Value DigitalContents::toJson() const
     {
         ret["primary_resource_id"]=Json::Value();
     }
-    if(getState())
+    if(getStatus())
     {
-        ret["state"]=getValueOfState();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["state"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getCategoryId())
     {
@@ -3381,9 +3381,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getState())
+            if(getStatus())
             {
-                ret[pMasqueradingVector[8]]=getValueOfState();
+                ret[pMasqueradingVector[8]]=getValueOfStatus();
             }
             else
             {
@@ -3655,13 +3655,13 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["primary_resource_id"]=Json::Value();
     }
-    if(getState())
+    if(getStatus())
     {
-        ret["state"]=getValueOfState();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["state"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getCategoryId())
     {
@@ -3862,9 +3862,9 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(7, "primary_resource_id", pJson["primary_resource_id"], err, true))
             return false;
     }
-    if(pJson.isMember("state"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(8, "state", pJson["state"], err, true))
+        if(!validJsonOfField(8, "status", pJson["status"], err, true))
             return false;
     }
     if(pJson.isMember("category_id"))
@@ -4250,9 +4250,9 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(7, "primary_resource_id", pJson["primary_resource_id"], err, false))
             return false;
     }
-    if(pJson.isMember("state"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(8, "state", pJson["state"], err, false))
+        if(!validJsonOfField(8, "status", pJson["status"], err, false))
             return false;
     }
     if(pJson.isMember("category_id"))

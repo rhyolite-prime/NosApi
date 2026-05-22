@@ -45,7 +45,6 @@ class Fields
     struct Cols
     {
         static const std::string _id;
-        static const std::string _asset_id;
         static const std::string _context;
         static const std::string _group_id;
         static const std::string _title;
@@ -126,16 +125,6 @@ class Fields
     ///Set the value of the column id
     void setId(const std::string &pId) noexcept;
     void setId(std::string &&pId) noexcept;
-
-    /**  For column asset_id  */
-    ///Get the value of the column asset_id, returns the default value if the column is null
-    const std::string &getValueOfAssetId() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getAssetId() const noexcept;
-    ///Set the value of the column asset_id
-    void setAssetId(const std::string &pAssetId) noexcept;
-    void setAssetId(std::string &&pAssetId) noexcept;
-    void setAssetIdToNull() noexcept;
 
     /**  For column context  */
     ///Get the value of the column context, returns the default value if the column is null
@@ -332,7 +321,7 @@ class Fields
     void setAccessLevelToNull() noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 23;  }
+    static size_t getColumnNumber() noexcept {  return 22;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -355,7 +344,6 @@ class Fields
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<std::string> id_;
-    std::shared_ptr<std::string> assetId_;
     std::shared_ptr<std::string> context_;
     std::shared_ptr<std::string> groupId_;
     std::shared_ptr<std::string> title_;
@@ -388,7 +376,7 @@ class Fields
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[23]={ false };
+    bool dirtyFlag_[22]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -412,125 +400,120 @@ class Fields
         {
             needSelection=true;
         }
-        if(dirtyFlag_[1])
-        {
-            sql += "asset_id,";
-            ++parametersCount;
-        }
         sql += "context,";
         ++parametersCount;
-        if(!dirtyFlag_[2])
+        if(!dirtyFlag_[1])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[3])
+        if(dirtyFlag_[2])
         {
             sql += "group_id,";
             ++parametersCount;
         }
         sql += "title,";
         ++parametersCount;
-        if(!dirtyFlag_[4])
+        if(!dirtyFlag_[3])
         {
             needSelection=true;
         }
         sql += "name,";
         ++parametersCount;
-        if(!dirtyFlag_[5])
+        if(!dirtyFlag_[4])
         {
             needSelection=true;
         }
         sql += "label,";
         ++parametersCount;
-        if(!dirtyFlag_[6])
+        if(!dirtyFlag_[5])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[7])
+        if(dirtyFlag_[6])
         {
             sql += "default_value,";
             ++parametersCount;
         }
         sql += "type,";
         ++parametersCount;
-        if(!dirtyFlag_[8])
+        if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
         sql += "note,";
         ++parametersCount;
-        if(!dirtyFlag_[9])
+        if(!dirtyFlag_[8])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[10])
+        if(dirtyFlag_[9])
         {
             sql += "description,";
             ++parametersCount;
         }
         sql += "status,";
         ++parametersCount;
-        if(!dirtyFlag_[11])
+        if(!dirtyFlag_[10])
         {
             needSelection=true;
         }
         sql += "required,";
         ++parametersCount;
-        if(!dirtyFlag_[12])
+        if(!dirtyFlag_[11])
         {
             needSelection=true;
         }
         sql += "only_use_in_subform,";
         ++parametersCount;
-        if(!dirtyFlag_[13])
+        if(!dirtyFlag_[12])
         {
             needSelection=true;
         }
         sql += "ordering,";
         ++parametersCount;
-        if(!dirtyFlag_[14])
+        if(!dirtyFlag_[13])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[15])
+        if(dirtyFlag_[14])
         {
             sql += "params,";
             ++parametersCount;
         }
-        if(dirtyFlag_[16])
+        if(dirtyFlag_[15])
         {
             sql += "fieldparams,";
             ++parametersCount;
         }
         sql += "language,";
         ++parametersCount;
-        if(!dirtyFlag_[17])
+        if(!dirtyFlag_[16])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[18])
+        if(dirtyFlag_[17])
         {
             sql += "created_by,";
             ++parametersCount;
         }
         sql += "created_at,";
         ++parametersCount;
-        if(!dirtyFlag_[19])
+        if(!dirtyFlag_[18])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[20])
+        if(dirtyFlag_[19])
         {
             sql += "modified_by,";
             ++parametersCount;
         }
         sql += "modified_at,";
         ++parametersCount;
-        if(!dirtyFlag_[21])
+        if(!dirtyFlag_[20])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[22])
+        if(dirtyFlag_[21])
         {
             sql += "access_level,";
             ++parametersCount;
@@ -560,7 +543,16 @@ class Fields
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[2])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[3])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
@@ -568,11 +560,6 @@ class Fields
         else
         {
             sql +="default,";
-        }
-        if(dirtyFlag_[3])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[4])
         {
@@ -597,14 +584,14 @@ class Fields
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[7])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[8])
         {
@@ -620,14 +607,14 @@ class Fields
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[10])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[11])
         {
@@ -661,10 +648,6 @@ class Fields
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[15])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -675,44 +658,39 @@ class Fields
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[17])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[18])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[19])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[20])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        if(dirtyFlag_[21])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
-        }
         else
         {
             sql +="default,";
         }
-        if(dirtyFlag_[22])
+        if(dirtyFlag_[21])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

@@ -49,7 +49,6 @@ class Categories
         static const std::string _alias;
         static const std::string _notes;
         static const std::string _description;
-        static const std::string _asset_id;
         static const std::string _parent_id;
         static const std::string _path;
         static const std::string _is_active;
@@ -160,16 +159,6 @@ class Categories
     void setDescription(const std::string &pDescription) noexcept;
     void setDescription(std::string &&pDescription) noexcept;
     void setDescriptionToNull() noexcept;
-
-    /**  For column asset_id  */
-    ///Get the value of the column asset_id, returns the default value if the column is null
-    const std::string &getValueOfAssetId() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getAssetId() const noexcept;
-    ///Set the value of the column asset_id
-    void setAssetId(const std::string &pAssetId) noexcept;
-    void setAssetId(std::string &&pAssetId) noexcept;
-    void setAssetIdToNull() noexcept;
 
     /**  For column parent_id  */
     ///Get the value of the column parent_id, returns the default value if the column is null
@@ -296,7 +285,7 @@ class Categories
     void setHits(const int32_t &pHits) noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 20;  }
+    static size_t getColumnNumber() noexcept {  return 19;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -323,7 +312,6 @@ class Categories
     std::shared_ptr<std::string> alias_;
     std::shared_ptr<std::string> notes_;
     std::shared_ptr<std::string> description_;
-    std::shared_ptr<std::string> assetId_;
     std::shared_ptr<std::string> parentId_;
     std::shared_ptr<std::string> path_;
     std::shared_ptr<bool> isActive_;
@@ -349,7 +337,7 @@ class Categories
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[20]={ false };
+    bool dirtyFlag_[19]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -398,84 +386,79 @@ class Categories
         }
         if(dirtyFlag_[5])
         {
-            sql += "asset_id,";
-            ++parametersCount;
-        }
-        if(dirtyFlag_[6])
-        {
             sql += "parent_id,";
             ++parametersCount;
         }
-        if(dirtyFlag_[7])
+        if(dirtyFlag_[6])
         {
             sql += "path,";
             ++parametersCount;
         }
         sql += "is_active,";
         ++parametersCount;
-        if(!dirtyFlag_[8])
+        if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
         sql += "published,";
         ++parametersCount;
-        if(!dirtyFlag_[9])
+        if(!dirtyFlag_[8])
         {
             needSelection=true;
         }
         sql += "article_count,";
         ++parametersCount;
-        if(!dirtyFlag_[10])
+        if(!dirtyFlag_[9])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[11])
+        if(dirtyFlag_[10])
         {
             sql += "access_level_id,";
             ++parametersCount;
         }
         sql += "metadesc,";
         ++parametersCount;
-        if(!dirtyFlag_[12])
+        if(!dirtyFlag_[11])
         {
             needSelection=true;
         }
         sql += "metakey,";
         ++parametersCount;
-        if(!dirtyFlag_[13])
+        if(!dirtyFlag_[12])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[14])
+        if(dirtyFlag_[13])
         {
             sql += "metadata,";
             ++parametersCount;
         }
         sql += "created_user_id,";
         ++parametersCount;
-        if(!dirtyFlag_[15])
+        if(!dirtyFlag_[14])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[16])
+        if(dirtyFlag_[15])
         {
             sql += "created_time,";
             ++parametersCount;
         }
         sql += "modified_user_id,";
         ++parametersCount;
-        if(!dirtyFlag_[17])
+        if(!dirtyFlag_[16])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[18])
+        if(dirtyFlag_[17])
         {
             sql += "modified_time,";
             ++parametersCount;
         }
         sql += "hits,";
         ++parametersCount;
-        if(!dirtyFlag_[19])
+        if(!dirtyFlag_[18])
         {
             needSelection=true;
         }
@@ -546,6 +529,10 @@ class Categories
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[8])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -569,14 +556,14 @@ class Categories
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[11])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[12])
         {
@@ -592,44 +579,35 @@ class Categories
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[14])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[15])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[16])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[17])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[18])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
-        }
-        if(dirtyFlag_[19])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

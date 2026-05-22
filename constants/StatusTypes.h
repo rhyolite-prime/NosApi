@@ -8,7 +8,7 @@ namespace nos::constants {
 
     enum StatusTypes {
 
-        Unpublished = 0,
+        Draft = 0,
         Published = 1,
         Archived = 2,
         Deleted = 3,

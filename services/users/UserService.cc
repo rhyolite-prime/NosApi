@@ -62,21 +62,32 @@ drogon::Task<dto::BaseApiResponse> UserService::getAll(int pageNo, int pageSize,
 
     Json::Value data = Json::arrayValue;
 
-    for (const auto &role : users) {
+    for (const auto &user : users) {
 
-      Json::Value roleJson = role.toJson();
+      Json::Value userJson = user.toJson();
       Json::Value camelCaseRole;
-      camelCaseRole["id"] = roleJson["id"];
-      camelCaseRole["firstName"] = roleJson["first_name"];
-      camelCaseRole["lastName"] = roleJson["last_name"];
-      camelCaseRole["email"] = roleJson["email"];
-      camelCaseRole["phoneNumber"] = roleJson["phone_number"];
-      camelCaseRole["country"] = roleJson["country"];
-      camelCaseRole["profileImageUrl"] = roleJson["profile_image_url"];
-      camelCaseRole["isLockedOut"] = roleJson["is_locked_out"];
-      camelCaseRole["isActive"] = roleJson["is_active"];
-      camelCaseRole["createdAt"] = roleJson["created_at"];
-      camelCaseRole["updatedAt"] = roleJson["updated_at"];
+      camelCaseRole["id"] = userJson["id"];
+      camelCaseRole["firstName"] = userJson["first_name"];
+      camelCaseRole["lastName"] = userJson["last_name"];
+      camelCaseRole["email"] = userJson["email"];
+      camelCaseRole["phoneNumber"] = userJson["phone_number"];
+      camelCaseRole["username"] = userJson["username"];
+      camelCaseRole["country"] = userJson["country"];
+      camelCaseRole["profileImageUrl"] = userJson["profile_image_url"];
+      camelCaseRole["isLockedOut"] = userJson["is_locked_out"];
+      camelCaseRole["isActive"] = userJson["is_active"];
+      camelCaseRole["createdAt"] = userJson["created_at"];
+      camelCaseRole["updatedAt"] = userJson["updated_at"];
+
+
+      Json::Value userGroupsArray;
+      Json::Reader reader;
+      if (userJson.isMember("user_groups") && userJson["user_groups"].isString()) {
+        reader.parse(userJson["user_groups"].asString(), userGroupsArray);
+      }
+      camelCaseRole["userGroups"] = userGroupsArray.isArray() ? userGroupsArray : Json::arrayValue;
+
+
       data.append(camelCaseRole);
     }
     response.result["data"] = data;
@@ -131,6 +142,18 @@ drogon::Task<dto::BaseApiResponse> UserService::create(const dto::UserDto &userD
     std::string hashedPassword = bcrypt::generateHash(password);
     user.setPasswordHash(hashedPassword);
 
+    Json::Value permissionsArray = Json::arrayValue;
+    for (const auto& perm : userDto.getUserGroups()) {
+      permissionsArray.append(perm);
+    }
+    Json::FastWriter writer;
+    std::string userGroupsStr = writer.write(permissionsArray);
+    if (!userGroupsStr.empty() && userGroupsStr.back() == '\n') {
+      userGroupsStr.pop_back();
+    }
+
+    user.setUserGroups(userGroupsStr);
+
     co_await mp.insert(user);
 
     response.success = true;
@@ -173,6 +196,7 @@ drogon::Task<dto::BaseApiResponse> UserService::update(const dto::UserDto &userD
       user.setEmail(userDto.getEmail());
     }
     if (!userDto.getUsername().empty()) {
+
       if (userDto.getUsername() != user.getValueOfUsername()) {
         size_t usernameCount = co_await mp.count(Criteria(Users::Cols::_username, CompareOperator::EQ, userDto.getUsername()));
         if (usernameCount > 0) {
@@ -182,6 +206,7 @@ drogon::Task<dto::BaseApiResponse> UserService::update(const dto::UserDto &userD
           co_return response;
         }
       }
+
       user.setUsername(userDto.getUsername());
     }
     if (!userDto.getPhoneNumber().empty()) {
@@ -193,7 +218,21 @@ drogon::Task<dto::BaseApiResponse> UserService::update(const dto::UserDto &userD
     if (!userDto.getPassword().empty()) {
       std::string hashedPassword = bcrypt::generateHash(userDto.getPassword());
       user.setPasswordHash(hashedPassword);
+
+      //send an email notifying password change.
     }
+
+    Json::Value permissionsArray = Json::arrayValue;
+    for (const auto& perm : userDto.getUserGroups()) {
+      permissionsArray.append(perm);
+    }
+    Json::FastWriter writer;
+    std::string userGroupsStr = writer.write(permissionsArray);
+    if (!userGroupsStr.empty() && userGroupsStr.back() == '\n') {
+      userGroupsStr.pop_back();
+    }
+
+    user.setUserGroups(userGroupsStr);
 
     user.setModifiedAt(trantor::Date::now());
 

@@ -116,9 +116,9 @@ drogon::Task<dto::BaseApiResponse> AccessLevelService::update(const dto::AccessL
     try {
         auto accessLevel = co_await mp.findOne(Criteria(AccessLevels::Cols::_id, CompareOperator::EQ, accessLevelId));
 
-        if (!accessLevelDto.getTitle().empty()) {
-            accessLevel.setTitle(accessLevelDto.getTitle());
-        }
+        accessLevel.setTitle(accessLevelDto.getTitle());
+        accessLevel.setOrdering(accessLevelDto.getOrdering());
+
         if (!accessLevelDto.getRules().empty()) {
             Json::Value rulesArray = Json::arrayValue;
             for (const auto& rule : accessLevelDto.getRules()) {
@@ -130,6 +130,8 @@ drogon::Task<dto::BaseApiResponse> AccessLevelService::update(const dto::AccessL
                 rulesStr.pop_back();
             }
             accessLevel.setRules(rulesStr);
+        }else {
+            accessLevel.setRulesToNull();
         }
 
         co_await mp.update(accessLevel);

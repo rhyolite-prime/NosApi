@@ -52,7 +52,7 @@ class DigitalContents
         static const std::string _introtext;
         static const std::string _fulltext;
         static const std::string _primary_resource_id;
-        static const std::string _state;
+        static const std::string _status;
         static const std::string _category_id;
         static const std::string _ordering;
         static const std::string _featured;
@@ -199,13 +199,13 @@ class DigitalContents
     void setPrimaryResourceId(std::string &&pPrimaryResourceId) noexcept;
     void setPrimaryResourceIdToNull() noexcept;
 
-    /**  For column state  */
-    ///Get the value of the column state, returns the default value if the column is null
-    const short &getValueOfState() const noexcept;
+    /**  For column status  */
+    ///Get the value of the column status, returns the default value if the column is null
+    const int32_t &getValueOfStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<short> &getState() const noexcept;
-    ///Set the value of the column state
-    void setState(const short &pState) noexcept;
+    const std::shared_ptr<int32_t> &getStatus() const noexcept;
+    ///Set the value of the column status
+    void setStatus(const int32_t &pStatus) noexcept;
 
     /**  For column category_id  */
     ///Get the value of the column category_id, returns the default value if the column is null
@@ -405,7 +405,7 @@ class DigitalContents
     std::shared_ptr<std::string> introtext_;
     std::shared_ptr<std::string> fulltext_;
     std::shared_ptr<std::string> primaryResourceId_;
-    std::shared_ptr<short> state_;
+    std::shared_ptr<int32_t> status_;
     std::shared_ptr<std::string> categoryId_;
     std::shared_ptr<int32_t> ordering_;
     std::shared_ptr<short> featured_;
@@ -494,7 +494,7 @@ class DigitalContents
             sql += "primary_resource_id,";
             ++parametersCount;
         }
-        sql += "state,";
+        sql += "status,";
         ++parametersCount;
         if(!dirtyFlag_[8])
         {
