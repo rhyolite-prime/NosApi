@@ -18,6 +18,7 @@ namespace nos::services {
         public:
 
         drogon::Task<dto::BaseApiResponse> getAll(int pageNo, int pageSize, const std::string &query);
+        drogon::Task<dto::BaseApiResponse> getDetails( const std::string &id);
         drogon::Task<dto::BaseApiResponse> create(const dto::WorkflowDto &workflowDto);
         drogon::Task<dto::BaseApiResponse> update(const dto::WorkflowDto &workflowDto, const std::string &workflowId);
         drogon::Task<dto::BaseApiResponse> deleteWorkflow(const std::string &workflowId);

@@ -79,6 +79,44 @@ namespace nos::services {
         co_return response;
     }
 
+
+    drogon::Task<dto::BaseApiResponse> WorkflowService::getDetails( const std::string &id) {
+        auto dbClient = drogon::app().getDbClient();
+        auto mp = CoroMapper<Workflows>(dbClient);
+
+        dto::BaseApiResponse response;
+        try {
+            auto workflow = co_await mp.findOne(Criteria(Workflows::Cols::_id, CompareOperator::EQ, id));
+
+            Json::Value wJson = workflow.toJson();
+            Json::Value camelCaseW;
+            camelCaseW["id"] = wJson["id"];
+            camelCaseW["status"] = wJson["status"];
+            camelCaseW["numberOfStages"] = wJson["number_of_stages"];
+            camelCaseW["numberOfTransitions"] = wJson["number_of_transitions"];
+            camelCaseW["title"] = wJson["title"];
+            camelCaseW["category"] = wJson["category"];
+            camelCaseW["description"] = wJson["description"];
+            camelCaseW["context"] = wJson["context"];
+            camelCaseW["isDefault"] = wJson["is_default"];
+            camelCaseW["ordering"] = wJson["ordering"];
+            camelCaseW["createdAt"] = wJson["created_at"];
+
+            response.success = true;
+            response.result["data"] = camelCaseW;
+
+        } catch (const UnexpectedRows &e) {
+            response.success = false;
+            response.message = "Workflow not found";
+            response.error["code"] = constants::ERR_RESOURCE_NOT_FOUND;
+        } catch (const DrogonDbException &e) {
+            response.success = false;
+            response.message = "Database error while fetching workflow details.";
+            response.error["detail"] = e.base().what();
+        }
+        co_return response;
+    }
+
     drogon::Task<dto::BaseApiResponse> WorkflowService::create(const dto::WorkflowDto &workflowDto) {
         auto dbClient = drogon::app().getDbClient();
         auto mp = CoroMapper<Workflows>(dbClient);

@@ -29,6 +29,19 @@ Task<HttpResponsePtr> WorkflowController::getAll(HttpRequestPtr req) {
     co_return resp;
 }
 
+
+Task<HttpResponsePtr> WorkflowController::getWorkflowDetails(HttpRequestPtr req, std::string id) {
+
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &workflowService = plugin->getWorkflowService();
+
+    auto result = co_await workflowService.getDetails(id);
+
+    auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
+    resp->setStatusCode(result.success ? k200OK : k500InternalServerError);
+    co_return resp;
+}
+
 Task<HttpResponsePtr> WorkflowController::createWorkflow(HttpRequestPtr req) {
     auto jsonBody = req->getJsonObject();
     if (!jsonBody) {
