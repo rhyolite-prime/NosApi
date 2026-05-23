@@ -25,13 +25,13 @@ namespace nos::services {
         //stages
         drogon::Task<dto::BaseApiResponse> getWorkflowStages(const std::string &workflowId);
         drogon::Task<dto::BaseApiResponse> createWorkflowStage(const dto::WorkflowStageDto &workflowStageDto);
-        drogon::Task<dto::BaseApiResponse> updateWorkflowStage(const dto::WorkflowStageDto &workflowStageDto, const std::string &workflowId, const std::string &id);
+        drogon::Task<dto::BaseApiResponse> updateWorkflowStage(const dto::WorkflowStageDto &workflowStageDto, const std::string &id);
         drogon::Task<dto::BaseApiResponse> deleteWorkflowStage(const std::string &workflowId, const std::string &id);
 
         //transitions
         drogon::Task<dto::BaseApiResponse> getWorkflowTransitions(const std::string &workflowId);
         drogon::Task<dto::BaseApiResponse> createWorkflowTransition(const dto::WorkflowTransitionDto &workflowTransitionDto);
-        drogon::Task<dto::BaseApiResponse> updateWorkflowTransition(const dto::WorkflowTransitionDto &workflowTransitionDto, const std::string &workflowId, const std::string &id);
+        drogon::Task<dto::BaseApiResponse> updateWorkflowTransition(const dto::WorkflowTransitionDto &workflowTransitionDto, const std::string &id);
         drogon::Task<dto::BaseApiResponse> deleteWorkflowTransition(const std::string &workflowId, const std::string &id);
 
 

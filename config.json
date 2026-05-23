@@ -412,6 +412,44 @@
           { "id": "settings.manage", "label": "Core Configuration", "description": "Modify agency global name, branding, and core settings." }
         ]
       }
+    ],
+    "WorkflowContext": [
+      { "value": "com.digitalcontent.article", "label": "Content->Articles" },
+      { "value": "com.digitalcontent.audio", "label": "Content->Audio" },
+      { "value": "com.digitalcontent.video", "label": "Content->Video" },
+      { "value": "com.digitalcontent.image", "label": "Content->Pictures" },
+      { "value": "com.digitalcontent.category", "label": "Content->Categories" },
+      { "value": "com.digitalcontent.contenttype", "label": "Content->Content Types" },
+      { "value": "com.digitalcontent.field", "label": "Content->Fields" },
+      { "value": "com.digitalcontent.fieldgroup", "label": "Content->Field Groups" },
+      { "value": "com.medialibrary.collections", "label": "Media Library->Collections" },
+      { "value": "com.medialibrary.uploadqueue", "label": "Media Library->Upload Queue" },
+      { "value": "com.medialibrary.storageanalytics", "label": "Media Library->Storage Analytics" },
+      { "value": "com.taxonomy.categories", "label": "Taxonomy->Categories" },
+      { "value": "com.taxonomy.tags", "label": "Taxonomy->Tags" },
+      { "value": "com.taxonomy.geographicregions", "label": "Taxonomy->Geographic Regions" },
+      { "value": "com.affiliate.directory", "label": "Affiliate->Directory" },
+      { "value": "com.affiliate.commissionpayout", "label": "Affiliate->Commission Payouts" },
+      { "value": "com.affiliate.promoassets", "label": "Affiliate->Promo Assets" },
+      { "value": "com.liveoperations.blogging", "label": "Live Operations->Blogging" },
+      { "value": "com.liveoperations.breakingnews", "label": "Live Operations->Breaking News" },
+      { "value": "com.liveoperations.newsticker", "label": "Live Operations->News Ticker" },
+      { "value": "com.liveoperations.eventcoverage", "label": "Live Operations->Event Coverage" },
+      { "value": "com.subscription.plans", "label": "Subscription->Plans" },
+      { "value": "com.subscription.paywallrules", "label": "Subscription->Paywall Rules" },
+      { "value": "com.subscription.invoices", "label": "Subscription->Invoices" },
+      { "value": "com.subscription.payments", "label": "Subscription->Payments" },
+      { "value": "com.subscription.coupons", "label": "Subscription->Coupons" },
+      { "value": "com.finance.erpintegrations", "label": "Finance->ERP Integration" },
+      { "value": "com.finance.journal", "label": "Finance->Journal" },
+      { "value": "com.messaging.newsletters", "label": "Messaging->Newsletters" },
+      { "value": "com.messaging.smsbroadcasts", "label": "Messaging->SMS Broadcasts" },
+      { "value": "com.audience.segments", "label": "Audience->Segments" },
+      { "value": "com.messaging.templates", "label": "Messaging->Templates" },
+      { "value": "com.admanagement.campaigns", "label": "Ad Management->Campaigns" },
+      { "value": "com.admanagement.slots", "label": "Ad Management->Slots" },
+      { "value": "com.admanagement.advertisers", "label": "Ad Management->Advertisers" },
+      { "value": "com.plugins", "label": "Plugins" }
     ]
 
 

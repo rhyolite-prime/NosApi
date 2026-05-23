@@ -21,34 +21,38 @@ namespace nos::dto {
         [[nodiscard]] const std::string& getWorkflowId() const { return workflowId_; }
         [[nodiscard]] const std::string& getTitle() const { return title_; }
         [[nodiscard]] const std::string& getDescription() const { return description_; }
-        [[nodiscard]] int getPublished() const { return published_; }
+        [[nodiscard]] int getStatus() const { return status_; }
         [[nodiscard]] int getOrdering() const { return ordering_; }
         [[nodiscard]] bool getIsDefault() const { return isDefault_; }
-        [[nodiscard]] const std::string& getCreatedBy() const { return createdBy_; }
-        [[nodiscard]] const std::string& getModifiedBy() const { return modifiedBy_; }
+        [[nodiscard]] const std::vector<std::string> &getTargetUsers() const { return target_users_; }
+        [[nodiscard]] const std::vector<std::string> &getTargetGroups() const { return target_groups_; }
+
 
         // Setters
         void setWorkflowId(const std::string& workflowId) { workflowId_ = workflowId; }
         void setTitle(const std::string& title) { title_ = title; }
         void setDescription(const std::string& description) { description_ = description; }
-        void setPublished(int published) { published_ = published; }
+        void setStatus(int status) { status_ = status; }
         void setOrdering(int ordering) { ordering_ = ordering; }
         void setIsDefault(bool isDefault) { isDefault_ = isDefault; }
-        void setCreatedBy(const std::string& createdBy) { createdBy_ = createdBy; }
-        void setModifiedBy(const std::string& modifiedBy) { modifiedBy_ = modifiedBy; }
+        void setTargetUsers(const std::vector<std::string> &value) { target_users_ = value; }
+        void setTargetGroups(const std::vector<std::string> &value) { target_groups_ = value; }
+
 
     private:
         std::string workflowId_;
         std::string title_;
         std::string description_;
-        int published_ = 1;
+        int status_ = 0;
         int ordering_ = 0;
         bool isDefault_ = false;
-        std::string createdBy_;
-        std::string modifiedBy_;
+        std::vector<std::string> target_users_;
+        std::vector<std::string> target_groups_;
+
     };
 
     inline void WorkflowStageDto::fromJson(const Json::Value& json) {
+
         if (json.isMember("workflowId") && !json["workflowId"].isNull())
             workflowId_ = json["workflowId"].asString();
 
@@ -58,8 +62,8 @@ namespace nos::dto {
         if (json.isMember("description") && !json["description"].isNull())
             description_ = json["description"].asString();
 
-        if (json.isMember("published") && !json["published"].isNull())
-            published_ = json["published"].asInt();
+        if (json.isMember("status") && !json["status"].isNull())
+            status_ = json["status"].asInt();
 
         if (json.isMember("ordering") && !json["ordering"].isNull())
             ordering_ = json["ordering"].asInt();
@@ -67,11 +71,18 @@ namespace nos::dto {
         if (json.isMember("isDefault") && !json["isDefault"].isNull())
             isDefault_ = json["isDefault"].asBool();
 
-        if (json.isMember("createdBy") && !json["createdBy"].isNull())
-            createdBy_ = json["createdBy"].asString();
+        if (json.isMember("targetUsers") && json["targetUsers"].isArray()) {
+            for (const auto &ip : json["targetUsers"]) {
+                target_users_.push_back(ip.asString());
+            }
+        }
 
-        if (json.isMember("modifiedBy") && !json["modifiedBy"].isNull())
-            modifiedBy_ = json["modifiedBy"].asString();
+        if (json.isMember("targetGroups") && json["targetGroups"].isArray()) {
+            for (const auto &ip : json["targetGroups"]) {
+                target_groups_.push_back(ip.asString());
+            }
+        }
+
     }
 
 }

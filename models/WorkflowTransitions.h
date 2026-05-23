@@ -45,13 +45,13 @@ class WorkflowTransitions
     struct Cols
     {
         static const std::string _id;
-        static const std::string _ordering;
         static const std::string _workflow_id;
-        static const std::string _published;
+        static const std::string _status;
         static const std::string _title;
         static const std::string _description;
         static const std::string _from_stage_id;
         static const std::string _to_stage_id;
+        static const std::string _ordering;
         static const std::string _options;
         static const std::string _created_by;
         static const std::string _created_at;
@@ -117,14 +117,6 @@ class WorkflowTransitions
     void setId(const std::string &pId) noexcept;
     void setId(std::string &&pId) noexcept;
 
-    /**  For column ordering  */
-    ///Get the value of the column ordering, returns the default value if the column is null
-    const int32_t &getValueOfOrdering() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getOrdering() const noexcept;
-    ///Set the value of the column ordering
-    void setOrdering(const int32_t &pOrdering) noexcept;
-
     /**  For column workflow_id  */
     ///Get the value of the column workflow_id, returns the default value if the column is null
     const std::string &getValueOfWorkflowId() const noexcept;
@@ -135,13 +127,13 @@ class WorkflowTransitions
     void setWorkflowId(std::string &&pWorkflowId) noexcept;
     void setWorkflowIdToNull() noexcept;
 
-    /**  For column published  */
-    ///Get the value of the column published, returns the default value if the column is null
-    const int32_t &getValueOfPublished() const noexcept;
+    /**  For column status  */
+    ///Get the value of the column status, returns the default value if the column is null
+    const int32_t &getValueOfStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getPublished() const noexcept;
-    ///Set the value of the column published
-    void setPublished(const int32_t &pPublished) noexcept;
+    const std::shared_ptr<int32_t> &getStatus() const noexcept;
+    ///Set the value of the column status
+    void setStatus(const int32_t &pStatus) noexcept;
 
     /**  For column title  */
     ///Get the value of the column title, returns the default value if the column is null
@@ -180,6 +172,14 @@ class WorkflowTransitions
     void setToStageId(const std::string &pToStageId) noexcept;
     void setToStageId(std::string &&pToStageId) noexcept;
     void setToStageIdToNull() noexcept;
+
+    /**  For column ordering  */
+    ///Get the value of the column ordering, returns the default value if the column is null
+    const int32_t &getValueOfOrdering() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getOrdering() const noexcept;
+    ///Set the value of the column ordering
+    void setOrdering(const int32_t &pOrdering) noexcept;
 
     /**  For column options  */
     ///Get the value of the column options, returns the default value if the column is null
@@ -253,13 +253,13 @@ class WorkflowTransitions
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<std::string> id_;
-    std::shared_ptr<int32_t> ordering_;
     std::shared_ptr<std::string> workflowId_;
-    std::shared_ptr<int32_t> published_;
+    std::shared_ptr<int32_t> status_;
     std::shared_ptr<std::string> title_;
     std::shared_ptr<std::string> description_;
     std::shared_ptr<std::string> fromStageId_;
     std::shared_ptr<std::string> toStageId_;
+    std::shared_ptr<int32_t> ordering_;
     std::shared_ptr<std::string> options_;
     std::shared_ptr<std::string> createdBy_;
     std::shared_ptr<::trantor::Date> createdAt_;
@@ -300,42 +300,42 @@ class WorkflowTransitions
         {
             needSelection=true;
         }
-        sql += "ordering,";
-        ++parametersCount;
-        if(!dirtyFlag_[1])
-        {
-            needSelection=true;
-        }
-        if(dirtyFlag_[2])
+        if(dirtyFlag_[1])
         {
             sql += "workflow_id,";
             ++parametersCount;
         }
-        sql += "published,";
+        sql += "status,";
         ++parametersCount;
-        if(!dirtyFlag_[3])
+        if(!dirtyFlag_[2])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[4])
+        if(dirtyFlag_[3])
         {
             sql += "title,";
             ++parametersCount;
         }
-        if(dirtyFlag_[5])
+        if(dirtyFlag_[4])
         {
             sql += "description,";
             ++parametersCount;
         }
-        if(dirtyFlag_[6])
+        if(dirtyFlag_[5])
         {
             sql += "from_stage_id,";
             ++parametersCount;
         }
-        if(dirtyFlag_[7])
+        if(dirtyFlag_[6])
         {
             sql += "to_stage_id,";
             ++parametersCount;
+        }
+        sql += "ordering,";
+        ++parametersCount;
+        if(!dirtyFlag_[7])
+        {
+            needSelection=true;
         }
         if(dirtyFlag_[8])
         {
@@ -389,23 +389,19 @@ class WorkflowTransitions
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[2])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[3])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[4])
         {
@@ -426,6 +422,10 @@ class WorkflowTransitions
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[8])
         {

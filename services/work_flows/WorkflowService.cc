@@ -98,7 +98,8 @@ namespace nos::services {
             workflow.setTitle(workflowDto.getTitle());
             workflow.setDescription(workflowDto.getDescription());
             workflow.setContext(workflowDto.getContext());
-            workflow.setStatus(workflowDto.getPublished());
+            workflow.setCategory(workflowDto.getCategory());
+            workflow.setStatus(workflowDto.getStatus());
             workflow.setIsDefault(workflowDto.getIsDefault());
             workflow.setOrdering(workflowDto.getOrdering());
 
@@ -128,6 +129,7 @@ namespace nos::services {
             auto workflow = co_await mp.findOne(Criteria(Workflows::Cols::_id, CompareOperator::EQ, workflowId));
 
             if (!workflowDto.getTitle().empty()) {
+
                 if (workflowDto.getTitle() != workflow.getValueOfTitle()) {
                     size_t count = co_await mp.count(Criteria(Workflows::Cols::_title, CompareOperator::EQ, workflowDto.getTitle()));
                     if (count > 0) {
@@ -137,17 +139,21 @@ namespace nos::services {
                         co_return response;
                     }
                 }
+
                 workflow.setTitle(workflowDto.getTitle());
             }
             
             if (!workflowDto.getDescription().empty()) {
                 workflow.setDescription(workflowDto.getDescription());
             }
+
             if (!workflowDto.getContext().empty()) {
                 workflow.setContext(workflowDto.getContext());
             }
-            
-            workflow.setStatus(workflowDto.getPublished());
+
+            workflow.setCategory(workflowDto.getCategory());
+
+            workflow.setStatus(workflowDto.getStatus());
             workflow.setIsDefault(workflowDto.getIsDefault());
             workflow.setOrdering(workflowDto.getOrdering());
 
@@ -195,7 +201,9 @@ namespace nos::services {
         co_return response;
     }
 
-    drogon::Task<dto::BaseApiResponse> WorkflowService::getWorkflowStages(const std::string &workflowId) {
+    drogon::Task<dto::BaseApiResponse> WorkflowService::getWorkflowStages(const std::string &workflowId)
+    {
+
         auto dbClient = drogon::app().getDbClient();
         auto mp = CoroMapper<WorkflowStages>(dbClient);
 
@@ -212,14 +220,28 @@ namespace nos::services {
                 Json::Value sJson = stage.toJson();
                 Json::Value camelCaseS;
                 camelCaseS["id"] = sJson["id"];
-                camelCaseS["assetId"] = sJson["asset_id"];
                 camelCaseS["ordering"] = sJson["ordering"];
                 camelCaseS["workflowId"] = sJson["workflow_id"];
-                camelCaseS["published"] = sJson["published"];
+                camelCaseS["status"] = sJson["status"];
                 camelCaseS["title"] = sJson["title"];
                 camelCaseS["description"] = sJson["description"];
+
+                Json::Value targetUsersArray;
+                Json::Reader reader;
+                if (sJson.isMember("target_users") && sJson["target_users"].isString()) {
+                    reader.parse(sJson["target_users"].asString(), targetUsersArray);
+                }
+                camelCaseS["targetUsers"] = targetUsersArray.isArray() ? targetUsersArray : Json::arrayValue;
+
+
+                Json::Value targetGroupsArray;
+
+                if (sJson.isMember("target_groups") && sJson["target_groups"].isString()) {
+                    reader.parse(sJson["target_groups"].asString(), targetGroupsArray);
+                }
+                camelCaseS["targetGroups"] = targetGroupsArray.isArray() ? targetGroupsArray : Json::arrayValue;
+
                 camelCaseS["isDefault"] = sJson["is_default"];
-                
                 camelCaseS["createdAt"] = sJson["created_at"];
                 
                 data.append(camelCaseS);
@@ -268,16 +290,33 @@ namespace nos::services {
             stage.setWorkflowId(workflowStageDto.getWorkflowId());
             stage.setTitle(workflowStageDto.getTitle());
             stage.setDescription(workflowStageDto.getDescription());
-            stage.setPublished(workflowStageDto.getPublished());
+            stage.setStatus(workflowStageDto.getStatus());
             stage.setOrdering(workflowStageDto.getOrdering());
             stage.setIsDefault(workflowStageDto.getIsDefault());
 
-            if (!workflowStageDto.getCreatedBy().empty()) {
-                stage.setCreatedBy(workflowStageDto.getCreatedBy());
+            Json::Value targetUsersArray = Json::arrayValue;
+            for (const auto& perm : workflowStageDto.getTargetUsers()) {
+                targetUsersArray.append(perm);
             }
-            if (!workflowStageDto.getModifiedBy().empty()) {
-                stage.setModifiedBy(workflowStageDto.getModifiedBy());
+            Json::FastWriter writer;
+            std::string targetUsersStr = writer.write(targetUsersArray);
+            if (!targetUsersStr.empty() && targetUsersStr.back() == '\n') {
+                targetUsersStr.pop_back();
             }
+            stage.setTargetUsers(targetUsersStr);
+
+            Json::Value targetGroupsArray = Json::arrayValue;
+            for (const auto& perm : workflowStageDto.getTargetUsers()) {
+                targetGroupsArray.append(perm);
+            }
+
+            std::string targetGroupsStr = writer.write(targetGroupsArray);
+            if (!targetGroupsStr.empty() && targetGroupsStr.back() == '\n') {
+                targetGroupsStr.pop_back();
+            }
+
+            stage.setTargetGroups(targetGroupsStr);
+
             stage.setCreatedAt(trantor::Date::now());
             stage.setModifiedAt(trantor::Date::now());
 
@@ -295,18 +334,18 @@ namespace nos::services {
         co_return response;
     }
 
-    drogon::Task<dto::BaseApiResponse> WorkflowService::updateWorkflowStage(const dto::WorkflowStageDto &workflowStageDto, const std::string &workflowId, const std::string &id) {
+    drogon::Task<dto::BaseApiResponse> WorkflowService::updateWorkflowStage(const dto::WorkflowStageDto &workflowStageDto, const std::string &id) {
         auto dbClient = drogon::app().getDbClient();
         auto mp = CoroMapper<WorkflowStages>(dbClient);
 
         dto::BaseApiResponse response;
         try {
             auto stage = co_await mp.findOne(Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, id) && 
-                                             Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowId));
+                                             Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowStageDto.getWorkflowId()));
 
             if (!workflowStageDto.getTitle().empty()) {
                 if (workflowStageDto.getTitle() != stage.getValueOfTitle()) {
-                    Criteria dupCriteria = Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowId) &&
+                    Criteria dupCriteria = Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowStageDto.getWorkflowId()) &&
                                           Criteria(WorkflowStages::Cols::_title, CompareOperator::EQ, workflowStageDto.getTitle());
                     size_t count = co_await mp.count(dupCriteria);
                     if (count > 0) {
@@ -323,13 +362,10 @@ namespace nos::services {
                 stage.setDescription(workflowStageDto.getDescription());
             }
 
-            stage.setPublished(workflowStageDto.getPublished());
+            stage.setStatus(workflowStageDto.getStatus());
             stage.setOrdering(workflowStageDto.getOrdering());
             stage.setIsDefault(workflowStageDto.getIsDefault());
 
-            if (!workflowStageDto.getModifiedBy().empty()) {
-                stage.setModifiedBy(workflowStageDto.getModifiedBy());
-            }
             stage.setModifiedAt(trantor::Date::now());
 
             co_await mp.update(stage);
@@ -468,18 +504,13 @@ namespace nos::services {
             transition.setWorkflowId(workflowTransitionDto.getWorkflowId());
             transition.setTitle(workflowTransitionDto.getTitle());
             transition.setDescription(workflowTransitionDto.getDescription());
-            transition.setPublished(workflowTransitionDto.getPublished());
+            transition.setStatus(workflowTransitionDto.getStatus());
             transition.setOrdering(workflowTransitionDto.getOrdering());
             transition.setFromStageId(workflowTransitionDto.getFromStageId());
             transition.setToStageId(workflowTransitionDto.getToStageId());
             transition.setOptions(workflowTransitionDto.getOptions());
 
-            if (!workflowTransitionDto.getCreatedBy().empty()) {
-                transition.setCreatedBy(workflowTransitionDto.getCreatedBy());
-            }
-            if (!workflowTransitionDto.getModifiedBy().empty()) {
-                transition.setModifiedBy(workflowTransitionDto.getModifiedBy());
-            }
+
             transition.setCreatedAt(trantor::Date::now());
             transition.setModifiedAt(trantor::Date::now());
 
@@ -497,18 +528,18 @@ namespace nos::services {
         co_return response;
     }
 
-    drogon::Task<dto::BaseApiResponse> WorkflowService::updateWorkflowTransition(const dto::WorkflowTransitionDto &workflowTransitionDto, const std::string &workflowId, const std::string &id) {
+    drogon::Task<dto::BaseApiResponse> WorkflowService::updateWorkflowTransition(const dto::WorkflowTransitionDto &workflowTransitionDto, const std::string &id) {
         auto dbClient = drogon::app().getDbClient();
         auto mp = CoroMapper<WorkflowTransitions>(dbClient);
 
         dto::BaseApiResponse response;
         try {
             auto transition = co_await mp.findOne(Criteria(WorkflowTransitions::Cols::_id, CompareOperator::EQ, id) && 
-                                                  Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, workflowId));
+                                                  Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId()));
 
             if (!workflowTransitionDto.getTitle().empty()) {
                 if (workflowTransitionDto.getTitle() != transition.getValueOfTitle()) {
-                    Criteria dupCriteria = Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, workflowId) &&
+                    Criteria dupCriteria = Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId()) &&
                                           Criteria(WorkflowTransitions::Cols::_title, CompareOperator::EQ, workflowTransitionDto.getTitle());
                     size_t count = co_await mp.count(dupCriteria);
                     if (count > 0) {
@@ -525,7 +556,7 @@ namespace nos::services {
             if (!workflowTransitionDto.getFromStageId().empty() && workflowTransitionDto.getFromStageId() != transition.getValueOfFromStageId()) {
                 size_t fromExists = co_await stageMp.count(
                     Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getFromStageId()) &&
-                    Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowId)
+                    Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
                 );
                 if (fromExists == 0) {
                     response.success = false;
@@ -539,7 +570,7 @@ namespace nos::services {
             if (!workflowTransitionDto.getToStageId().empty() && workflowTransitionDto.getToStageId() != transition.getValueOfToStageId()) {
                 size_t toExists = co_await stageMp.count(
                     Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getToStageId()) &&
-                    Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowId)
+                    Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
                 );
                 if (toExists == 0) {
                     response.success = false;
@@ -557,12 +588,10 @@ namespace nos::services {
                 transition.setOptions(workflowTransitionDto.getOptions());
             }
 
-            transition.setPublished(workflowTransitionDto.getPublished());
+            transition.setStatus(workflowTransitionDto.getStatus());
             transition.setOrdering(workflowTransitionDto.getOrdering());
 
-            if (!workflowTransitionDto.getModifiedBy().empty()) {
-                transition.setModifiedBy(workflowTransitionDto.getModifiedBy());
-            }
+
             transition.setModifiedAt(trantor::Date::now());
 
             co_await mp.update(transition);
