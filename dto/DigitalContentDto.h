@@ -21,10 +21,10 @@ namespace nos::dto {
         [[nodiscard]] const std::string& getTitle() const { return title_; }
         [[nodiscard]] const std::string& getAlias() const { return alias_; }
         [[nodiscard]] const std::string& getContentTypeId() const { return contentTypeId_; }
-        [[nodiscard]] const std::string& getContentType() const { return contentType_; }
+        [[nodiscard]] const std::string& getContentTypeName() const { return contentType_; }
         [[nodiscard]] const std::string& getIntrotext() const { return introtext_; }
         [[nodiscard]] const std::string& getFulltext() const { return fulltext_; }
-        [[nodiscard]] const std::string& getPrimaryResourceId() const { return primaryResourceId_; }
+
         [[nodiscard]] int32_t getStatus() const { return status_; }
         [[nodiscard]] const std::string& getCategoryId() const { return categoryId_; }
         [[nodiscard]] int32_t getOrdering() const { return ordering_; }
@@ -35,40 +35,14 @@ namespace nos::dto {
         [[nodiscard]] const Json::Value& getMetadata() const { return metadata_; }
         [[nodiscard]] const Json::Value& getPresentationConfig() const { return presentationConfig_; }
         [[nodiscard]] const Json::Value& getDisplayOverrides() const { return displayOverrides_; }
-        [[nodiscard]] const std::string& getPublishUp() const { return publishUp_; }
-        [[nodiscard]] const std::string& getPublishDown() const { return publishDown_; }
+
         [[nodiscard]] int32_t getVersion() const { return version_; }
         [[nodiscard]] const std::string& getLanguage() const { return language_; }
         [[nodiscard]] const std::string& getCreatedBy() const { return createdBy_; }
         [[nodiscard]] const std::string& getModifiedBy() const { return modifiedBy_; }
         [[nodiscard]] int32_t getViews() const { return views_; }
 
-        // Has-flags
-        [[nodiscard]] bool hasId() const { return has_id_; }
-        [[nodiscard]] bool hasTitle() const { return has_title_; }
-        [[nodiscard]] bool hasAlias() const { return has_alias_; }
-        [[nodiscard]] bool hasContentTypeId() const { return has_content_type_id_; }
-        [[nodiscard]] bool hasContentType() const { return has_content_type_; }
-        [[nodiscard]] bool hasIntrotext() const { return has_introtext_; }
-        [[nodiscard]] bool hasFulltext() const { return has_fulltext_; }
-        [[nodiscard]] bool hasPrimaryResourceId() const { return has_primary_resource_id_; }
-        [[nodiscard]] bool hasStatus() const { return has_status_; }
-        [[nodiscard]] bool hasCategoryId() const { return has_category_id_; }
-        [[nodiscard]] bool hasOrdering() const { return has_ordering_; }
-        [[nodiscard]] bool hasFeatured() const { return has_featured_; }
-        [[nodiscard]] bool hasAccessLevelId() const { return has_access_level_id_; }
-        [[nodiscard]] bool hasMetakey() const { return has_metakey_; }
-        [[nodiscard]] bool hasMetadesc() const { return has_metadesc_; }
-        [[nodiscard]] bool hasMetadata() const { return has_metadata_; }
-        [[nodiscard]] bool hasPresentationConfig() const { return has_presentation_config_; }
-        [[nodiscard]] bool hasDisplayOverrides() const { return has_display_overrides_; }
-        [[nodiscard]] bool hasPublishUp() const { return has_publish_up_; }
-        [[nodiscard]] bool hasPublishDown() const { return has_publish_down_; }
-        [[nodiscard]] bool hasVersion() const { return has_version_; }
-        [[nodiscard]] bool hasLanguage() const { return has_language_; }
-        [[nodiscard]] bool hasCreatedBy() const { return has_created_by_; }
-        [[nodiscard]] bool hasModifiedBy() const { return has_modified_by_; }
-        [[nodiscard]] bool hasViews() const { return has_views_; }
+
 
         // Setters
 
@@ -78,7 +52,7 @@ namespace nos::dto {
         void setContentType(const std::string& val) { contentType_ = val; has_content_type_ = true; }
         void setIntrotext(const std::string& val) { introtext_ = val; has_introtext_ = true; }
         void setFulltext(const std::string& val) { fulltext_ = val; has_fulltext_ = true; }
-        void setPrimaryResourceId(const std::string& val) { primaryResourceId_ = val; has_primary_resource_id_ = true; }
+
         void setStatus(int32_t val) { status_ = val; has_status_ = true; }
         void setCategoryId(const std::string& val) { categoryId_ = val; has_category_id_ = true; }
         void setOrdering(int32_t val) { ordering_ = val; has_ordering_ = true; }
@@ -89,8 +63,7 @@ namespace nos::dto {
         void setMetadata(const Json::Value& val) { metadata_ = val; has_metadata_ = true; }
         void setPresentationConfig(const Json::Value& val) { presentationConfig_ = val; has_presentation_config_ = true; }
         void setDisplayOverrides(const Json::Value& val) { displayOverrides_ = val; has_display_overrides_ = true; }
-        void setPublishUp(const std::string& val) { publishUp_ = val; has_publish_up_ = true; }
-        void setPublishDown(const std::string& val) { publishDown_ = val; has_publish_down_ = true; }
+
         void setVersion(int32_t val) { version_ = val; has_version_ = true; }
         void setLanguage(const std::string& val) { language_ = val; has_language_ = true; }
         void setCreatedBy(const std::string& val) { createdBy_ = val; has_created_by_ = true; }
@@ -116,8 +89,7 @@ namespace nos::dto {
         Json::Value metadata_ = Json::objectValue;
         Json::Value presentationConfig_ = Json::objectValue;
         Json::Value displayOverrides_ = Json::objectValue;
-        std::string publishUp_;
-        std::string publishDown_;
+
         int32_t version_ = 1;
         std::string language_ = "*";
         std::string createdBy_;
@@ -142,8 +114,7 @@ namespace nos::dto {
         bool has_metadata_ = false;
         bool has_presentation_config_ = false;
         bool has_display_overrides_ = false;
-        bool has_publish_up_ = false;
-        bool has_publish_down_ = false;
+
         bool has_version_ = false;
         bool has_language_ = false;
         bool has_created_by_ = false;
@@ -221,14 +192,7 @@ namespace nos::dto {
             has_display_overrides_ = true;
             if (!json["displayOverrides"].isNull()) displayOverrides_ = json["displayOverrides"];
         }
-        if (json.isMember("publishUp")) {
-            has_publish_up_ = true;
-            if (!json["publishUp"].isNull()) publishUp_ = json["publishUp"].asString();
-        }
-        if (json.isMember("publishDown")) {
-            has_publish_down_ = true;
-            if (!json["publishDown"].isNull()) publishDown_ = json["publishDown"].asString();
-        }
+
         if (json.isMember("version")) {
             has_version_ = true;
             if (!json["version"].isNull()) version_ = json["version"].asInt();
@@ -237,14 +201,7 @@ namespace nos::dto {
             has_language_ = true;
             if (!json["language"].isNull()) language_ = json["language"].asString();
         }
-        if (json.isMember("createdBy")) {
-            has_created_by_ = true;
-            if (!json["createdBy"].isNull()) createdBy_ = json["createdBy"].asString();
-        }
-        if (json.isMember("modifiedBy")) {
-            has_modified_by_ = true;
-            if (!json["modifiedBy"].isNull()) modifiedBy_ = json["modifiedBy"].asString();
-        }
+
         if (json.isMember("views")) {
             has_views_ = true;
             if (!json["views"].isNull()) views_ = json["views"].asInt();

@@ -3,8 +3,8 @@ int main() {
     //Set HTTP listener address and port
 
     //Load config file
-    //drogon::app().loadConfigFile("../config.json");
-    drogon::app().loadConfigFile("config.json");
+    drogon::app().loadConfigFile("../config.json");
+    //drogon::app().loadConfigFile("config.json");
     //Run HTTP framework,the method will block in the internal event loop
 
     drogon::app().registerPostHandlingAdvice(

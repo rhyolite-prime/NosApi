@@ -45,31 +45,29 @@ class ContentTypes
     struct Cols
     {
         static const std::string _id;
-        static const std::string _type_name;
-        static const std::string _type_key;
+        static const std::string _name;
         static const std::string _description;
         static const std::string _icon_class;
         static const std::string _allowed_extensions;
         static const std::string _max_file_size;
         static const std::string _requires_media;
         static const std::string _requires_thumbnail;
-        static const std::string _requires_duration;
         static const std::string _sort_order;
         static const std::string _is_active;
         static const std::string _is_system;
         static const std::string _metadata_schema;
-        static const std::string _created;
-        static const std::string _modified;
         static const std::string _created_by;
+        static const std::string _created_at;
         static const std::string _modified_by;
+        static const std::string _modified_at;
     };
 
     static const int primaryKeyNumber;
     static const std::string tableName;
     static const bool hasPrimaryKey;
     static const std::string primaryKeyName;
-    using PrimaryKeyType = void;
-    int getPrimaryKey() const { assert(false); return 0; }
+    using PrimaryKeyType = std::string;
+    const PrimaryKeyType &getPrimaryKey() const;
 
     /**
      * @brief constructor
@@ -122,23 +120,14 @@ class ContentTypes
     void setId(const std::string &pId) noexcept;
     void setId(std::string &&pId) noexcept;
 
-    /**  For column type_name  */
-    ///Get the value of the column type_name, returns the default value if the column is null
-    const std::string &getValueOfTypeName() const noexcept;
+    /**  For column name  */
+    ///Get the value of the column name, returns the default value if the column is null
+    const std::string &getValueOfName() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getTypeName() const noexcept;
-    ///Set the value of the column type_name
-    void setTypeName(const std::string &pTypeName) noexcept;
-    void setTypeName(std::string &&pTypeName) noexcept;
-
-    /**  For column type_key  */
-    ///Get the value of the column type_key, returns the default value if the column is null
-    const std::string &getValueOfTypeKey() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getTypeKey() const noexcept;
-    ///Set the value of the column type_key
-    void setTypeKey(const std::string &pTypeKey) noexcept;
-    void setTypeKey(std::string &&pTypeKey) noexcept;
+    const std::shared_ptr<std::string> &getName() const noexcept;
+    ///Set the value of the column name
+    void setName(const std::string &pName) noexcept;
+    void setName(std::string &&pName) noexcept;
 
     /**  For column description  */
     ///Get the value of the column description, returns the default value if the column is null
@@ -196,15 +185,6 @@ class ContentTypes
     void setRequiresThumbnail(const bool &pRequiresThumbnail) noexcept;
     void setRequiresThumbnailToNull() noexcept;
 
-    /**  For column requires_duration  */
-    ///Get the value of the column requires_duration, returns the default value if the column is null
-    const bool &getValueOfRequiresDuration() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<bool> &getRequiresDuration() const noexcept;
-    ///Set the value of the column requires_duration
-    void setRequiresDuration(const bool &pRequiresDuration) noexcept;
-    void setRequiresDurationToNull() noexcept;
-
     /**  For column sort_order  */
     ///Get the value of the column sort_order, returns the default value if the column is null
     const int32_t &getValueOfSortOrder() const noexcept;
@@ -242,24 +222,6 @@ class ContentTypes
     void setMetadataSchema(std::string &&pMetadataSchema) noexcept;
     void setMetadataSchemaToNull() noexcept;
 
-    /**  For column created  */
-    ///Get the value of the column created, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreated() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreated() const noexcept;
-    ///Set the value of the column created
-    void setCreated(const ::trantor::Date &pCreated) noexcept;
-    void setCreatedToNull() noexcept;
-
-    /**  For column modified  */
-    ///Get the value of the column modified, returns the default value if the column is null
-    const ::trantor::Date &getValueOfModified() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getModified() const noexcept;
-    ///Set the value of the column modified
-    void setModified(const ::trantor::Date &pModified) noexcept;
-    void setModifiedToNull() noexcept;
-
     /**  For column created_by  */
     ///Get the value of the column created_by, returns the default value if the column is null
     const std::string &getValueOfCreatedBy() const noexcept;
@@ -269,6 +231,15 @@ class ContentTypes
     void setCreatedBy(const std::string &pCreatedBy) noexcept;
     void setCreatedBy(std::string &&pCreatedBy) noexcept;
     void setCreatedByToNull() noexcept;
+
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
+    void setCreatedAtToNull() noexcept;
 
     /**  For column modified_by  */
     ///Get the value of the column modified_by, returns the default value if the column is null
@@ -280,8 +251,17 @@ class ContentTypes
     void setModifiedBy(std::string &&pModifiedBy) noexcept;
     void setModifiedByToNull() noexcept;
 
+    /**  For column modified_at  */
+    ///Get the value of the column modified_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfModifiedAt() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<::trantor::Date> &getModifiedAt() const noexcept;
+    ///Set the value of the column modified_at
+    void setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept;
+    void setModifiedAtToNull() noexcept;
 
-    static size_t getColumnNumber() noexcept {  return 18;  }
+
+    static size_t getColumnNumber() noexcept {  return 16;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -304,23 +284,21 @@ class ContentTypes
     ///For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<std::string> id_;
-    std::shared_ptr<std::string> typeName_;
-    std::shared_ptr<std::string> typeKey_;
+    std::shared_ptr<std::string> name_;
     std::shared_ptr<std::string> description_;
     std::shared_ptr<std::string> iconClass_;
     std::shared_ptr<std::string> allowedExtensions_;
     std::shared_ptr<int64_t> maxFileSize_;
     std::shared_ptr<bool> requiresMedia_;
     std::shared_ptr<bool> requiresThumbnail_;
-    std::shared_ptr<bool> requiresDuration_;
     std::shared_ptr<int32_t> sortOrder_;
     std::shared_ptr<bool> isActive_;
     std::shared_ptr<bool> isSystem_;
     std::shared_ptr<std::string> metadataSchema_;
-    std::shared_ptr<::trantor::Date> created_;
-    std::shared_ptr<::trantor::Date> modified_;
     std::shared_ptr<std::string> createdBy_;
+    std::shared_ptr<::trantor::Date> createdAt_;
     std::shared_ptr<std::string> modifiedBy_;
+    std::shared_ptr<::trantor::Date> modifiedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -332,17 +310,17 @@ class ContentTypes
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[18]={ false };
+    bool dirtyFlag_[16]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
-        static const std::string sql="";
+        static const std::string sql="select * from " + tableName + " where id = $1";
         return sql;
     }
 
     static const std::string &sqlForDeletingByPrimaryKey()
     {
-        static const std::string sql="";
+        static const std::string sql="delete from " + tableName + " where id = $1";
         return sql;
     }
     std::string sqlForInserting(bool &needSelection) const
@@ -358,99 +336,86 @@ class ContentTypes
         }
         if(dirtyFlag_[1])
         {
-            sql += "type_name,";
+            sql += "name,";
             ++parametersCount;
         }
         if(dirtyFlag_[2])
-        {
-            sql += "type_key,";
-            ++parametersCount;
-        }
-        if(dirtyFlag_[3])
         {
             sql += "description,";
             ++parametersCount;
         }
         sql += "icon_class,";
         ++parametersCount;
-        if(!dirtyFlag_[4])
+        if(!dirtyFlag_[3])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[5])
+        if(dirtyFlag_[4])
         {
             sql += "allowed_extensions,";
             ++parametersCount;
         }
         sql += "max_file_size,";
         ++parametersCount;
-        if(!dirtyFlag_[6])
+        if(!dirtyFlag_[5])
         {
             needSelection=true;
         }
         sql += "requires_media,";
         ++parametersCount;
-        if(!dirtyFlag_[7])
+        if(!dirtyFlag_[6])
         {
             needSelection=true;
         }
         sql += "requires_thumbnail,";
         ++parametersCount;
-        if(!dirtyFlag_[8])
-        {
-            needSelection=true;
-        }
-        sql += "requires_duration,";
-        ++parametersCount;
-        if(!dirtyFlag_[9])
+        if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
         sql += "sort_order,";
         ++parametersCount;
-        if(!dirtyFlag_[10])
+        if(!dirtyFlag_[8])
         {
             needSelection=true;
         }
         sql += "is_active,";
         ++parametersCount;
-        if(!dirtyFlag_[11])
+        if(!dirtyFlag_[9])
         {
             needSelection=true;
         }
         sql += "is_system,";
         ++parametersCount;
-        if(!dirtyFlag_[12])
+        if(!dirtyFlag_[10])
         {
             needSelection=true;
         }
         sql += "metadata_schema,";
         ++parametersCount;
+        if(!dirtyFlag_[11])
+        {
+            needSelection=true;
+        }
+        if(dirtyFlag_[12])
+        {
+            sql += "created_by,";
+            ++parametersCount;
+        }
+        sql += "created_at,";
+        ++parametersCount;
         if(!dirtyFlag_[13])
         {
             needSelection=true;
         }
-        sql += "created,";
-        ++parametersCount;
-        if(!dirtyFlag_[14])
+        if(dirtyFlag_[14])
         {
-            needSelection=true;
+            sql += "modified_by,";
+            ++parametersCount;
         }
-        sql += "modified,";
+        sql += "modified_at,";
         ++parametersCount;
         if(!dirtyFlag_[15])
-        {
-            needSelection=true;
-        }
-        sql += "created_by,";
-        ++parametersCount;
-        if(!dirtyFlag_[16])
-        {
-            needSelection=true;
-        }
-        sql += "modified_by,";
-        ++parametersCount;
-        if(!dirtyFlag_[17])
         {
             needSelection=true;
         }
@@ -489,7 +454,16 @@ class ContentTypes
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[4])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[5])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
@@ -497,11 +471,6 @@ class ContentTypes
         else
         {
             sql +="default,";
-        }
-        if(dirtyFlag_[5])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
         }
         if(dirtyFlag_[6])
         {
@@ -562,10 +531,6 @@ class ContentTypes
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[13])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -580,29 +545,7 @@ class ContentTypes
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[15])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
-        }
-        if(dirtyFlag_[16])
-        {
-            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
-            sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
-        }
-        if(dirtyFlag_[17])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

@@ -8,7 +8,7 @@
 #include "Categories.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
-#include <codecvt>
+
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::Nos;
@@ -20,42 +20,42 @@ const std::string Categories::Cols::_notes = "\"notes\"";
 const std::string Categories::Cols::_description = "\"description\"";
 const std::string Categories::Cols::_parent_id = "\"parent_id\"";
 const std::string Categories::Cols::_path = "\"path\"";
-const std::string Categories::Cols::_is_active = "\"is_active\"";
-const std::string Categories::Cols::_published = "\"published\"";
+const std::string Categories::Cols::_status = "\"status\"";
 const std::string Categories::Cols::_article_count = "\"article_count\"";
+const std::string Categories::Cols::_view_count = "\"view_count\"";
 const std::string Categories::Cols::_access_level_id = "\"access_level_id\"";
+const std::string Categories::Cols::_access_level_name = "\"access_level_name\"";
 const std::string Categories::Cols::_metadesc = "\"metadesc\"";
 const std::string Categories::Cols::_metakey = "\"metakey\"";
 const std::string Categories::Cols::_metadata = "\"metadata\"";
-const std::string Categories::Cols::_created_user_id = "\"created_user_id\"";
-const std::string Categories::Cols::_created_time = "\"created_time\"";
-const std::string Categories::Cols::_modified_user_id = "\"modified_user_id\"";
-const std::string Categories::Cols::_modified_time = "\"modified_time\"";
-const std::string Categories::Cols::_hits = "\"hits\"";
+const std::string Categories::Cols::_created_by = "\"created_by\"";
+const std::string Categories::Cols::_created_at = "\"created_at\"";
+const std::string Categories::Cols::_modified_by = "\"modified_by\"";
+const std::string Categories::Cols::_modified_at = "\"modified_at\"";
 const std::string Categories::primaryKeyName = "id";
 const bool Categories::hasPrimaryKey = true;
 const std::string Categories::tableName = "\"categories\"";
 
 const std::vector<typename Categories::MetaData> Categories::metaData_={
 {"id","std::string","uuid",0,0,1,1},
-{"name","std::string","character varying",255,0,0,1},
-{"alias","std::string","character varying",400,0,0,1},
+{"name","std::string","character varying",100,0,0,1},
+{"alias","std::string","character varying",100,0,0,1},
 {"notes","std::string","character varying",255,0,0,1},
 {"description","std::string","text",0,0,0,0},
 {"parent_id","std::string","uuid",0,0,0,0},
 {"path","std::string","USER-DEFINED",0,0,0,0},
-{"is_active","bool","boolean",1,0,0,1},
-{"published","bool","boolean",1,0,0,1},
+{"status","int32_t","integer",4,0,0,1},
 {"article_count","int32_t","integer",4,0,0,1},
+{"view_count","int32_t","integer",4,0,0,1},
 {"access_level_id","std::string","uuid",0,0,0,0},
+{"access_level_name","std::string","character varying",50,0,0,1},
 {"metadesc","std::string","character varying",1024,0,0,1},
 {"metakey","std::string","character varying",1024,0,0,1},
 {"metadata","std::string","jsonb",0,0,0,0},
-{"created_user_id","std::string","uuid",0,0,0,1},
-{"created_time","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"modified_user_id","std::string","uuid",0,0,0,1},
-{"modified_time","::trantor::Date","timestamp without time zone",0,0,0,1},
-{"hits","int32_t","integer",4,0,0,1}
+{"created_by","std::string","uuid",0,0,0,0},
+{"created_at","::trantor::Date","timestamp with time zone",0,0,0,0},
+{"modified_by","std::string","uuid",0,0,0,0},
+{"modified_at","::trantor::Date","timestamp with time zone",0,0,0,0}
 };
 const std::string &Categories::getColumnName(size_t index) noexcept(false)
 {
@@ -94,21 +94,25 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         {
             path_=std::make_shared<std::string>(r["path"].as<std::string>());
         }
-        if(!r["is_active"].isNull())
+        if(!r["status"].isNull())
         {
-            isActive_=std::make_shared<bool>(r["is_active"].as<bool>());
-        }
-        if(!r["published"].isNull())
-        {
-            published_=std::make_shared<bool>(r["published"].as<bool>());
+            status_=std::make_shared<int32_t>(r["status"].as<int32_t>());
         }
         if(!r["article_count"].isNull())
         {
             articleCount_=std::make_shared<int32_t>(r["article_count"].as<int32_t>());
         }
+        if(!r["view_count"].isNull())
+        {
+            viewCount_=std::make_shared<int32_t>(r["view_count"].as<int32_t>());
+        }
         if(!r["access_level_id"].isNull())
         {
             accessLevelId_=std::make_shared<std::string>(r["access_level_id"].as<std::string>());
+        }
+        if(!r["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(r["access_level_name"].as<std::string>());
         }
         if(!r["metadesc"].isNull())
         {
@@ -122,13 +126,13 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         {
             metadata_=std::make_shared<std::string>(r["metadata"].as<std::string>());
         }
-        if(!r["created_user_id"].isNull())
+        if(!r["created_by"].isNull())
         {
-            createdUserId_=std::make_shared<std::string>(r["created_user_id"].as<std::string>());
+            createdBy_=std::make_shared<std::string>(r["created_by"].as<std::string>());
         }
-        if(!r["created_time"].isNull())
+        if(!r["created_at"].isNull())
         {
-            auto timeStr = r["created_time"].as<std::string>();
+            auto timeStr = r["created_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -145,16 +149,16 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["modified_user_id"].isNull())
+        if(!r["modified_by"].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(r["modified_user_id"].as<std::string>());
+            modifiedBy_=std::make_shared<std::string>(r["modified_by"].as<std::string>());
         }
-        if(!r["modified_time"].isNull())
+        if(!r["modified_at"].isNull())
         {
-            auto timeStr = r["modified_time"].as<std::string>();
+            auto timeStr = r["modified_at"].as<std::string>();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -171,12 +175,8 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
-        }
-        if(!r["hits"].isNull())
-        {
-            hits_=std::make_shared<int32_t>(r["hits"].as<int32_t>());
         }
     }
     else
@@ -226,17 +226,17 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 7;
         if(!r[index].isNull())
         {
-            isActive_=std::make_shared<bool>(r[index].as<bool>());
+            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 8;
         if(!r[index].isNull())
         {
-            published_=std::make_shared<bool>(r[index].as<bool>());
+            articleCount_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 9;
         if(!r[index].isNull())
         {
-            articleCount_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            viewCount_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 10;
         if(!r[index].isNull())
@@ -246,52 +246,57 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 11;
         if(!r[index].isNull())
         {
-            metadesc_=std::make_shared<std::string>(r[index].as<std::string>());
+            accessLevelName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 12;
         if(!r[index].isNull())
         {
-            metakey_=std::make_shared<std::string>(r[index].as<std::string>());
+            metadesc_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 13;
         if(!r[index].isNull())
         {
-            metadata_=std::make_shared<std::string>(r[index].as<std::string>());
+            metakey_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 14;
         if(!r[index].isNull())
         {
-            createdUserId_=std::make_shared<std::string>(r[index].as<std::string>());
+            metadata_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 15;
         if(!r[index].isNull())
         {
-            auto timeStr = r[index].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 16;
         if(!r[index].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(r[index].as<std::string>());
+            auto timeStr = r[index].as<std::string>();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
         }
         index = offset + 17;
+        if(!r[index].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(r[index].as<std::string>());
+        }
+        index = offset + 18;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -311,13 +316,8 @@ Categories::Categories(const Row &r, const ssize_t indexOffset) noexcept
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
-        }
-        index = offset + 18;
-        if(!r[index].isNull())
-        {
-            hits_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
     }
 
@@ -391,7 +391,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            isActive_=std::make_shared<bool>(pJson[pMasqueradingVector[7]].asBool());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[7]].asInt64());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -399,7 +399,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            published_=std::make_shared<bool>(pJson[pMasqueradingVector[8]].asBool());
+            articleCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -407,7 +407,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            articleCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
+            viewCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -423,7 +423,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
+            accessLevelName_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -431,7 +431,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[12] = true;
         if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
+            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
         }
     }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
@@ -439,7 +439,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -447,7 +447,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            createdUserId_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
+            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -455,25 +455,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[15]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -481,15 +463,7 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
-        }
-    }
-    if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
-    {
-        dirtyFlag_[17] = true;
-        if(!pJson[pMasqueradingVector[17]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[17]].asString();
+            auto timeStr = pJson[pMasqueradingVector[16]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -506,8 +480,16 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
+        }
+    }
+    if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
+    {
+        dirtyFlag_[17] = true;
+        if(!pJson[pMasqueradingVector[17]].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -515,7 +497,25 @@ Categories::Categories(const Json::Value &pJson, const std::vector<std::string> 
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[18]].asInt64());
+            auto timeStr = pJson[pMasqueradingVector[18]].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
         }
     }
 }
@@ -578,28 +578,28 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
             path_=std::make_shared<std::string>(pJson["path"].asString());
         }
     }
-    if(pJson.isMember("is_active"))
+    if(pJson.isMember("status"))
     {
         dirtyFlag_[7]=true;
-        if(!pJson["is_active"].isNull())
+        if(!pJson["status"].isNull())
         {
-            isActive_=std::make_shared<bool>(pJson["is_active"].asBool());
-        }
-    }
-    if(pJson.isMember("published"))
-    {
-        dirtyFlag_[8]=true;
-        if(!pJson["published"].isNull())
-        {
-            published_=std::make_shared<bool>(pJson["published"].asBool());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("article_count"))
     {
-        dirtyFlag_[9]=true;
+        dirtyFlag_[8]=true;
         if(!pJson["article_count"].isNull())
         {
             articleCount_=std::make_shared<int32_t>((int32_t)pJson["article_count"].asInt64());
+        }
+    }
+    if(pJson.isMember("view_count"))
+    {
+        dirtyFlag_[9]=true;
+        if(!pJson["view_count"].isNull())
+        {
+            viewCount_=std::make_shared<int32_t>((int32_t)pJson["view_count"].asInt64());
         }
     }
     if(pJson.isMember("access_level_id"))
@@ -610,9 +610,17 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
             accessLevelId_=std::make_shared<std::string>(pJson["access_level_id"].asString());
         }
     }
-    if(pJson.isMember("metadesc"))
+    if(pJson.isMember("access_level_name"))
     {
         dirtyFlag_[11]=true;
+        if(!pJson["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(pJson["access_level_name"].asString());
+        }
+    }
+    if(pJson.isMember("metadesc"))
+    {
+        dirtyFlag_[12]=true;
         if(!pJson["metadesc"].isNull())
         {
             metadesc_=std::make_shared<std::string>(pJson["metadesc"].asString());
@@ -620,7 +628,7 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metakey"))
     {
-        dirtyFlag_[12]=true;
+        dirtyFlag_[13]=true;
         if(!pJson["metakey"].isNull())
         {
             metakey_=std::make_shared<std::string>(pJson["metakey"].asString());
@@ -628,60 +636,26 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadata"))
     {
-        dirtyFlag_[13]=true;
+        dirtyFlag_[14]=true;
         if(!pJson["metadata"].isNull())
         {
             metadata_=std::make_shared<std::string>(pJson["metadata"].asString());
         }
     }
-    if(pJson.isMember("created_user_id"))
-    {
-        dirtyFlag_[14]=true;
-        if(!pJson["created_user_id"].isNull())
-        {
-            createdUserId_=std::make_shared<std::string>(pJson["created_user_id"].asString());
-        }
-    }
-    if(pJson.isMember("created_time"))
+    if(pJson.isMember("created_by"))
     {
         dirtyFlag_[15]=true;
-        if(!pJson["created_time"].isNull())
+        if(!pJson["created_by"].isNull())
         {
-            auto timeStr = pJson["created_time"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
         }
     }
-    if(pJson.isMember("modified_user_id"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[16]=true;
-        if(!pJson["modified_user_id"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(pJson["modified_user_id"].asString());
-        }
-    }
-    if(pJson.isMember("modified_time"))
-    {
-        dirtyFlag_[17]=true;
-        if(!pJson["modified_time"].isNull())
-        {
-            auto timeStr = pJson["modified_time"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -698,16 +672,42 @@ Categories::Categories(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("modified_by"))
+    {
+        dirtyFlag_[17]=true;
+        if(!pJson["modified_by"].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
+        }
+    }
+    if(pJson.isMember("modified_at"))
     {
         dirtyFlag_[18]=true;
-        if(!pJson["hits"].isNull())
+        if(!pJson["modified_at"].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson["hits"].asInt64());
+            auto timeStr = pJson["modified_at"].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
         }
     }
 }
@@ -780,7 +780,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            isActive_=std::make_shared<bool>(pJson[pMasqueradingVector[7]].asBool());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[7]].asInt64());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -788,7 +788,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            published_=std::make_shared<bool>(pJson[pMasqueradingVector[8]].asBool());
+            articleCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -796,7 +796,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            articleCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
+            viewCount_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -812,7 +812,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
+            accessLevelName_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -820,7 +820,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[12] = true;
         if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
+            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
         }
     }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
@@ -828,7 +828,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -836,7 +836,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            createdUserId_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
+            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -844,25 +844,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[15]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -870,15 +852,7 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
-        }
-    }
-    if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
-    {
-        dirtyFlag_[17] = true;
-        if(!pJson[pMasqueradingVector[17]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[17]].asString();
+            auto timeStr = pJson[pMasqueradingVector[16]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -895,8 +869,16 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
+        }
+    }
+    if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
+    {
+        dirtyFlag_[17] = true;
+        if(!pJson[pMasqueradingVector[17]].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -904,7 +886,25 @@ void Categories::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[18]].asInt64());
+            auto timeStr = pJson[pMasqueradingVector[18]].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
         }
     }
 }
@@ -966,28 +966,28 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
             path_=std::make_shared<std::string>(pJson["path"].asString());
         }
     }
-    if(pJson.isMember("is_active"))
+    if(pJson.isMember("status"))
     {
         dirtyFlag_[7] = true;
-        if(!pJson["is_active"].isNull())
+        if(!pJson["status"].isNull())
         {
-            isActive_=std::make_shared<bool>(pJson["is_active"].asBool());
-        }
-    }
-    if(pJson.isMember("published"))
-    {
-        dirtyFlag_[8] = true;
-        if(!pJson["published"].isNull())
-        {
-            published_=std::make_shared<bool>(pJson["published"].asBool());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("article_count"))
     {
-        dirtyFlag_[9] = true;
+        dirtyFlag_[8] = true;
         if(!pJson["article_count"].isNull())
         {
             articleCount_=std::make_shared<int32_t>((int32_t)pJson["article_count"].asInt64());
+        }
+    }
+    if(pJson.isMember("view_count"))
+    {
+        dirtyFlag_[9] = true;
+        if(!pJson["view_count"].isNull())
+        {
+            viewCount_=std::make_shared<int32_t>((int32_t)pJson["view_count"].asInt64());
         }
     }
     if(pJson.isMember("access_level_id"))
@@ -998,9 +998,17 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
             accessLevelId_=std::make_shared<std::string>(pJson["access_level_id"].asString());
         }
     }
-    if(pJson.isMember("metadesc"))
+    if(pJson.isMember("access_level_name"))
     {
         dirtyFlag_[11] = true;
+        if(!pJson["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(pJson["access_level_name"].asString());
+        }
+    }
+    if(pJson.isMember("metadesc"))
+    {
+        dirtyFlag_[12] = true;
         if(!pJson["metadesc"].isNull())
         {
             metadesc_=std::make_shared<std::string>(pJson["metadesc"].asString());
@@ -1008,7 +1016,7 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metakey"))
     {
-        dirtyFlag_[12] = true;
+        dirtyFlag_[13] = true;
         if(!pJson["metakey"].isNull())
         {
             metakey_=std::make_shared<std::string>(pJson["metakey"].asString());
@@ -1016,60 +1024,26 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadata"))
     {
-        dirtyFlag_[13] = true;
+        dirtyFlag_[14] = true;
         if(!pJson["metadata"].isNull())
         {
             metadata_=std::make_shared<std::string>(pJson["metadata"].asString());
         }
     }
-    if(pJson.isMember("created_user_id"))
-    {
-        dirtyFlag_[14] = true;
-        if(!pJson["created_user_id"].isNull())
-        {
-            createdUserId_=std::make_shared<std::string>(pJson["created_user_id"].asString());
-        }
-    }
-    if(pJson.isMember("created_time"))
+    if(pJson.isMember("created_by"))
     {
         dirtyFlag_[15] = true;
-        if(!pJson["created_time"].isNull())
+        if(!pJson["created_by"].isNull())
         {
-            auto timeStr = pJson["created_time"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                createdTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
         }
     }
-    if(pJson.isMember("modified_user_id"))
+    if(pJson.isMember("created_at"))
     {
         dirtyFlag_[16] = true;
-        if(!pJson["modified_user_id"].isNull())
+        if(!pJson["created_at"].isNull())
         {
-            modifiedUserId_=std::make_shared<std::string>(pJson["modified_user_id"].asString());
-        }
-    }
-    if(pJson.isMember("modified_time"))
-    {
-        dirtyFlag_[17] = true;
-        if(!pJson["modified_time"].isNull())
-        {
-            auto timeStr = pJson["modified_time"].asString();
+            auto timeStr = pJson["created_at"].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -1086,16 +1060,42 @@ void Categories::updateByJson(const Json::Value &pJson) noexcept(false)
                     }
                     decimalNum = (size_t)atol(decimals.c_str());
                 }
-                modifiedTime_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+                createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("modified_by"))
+    {
+        dirtyFlag_[17] = true;
+        if(!pJson["modified_by"].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
+        }
+    }
+    if(pJson.isMember("modified_at"))
     {
         dirtyFlag_[18] = true;
-        if(!pJson["hits"].isNull())
+        if(!pJson["modified_at"].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson["hits"].asInt64());
+            auto timeStr = pJson["modified_at"].asString();
+            struct tm stm;
+            memset(&stm,0,sizeof(stm));
+            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
+            time_t t = mktime(&stm);
+            size_t decimalNum = 0;
+            if(p)
+            {
+                if(*p=='.')
+                {
+                    std::string decimals(p+1,&timeStr[timeStr.length()]);
+                    while(decimals.length()<6)
+                    {
+                        decimals += "0";
+                    }
+                    decimalNum = (size_t)atol(decimals.c_str());
+                }
+                modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
+            }
         }
     }
 }
@@ -1274,38 +1274,21 @@ void Categories::setPathToNull() noexcept
     dirtyFlag_[6] = true;
 }
 
-const bool &Categories::getValueOfIsActive() const noexcept
+const int32_t &Categories::getValueOfStatus() const noexcept
 {
-    static const bool defaultValue = bool();
-    if(isActive_)
-        return *isActive_;
+    static const int32_t defaultValue = int32_t();
+    if(status_)
+        return *status_;
     return defaultValue;
 }
-const std::shared_ptr<bool> &Categories::getIsActive() const noexcept
+const std::shared_ptr<int32_t> &Categories::getStatus() const noexcept
 {
-    return isActive_;
+    return status_;
 }
-void Categories::setIsActive(const bool &pIsActive) noexcept
+void Categories::setStatus(const int32_t &pStatus) noexcept
 {
-    isActive_ = std::make_shared<bool>(pIsActive);
+    status_ = std::make_shared<int32_t>(pStatus);
     dirtyFlag_[7] = true;
-}
-
-const bool &Categories::getValueOfPublished() const noexcept
-{
-    static const bool defaultValue = bool();
-    if(published_)
-        return *published_;
-    return defaultValue;
-}
-const std::shared_ptr<bool> &Categories::getPublished() const noexcept
-{
-    return published_;
-}
-void Categories::setPublished(const bool &pPublished) noexcept
-{
-    published_ = std::make_shared<bool>(pPublished);
-    dirtyFlag_[8] = true;
 }
 
 const int32_t &Categories::getValueOfArticleCount() const noexcept
@@ -1322,6 +1305,23 @@ const std::shared_ptr<int32_t> &Categories::getArticleCount() const noexcept
 void Categories::setArticleCount(const int32_t &pArticleCount) noexcept
 {
     articleCount_ = std::make_shared<int32_t>(pArticleCount);
+    dirtyFlag_[8] = true;
+}
+
+const int32_t &Categories::getValueOfViewCount() const noexcept
+{
+    static const int32_t defaultValue = int32_t();
+    if(viewCount_)
+        return *viewCount_;
+    return defaultValue;
+}
+const std::shared_ptr<int32_t> &Categories::getViewCount() const noexcept
+{
+    return viewCount_;
+}
+void Categories::setViewCount(const int32_t &pViewCount) noexcept
+{
+    viewCount_ = std::make_shared<int32_t>(pViewCount);
     dirtyFlag_[9] = true;
 }
 
@@ -1352,6 +1352,28 @@ void Categories::setAccessLevelIdToNull() noexcept
     dirtyFlag_[10] = true;
 }
 
+const std::string &Categories::getValueOfAccessLevelName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(accessLevelName_)
+        return *accessLevelName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &Categories::getAccessLevelName() const noexcept
+{
+    return accessLevelName_;
+}
+void Categories::setAccessLevelName(const std::string &pAccessLevelName) noexcept
+{
+    accessLevelName_ = std::make_shared<std::string>(pAccessLevelName);
+    dirtyFlag_[11] = true;
+}
+void Categories::setAccessLevelName(std::string &&pAccessLevelName) noexcept
+{
+    accessLevelName_ = std::make_shared<std::string>(std::move(pAccessLevelName));
+    dirtyFlag_[11] = true;
+}
+
 const std::string &Categories::getValueOfMetadesc() const noexcept
 {
     static const std::string defaultValue = std::string();
@@ -1366,12 +1388,12 @@ const std::shared_ptr<std::string> &Categories::getMetadesc() const noexcept
 void Categories::setMetadesc(const std::string &pMetadesc) noexcept
 {
     metadesc_ = std::make_shared<std::string>(pMetadesc);
-    dirtyFlag_[11] = true;
+    dirtyFlag_[12] = true;
 }
 void Categories::setMetadesc(std::string &&pMetadesc) noexcept
 {
     metadesc_ = std::make_shared<std::string>(std::move(pMetadesc));
-    dirtyFlag_[11] = true;
+    dirtyFlag_[12] = true;
 }
 
 const std::string &Categories::getValueOfMetakey() const noexcept
@@ -1388,12 +1410,12 @@ const std::shared_ptr<std::string> &Categories::getMetakey() const noexcept
 void Categories::setMetakey(const std::string &pMetakey) noexcept
 {
     metakey_ = std::make_shared<std::string>(pMetakey);
-    dirtyFlag_[12] = true;
+    dirtyFlag_[13] = true;
 }
 void Categories::setMetakey(std::string &&pMetakey) noexcept
 {
     metakey_ = std::make_shared<std::string>(std::move(pMetakey));
-    dirtyFlag_[12] = true;
+    dirtyFlag_[13] = true;
 }
 
 const std::string &Categories::getValueOfMetadata() const noexcept
@@ -1410,111 +1432,114 @@ const std::shared_ptr<std::string> &Categories::getMetadata() const noexcept
 void Categories::setMetadata(const std::string &pMetadata) noexcept
 {
     metadata_ = std::make_shared<std::string>(pMetadata);
-    dirtyFlag_[13] = true;
+    dirtyFlag_[14] = true;
 }
 void Categories::setMetadata(std::string &&pMetadata) noexcept
 {
     metadata_ = std::make_shared<std::string>(std::move(pMetadata));
-    dirtyFlag_[13] = true;
+    dirtyFlag_[14] = true;
 }
 void Categories::setMetadataToNull() noexcept
 {
     metadata_.reset();
-    dirtyFlag_[13] = true;
+    dirtyFlag_[14] = true;
 }
 
-const std::string &Categories::getValueOfCreatedUserId() const noexcept
+const std::string &Categories::getValueOfCreatedBy() const noexcept
 {
     static const std::string defaultValue = std::string();
-    if(createdUserId_)
-        return *createdUserId_;
+    if(createdBy_)
+        return *createdBy_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getCreatedUserId() const noexcept
+const std::shared_ptr<std::string> &Categories::getCreatedBy() const noexcept
 {
-    return createdUserId_;
+    return createdBy_;
 }
-void Categories::setCreatedUserId(const std::string &pCreatedUserId) noexcept
+void Categories::setCreatedBy(const std::string &pCreatedBy) noexcept
 {
-    createdUserId_ = std::make_shared<std::string>(pCreatedUserId);
-    dirtyFlag_[14] = true;
+    createdBy_ = std::make_shared<std::string>(pCreatedBy);
+    dirtyFlag_[15] = true;
 }
-void Categories::setCreatedUserId(std::string &&pCreatedUserId) noexcept
+void Categories::setCreatedBy(std::string &&pCreatedBy) noexcept
 {
-    createdUserId_ = std::make_shared<std::string>(std::move(pCreatedUserId));
-    dirtyFlag_[14] = true;
+    createdBy_ = std::make_shared<std::string>(std::move(pCreatedBy));
+    dirtyFlag_[15] = true;
 }
-
-const ::trantor::Date &Categories::getValueOfCreatedTime() const noexcept
+void Categories::setCreatedByToNull() noexcept
 {
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdTime_)
-        return *createdTime_;
-    return defaultValue;
-}
-const std::shared_ptr<::trantor::Date> &Categories::getCreatedTime() const noexcept
-{
-    return createdTime_;
-}
-void Categories::setCreatedTime(const ::trantor::Date &pCreatedTime) noexcept
-{
-    createdTime_ = std::make_shared<::trantor::Date>(pCreatedTime);
+    createdBy_.reset();
     dirtyFlag_[15] = true;
 }
 
-const std::string &Categories::getValueOfModifiedUserId() const noexcept
+const ::trantor::Date &Categories::getValueOfCreatedAt() const noexcept
 {
-    static const std::string defaultValue = std::string();
-    if(modifiedUserId_)
-        return *modifiedUserId_;
+    static const ::trantor::Date defaultValue = ::trantor::Date();
+    if(createdAt_)
+        return *createdAt_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &Categories::getModifiedUserId() const noexcept
+const std::shared_ptr<::trantor::Date> &Categories::getCreatedAt() const noexcept
 {
-    return modifiedUserId_;
+    return createdAt_;
 }
-void Categories::setModifiedUserId(const std::string &pModifiedUserId) noexcept
+void Categories::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
-    modifiedUserId_ = std::make_shared<std::string>(pModifiedUserId);
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
     dirtyFlag_[16] = true;
 }
-void Categories::setModifiedUserId(std::string &&pModifiedUserId) noexcept
+void Categories::setCreatedAtToNull() noexcept
 {
-    modifiedUserId_ = std::make_shared<std::string>(std::move(pModifiedUserId));
+    createdAt_.reset();
     dirtyFlag_[16] = true;
 }
 
-const ::trantor::Date &Categories::getValueOfModifiedTime() const noexcept
+const std::string &Categories::getValueOfModifiedBy() const noexcept
 {
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(modifiedTime_)
-        return *modifiedTime_;
+    static const std::string defaultValue = std::string();
+    if(modifiedBy_)
+        return *modifiedBy_;
     return defaultValue;
 }
-const std::shared_ptr<::trantor::Date> &Categories::getModifiedTime() const noexcept
+const std::shared_ptr<std::string> &Categories::getModifiedBy() const noexcept
 {
-    return modifiedTime_;
+    return modifiedBy_;
 }
-void Categories::setModifiedTime(const ::trantor::Date &pModifiedTime) noexcept
+void Categories::setModifiedBy(const std::string &pModifiedBy) noexcept
 {
-    modifiedTime_ = std::make_shared<::trantor::Date>(pModifiedTime);
+    modifiedBy_ = std::make_shared<std::string>(pModifiedBy);
+    dirtyFlag_[17] = true;
+}
+void Categories::setModifiedBy(std::string &&pModifiedBy) noexcept
+{
+    modifiedBy_ = std::make_shared<std::string>(std::move(pModifiedBy));
+    dirtyFlag_[17] = true;
+}
+void Categories::setModifiedByToNull() noexcept
+{
+    modifiedBy_.reset();
     dirtyFlag_[17] = true;
 }
 
-const int32_t &Categories::getValueOfHits() const noexcept
+const ::trantor::Date &Categories::getValueOfModifiedAt() const noexcept
 {
-    static const int32_t defaultValue = int32_t();
-    if(hits_)
-        return *hits_;
+    static const ::trantor::Date defaultValue = ::trantor::Date();
+    if(modifiedAt_)
+        return *modifiedAt_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &Categories::getHits() const noexcept
+const std::shared_ptr<::trantor::Date> &Categories::getModifiedAt() const noexcept
 {
-    return hits_;
+    return modifiedAt_;
 }
-void Categories::setHits(const int32_t &pHits) noexcept
+void Categories::setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept
 {
-    hits_ = std::make_shared<int32_t>(pHits);
+    modifiedAt_ = std::make_shared<::trantor::Date>(pModifiedAt);
+    dirtyFlag_[18] = true;
+}
+void Categories::setModifiedAtToNull() noexcept
+{
+    modifiedAt_.reset();
     dirtyFlag_[18] = true;
 }
 
@@ -1532,18 +1557,18 @@ const std::vector<std::string> &Categories::insertColumns() noexcept
         "description",
         "parent_id",
         "path",
-        "is_active",
-        "published",
+        "status",
         "article_count",
+        "view_count",
         "access_level_id",
+        "access_level_name",
         "metadesc",
         "metakey",
         "metadata",
-        "created_user_id",
-        "created_time",
-        "modified_user_id",
-        "modified_time",
-        "hits"
+        "created_by",
+        "created_at",
+        "modified_by",
+        "modified_at"
     };
     return inCols;
 }
@@ -1629,9 +1654,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getIsActive())
+        if(getStatus())
         {
-            binder << getValueOfIsActive();
+            binder << getValueOfStatus();
         }
         else
         {
@@ -1640,9 +1665,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getPublished())
+        if(getArticleCount())
         {
-            binder << getValueOfPublished();
+            binder << getValueOfArticleCount();
         }
         else
         {
@@ -1651,9 +1676,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getArticleCount())
+        if(getViewCount())
         {
-            binder << getValueOfArticleCount();
+            binder << getValueOfViewCount();
         }
         else
         {
@@ -1673,6 +1698,17 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[11])
     {
+        if(getAccessLevelName())
+        {
+            binder << getValueOfAccessLevelName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[12])
+    {
         if(getMetadesc())
         {
             binder << getValueOfMetadesc();
@@ -1682,7 +1718,7 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[13])
     {
         if(getMetakey())
         {
@@ -1693,7 +1729,7 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[14])
     {
         if(getMetadata())
         {
@@ -1704,22 +1740,11 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
-    {
-        if(getCreatedUserId())
-        {
-            binder << getValueOfCreatedUserId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
     if(dirtyFlag_[15])
     {
-        if(getCreatedTime())
+        if(getCreatedBy())
         {
-            binder << getValueOfCreatedTime();
+            binder << getValueOfCreatedBy();
         }
         else
         {
@@ -1728,9 +1753,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[16])
     {
-        if(getModifiedUserId())
+        if(getCreatedAt())
         {
-            binder << getValueOfModifiedUserId();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -1739,9 +1764,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[17])
     {
-        if(getModifiedTime())
+        if(getModifiedBy())
         {
-            binder << getValueOfModifiedTime();
+            binder << getValueOfModifiedBy();
         }
         else
         {
@@ -1750,9 +1775,9 @@ void Categories::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[18])
     {
-        if(getHits())
+        if(getModifiedAt())
         {
-            binder << getValueOfHits();
+            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -1924,9 +1949,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getIsActive())
+        if(getStatus())
         {
-            binder << getValueOfIsActive();
+            binder << getValueOfStatus();
         }
         else
         {
@@ -1935,9 +1960,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[8])
     {
-        if(getPublished())
+        if(getArticleCount())
         {
-            binder << getValueOfPublished();
+            binder << getValueOfArticleCount();
         }
         else
         {
@@ -1946,9 +1971,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[9])
     {
-        if(getArticleCount())
+        if(getViewCount())
         {
-            binder << getValueOfArticleCount();
+            binder << getValueOfViewCount();
         }
         else
         {
@@ -1968,6 +1993,17 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[11])
     {
+        if(getAccessLevelName())
+        {
+            binder << getValueOfAccessLevelName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[12])
+    {
         if(getMetadesc())
         {
             binder << getValueOfMetadesc();
@@ -1977,7 +2013,7 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[13])
     {
         if(getMetakey())
         {
@@ -1988,7 +2024,7 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[14])
     {
         if(getMetadata())
         {
@@ -1999,22 +2035,11 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
-    {
-        if(getCreatedUserId())
-        {
-            binder << getValueOfCreatedUserId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
     if(dirtyFlag_[15])
     {
-        if(getCreatedTime())
+        if(getCreatedBy())
         {
-            binder << getValueOfCreatedTime();
+            binder << getValueOfCreatedBy();
         }
         else
         {
@@ -2023,9 +2048,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[16])
     {
-        if(getModifiedUserId())
+        if(getCreatedAt())
         {
-            binder << getValueOfModifiedUserId();
+            binder << getValueOfCreatedAt();
         }
         else
         {
@@ -2034,9 +2059,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[17])
     {
-        if(getModifiedTime())
+        if(getModifiedBy())
         {
-            binder << getValueOfModifiedTime();
+            binder << getValueOfModifiedBy();
         }
         else
         {
@@ -2045,9 +2070,9 @@ void Categories::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[18])
     {
-        if(getHits())
+        if(getModifiedAt())
         {
-            binder << getValueOfHits();
+            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -2114,21 +2139,13 @@ Json::Value Categories::toJson() const
     {
         ret["path"]=Json::Value();
     }
-    if(getIsActive())
+    if(getStatus())
     {
-        ret["is_active"]=getValueOfIsActive();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["is_active"]=Json::Value();
-    }
-    if(getPublished())
-    {
-        ret["published"]=getValueOfPublished();
-    }
-    else
-    {
-        ret["published"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getArticleCount())
     {
@@ -2138,6 +2155,14 @@ Json::Value Categories::toJson() const
     {
         ret["article_count"]=Json::Value();
     }
+    if(getViewCount())
+    {
+        ret["view_count"]=getValueOfViewCount();
+    }
+    else
+    {
+        ret["view_count"]=Json::Value();
+    }
     if(getAccessLevelId())
     {
         ret["access_level_id"]=getValueOfAccessLevelId();
@@ -2145,6 +2170,14 @@ Json::Value Categories::toJson() const
     else
     {
         ret["access_level_id"]=Json::Value();
+    }
+    if(getAccessLevelName())
+    {
+        ret["access_level_name"]=getValueOfAccessLevelName();
+    }
+    else
+    {
+        ret["access_level_name"]=Json::Value();
     }
     if(getMetadesc())
     {
@@ -2170,45 +2203,37 @@ Json::Value Categories::toJson() const
     {
         ret["metadata"]=Json::Value();
     }
-    if(getCreatedUserId())
+    if(getCreatedBy())
     {
-        ret["created_user_id"]=getValueOfCreatedUserId();
+        ret["created_by"]=getValueOfCreatedBy();
     }
     else
     {
-        ret["created_user_id"]=Json::Value();
+        ret["created_by"]=Json::Value();
     }
-    if(getCreatedTime())
+    if(getCreatedAt())
     {
-        ret["created_time"]=getCreatedTime()->toDbStringLocal();
-    }
-    else
-    {
-        ret["created_time"]=Json::Value();
-    }
-    if(getModifiedUserId())
-    {
-        ret["modified_user_id"]=getValueOfModifiedUserId();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["modified_user_id"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getModifiedTime())
+    if(getModifiedBy())
     {
-        ret["modified_time"]=getModifiedTime()->toDbStringLocal();
-    }
-    else
-    {
-        ret["modified_time"]=Json::Value();
-    }
-    if(getHits())
-    {
-        ret["hits"]=getValueOfHits();
+        ret["modified_by"]=getValueOfModifiedBy();
     }
     else
     {
-        ret["hits"]=Json::Value();
+        ret["modified_by"]=Json::Value();
+    }
+    if(getModifiedAt())
+    {
+        ret["modified_at"]=getModifiedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["modified_at"]=Json::Value();
     }
     return ret;
 }
@@ -2303,9 +2328,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[7].empty())
         {
-            if(getIsActive())
+            if(getStatus())
             {
-                ret[pMasqueradingVector[7]]=getValueOfIsActive();
+                ret[pMasqueradingVector[7]]=getValueOfStatus();
             }
             else
             {
@@ -2314,9 +2339,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getPublished())
+            if(getArticleCount())
             {
-                ret[pMasqueradingVector[8]]=getValueOfPublished();
+                ret[pMasqueradingVector[8]]=getValueOfArticleCount();
             }
             else
             {
@@ -2325,9 +2350,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getArticleCount())
+            if(getViewCount())
             {
-                ret[pMasqueradingVector[9]]=getValueOfArticleCount();
+                ret[pMasqueradingVector[9]]=getValueOfViewCount();
             }
             else
             {
@@ -2347,9 +2372,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[11].empty())
         {
-            if(getMetadesc())
+            if(getAccessLevelName())
             {
-                ret[pMasqueradingVector[11]]=getValueOfMetadesc();
+                ret[pMasqueradingVector[11]]=getValueOfAccessLevelName();
             }
             else
             {
@@ -2358,9 +2383,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[12].empty())
         {
-            if(getMetakey())
+            if(getMetadesc())
             {
-                ret[pMasqueradingVector[12]]=getValueOfMetakey();
+                ret[pMasqueradingVector[12]]=getValueOfMetadesc();
             }
             else
             {
@@ -2369,9 +2394,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[13].empty())
         {
-            if(getMetadata())
+            if(getMetakey())
             {
-                ret[pMasqueradingVector[13]]=getValueOfMetadata();
+                ret[pMasqueradingVector[13]]=getValueOfMetakey();
             }
             else
             {
@@ -2380,9 +2405,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[14].empty())
         {
-            if(getCreatedUserId())
+            if(getMetadata())
             {
-                ret[pMasqueradingVector[14]]=getValueOfCreatedUserId();
+                ret[pMasqueradingVector[14]]=getValueOfMetadata();
             }
             else
             {
@@ -2391,9 +2416,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[15].empty())
         {
-            if(getCreatedTime())
+            if(getCreatedBy())
             {
-                ret[pMasqueradingVector[15]]=getCreatedTime()->toDbStringLocal();
+                ret[pMasqueradingVector[15]]=getValueOfCreatedBy();
             }
             else
             {
@@ -2402,9 +2427,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[16].empty())
         {
-            if(getModifiedUserId())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[16]]=getValueOfModifiedUserId();
+                ret[pMasqueradingVector[16]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -2413,9 +2438,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[17].empty())
         {
-            if(getModifiedTime())
+            if(getModifiedBy())
             {
-                ret[pMasqueradingVector[17]]=getModifiedTime()->toDbStringLocal();
+                ret[pMasqueradingVector[17]]=getValueOfModifiedBy();
             }
             else
             {
@@ -2424,9 +2449,9 @@ Json::Value Categories::toMasqueradedJson(
         }
         if(!pMasqueradingVector[18].empty())
         {
-            if(getHits())
+            if(getModifiedAt())
             {
-                ret[pMasqueradingVector[18]]=getValueOfHits();
+                ret[pMasqueradingVector[18]]=getModifiedAt()->toDbStringLocal();
             }
             else
             {
@@ -2492,21 +2517,13 @@ Json::Value Categories::toMasqueradedJson(
     {
         ret["path"]=Json::Value();
     }
-    if(getIsActive())
+    if(getStatus())
     {
-        ret["is_active"]=getValueOfIsActive();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["is_active"]=Json::Value();
-    }
-    if(getPublished())
-    {
-        ret["published"]=getValueOfPublished();
-    }
-    else
-    {
-        ret["published"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getArticleCount())
     {
@@ -2516,6 +2533,14 @@ Json::Value Categories::toMasqueradedJson(
     {
         ret["article_count"]=Json::Value();
     }
+    if(getViewCount())
+    {
+        ret["view_count"]=getValueOfViewCount();
+    }
+    else
+    {
+        ret["view_count"]=Json::Value();
+    }
     if(getAccessLevelId())
     {
         ret["access_level_id"]=getValueOfAccessLevelId();
@@ -2523,6 +2548,14 @@ Json::Value Categories::toMasqueradedJson(
     else
     {
         ret["access_level_id"]=Json::Value();
+    }
+    if(getAccessLevelName())
+    {
+        ret["access_level_name"]=getValueOfAccessLevelName();
+    }
+    else
+    {
+        ret["access_level_name"]=Json::Value();
     }
     if(getMetadesc())
     {
@@ -2548,45 +2581,37 @@ Json::Value Categories::toMasqueradedJson(
     {
         ret["metadata"]=Json::Value();
     }
-    if(getCreatedUserId())
+    if(getCreatedBy())
     {
-        ret["created_user_id"]=getValueOfCreatedUserId();
+        ret["created_by"]=getValueOfCreatedBy();
     }
     else
     {
-        ret["created_user_id"]=Json::Value();
+        ret["created_by"]=Json::Value();
     }
-    if(getCreatedTime())
+    if(getCreatedAt())
     {
-        ret["created_time"]=getCreatedTime()->toDbStringLocal();
-    }
-    else
-    {
-        ret["created_time"]=Json::Value();
-    }
-    if(getModifiedUserId())
-    {
-        ret["modified_user_id"]=getValueOfModifiedUserId();
+        ret["created_at"]=getCreatedAt()->toDbStringLocal();
     }
     else
     {
-        ret["modified_user_id"]=Json::Value();
+        ret["created_at"]=Json::Value();
     }
-    if(getModifiedTime())
+    if(getModifiedBy())
     {
-        ret["modified_time"]=getModifiedTime()->toDbStringLocal();
-    }
-    else
-    {
-        ret["modified_time"]=Json::Value();
-    }
-    if(getHits())
-    {
-        ret["hits"]=getValueOfHits();
+        ret["modified_by"]=getValueOfModifiedBy();
     }
     else
     {
-        ret["hits"]=Json::Value();
+        ret["modified_by"]=Json::Value();
+    }
+    if(getModifiedAt())
+    {
+        ret["modified_at"]=getModifiedAt()->toDbStringLocal();
+    }
+    else
+    {
+        ret["modified_at"]=Json::Value();
     }
     return ret;
 }
@@ -2628,19 +2653,19 @@ bool Categories::validateJsonForCreation(const Json::Value &pJson, std::string &
         if(!validJsonOfField(6, "path", pJson["path"], err, true))
             return false;
     }
-    if(pJson.isMember("is_active"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(7, "is_active", pJson["is_active"], err, true))
-            return false;
-    }
-    if(pJson.isMember("published"))
-    {
-        if(!validJsonOfField(8, "published", pJson["published"], err, true))
+        if(!validJsonOfField(7, "status", pJson["status"], err, true))
             return false;
     }
     if(pJson.isMember("article_count"))
     {
-        if(!validJsonOfField(9, "article_count", pJson["article_count"], err, true))
+        if(!validJsonOfField(8, "article_count", pJson["article_count"], err, true))
+            return false;
+    }
+    if(pJson.isMember("view_count"))
+    {
+        if(!validJsonOfField(9, "view_count", pJson["view_count"], err, true))
             return false;
     }
     if(pJson.isMember("access_level_id"))
@@ -2648,54 +2673,49 @@ bool Categories::validateJsonForCreation(const Json::Value &pJson, std::string &
         if(!validJsonOfField(10, "access_level_id", pJson["access_level_id"], err, true))
             return false;
     }
+    if(pJson.isMember("access_level_name"))
+    {
+        if(!validJsonOfField(11, "access_level_name", pJson["access_level_name"], err, true))
+            return false;
+    }
+    else
+    {
+        err="The access_level_name column cannot be null";
+        return false;
+    }
     if(pJson.isMember("metadesc"))
     {
-        if(!validJsonOfField(11, "metadesc", pJson["metadesc"], err, true))
+        if(!validJsonOfField(12, "metadesc", pJson["metadesc"], err, true))
             return false;
     }
     if(pJson.isMember("metakey"))
     {
-        if(!validJsonOfField(12, "metakey", pJson["metakey"], err, true))
+        if(!validJsonOfField(13, "metakey", pJson["metakey"], err, true))
             return false;
     }
     if(pJson.isMember("metadata"))
     {
-        if(!validJsonOfField(13, "metadata", pJson["metadata"], err, true))
+        if(!validJsonOfField(14, "metadata", pJson["metadata"], err, true))
             return false;
     }
-    if(pJson.isMember("created_user_id"))
+    if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(14, "created_user_id", pJson["created_user_id"], err, true))
+        if(!validJsonOfField(15, "created_by", pJson["created_by"], err, true))
             return false;
     }
-    if(pJson.isMember("created_time"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(15, "created_time", pJson["created_time"], err, true))
+        if(!validJsonOfField(16, "created_at", pJson["created_at"], err, true))
             return false;
     }
-    else
+    if(pJson.isMember("modified_by"))
     {
-        err="The created_time column cannot be null";
-        return false;
-    }
-    if(pJson.isMember("modified_user_id"))
-    {
-        if(!validJsonOfField(16, "modified_user_id", pJson["modified_user_id"], err, true))
+        if(!validJsonOfField(17, "modified_by", pJson["modified_by"], err, true))
             return false;
     }
-    if(pJson.isMember("modified_time"))
+    if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(17, "modified_time", pJson["modified_time"], err, true))
-            return false;
-    }
-    else
-    {
-        err="The modified_time column cannot be null";
-        return false;
-    }
-    if(pJson.isMember("hits"))
-    {
-        if(!validJsonOfField(18, "hits", pJson["hits"], err, true))
+        if(!validJsonOfField(18, "modified_at", pJson["modified_at"], err, true))
             return false;
     }
     return true;
@@ -2805,6 +2825,11 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(11, pMasqueradingVector[11], pJson[pMasqueradingVector[11]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[11] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[12].empty())
       {
@@ -2837,11 +2862,6 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(15, pMasqueradingVector[15], pJson[pMasqueradingVector[15]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[15] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[16].empty())
       {
@@ -2858,11 +2878,6 @@ bool Categories::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(17, pMasqueradingVector[17], pJson[pMasqueradingVector[17]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[17] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[18].empty())
       {
@@ -2922,19 +2937,19 @@ bool Categories::validateJsonForUpdate(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(6, "path", pJson["path"], err, false))
             return false;
     }
-    if(pJson.isMember("is_active"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(7, "is_active", pJson["is_active"], err, false))
-            return false;
-    }
-    if(pJson.isMember("published"))
-    {
-        if(!validJsonOfField(8, "published", pJson["published"], err, false))
+        if(!validJsonOfField(7, "status", pJson["status"], err, false))
             return false;
     }
     if(pJson.isMember("article_count"))
     {
-        if(!validJsonOfField(9, "article_count", pJson["article_count"], err, false))
+        if(!validJsonOfField(8, "article_count", pJson["article_count"], err, false))
+            return false;
+    }
+    if(pJson.isMember("view_count"))
+    {
+        if(!validJsonOfField(9, "view_count", pJson["view_count"], err, false))
             return false;
     }
     if(pJson.isMember("access_level_id"))
@@ -2942,44 +2957,44 @@ bool Categories::validateJsonForUpdate(const Json::Value &pJson, std::string &er
         if(!validJsonOfField(10, "access_level_id", pJson["access_level_id"], err, false))
             return false;
     }
+    if(pJson.isMember("access_level_name"))
+    {
+        if(!validJsonOfField(11, "access_level_name", pJson["access_level_name"], err, false))
+            return false;
+    }
     if(pJson.isMember("metadesc"))
     {
-        if(!validJsonOfField(11, "metadesc", pJson["metadesc"], err, false))
+        if(!validJsonOfField(12, "metadesc", pJson["metadesc"], err, false))
             return false;
     }
     if(pJson.isMember("metakey"))
     {
-        if(!validJsonOfField(12, "metakey", pJson["metakey"], err, false))
+        if(!validJsonOfField(13, "metakey", pJson["metakey"], err, false))
             return false;
     }
     if(pJson.isMember("metadata"))
     {
-        if(!validJsonOfField(13, "metadata", pJson["metadata"], err, false))
+        if(!validJsonOfField(14, "metadata", pJson["metadata"], err, false))
             return false;
     }
-    if(pJson.isMember("created_user_id"))
+    if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(14, "created_user_id", pJson["created_user_id"], err, false))
+        if(!validJsonOfField(15, "created_by", pJson["created_by"], err, false))
             return false;
     }
-    if(pJson.isMember("created_time"))
+    if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(15, "created_time", pJson["created_time"], err, false))
+        if(!validJsonOfField(16, "created_at", pJson["created_at"], err, false))
             return false;
     }
-    if(pJson.isMember("modified_user_id"))
+    if(pJson.isMember("modified_by"))
     {
-        if(!validJsonOfField(16, "modified_user_id", pJson["modified_user_id"], err, false))
+        if(!validJsonOfField(17, "modified_by", pJson["modified_by"], err, false))
             return false;
     }
-    if(pJson.isMember("modified_time"))
+    if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(17, "modified_time", pJson["modified_time"], err, false))
-            return false;
-    }
-    if(pJson.isMember("hits"))
-    {
-        if(!validJsonOfField(18, "hits", pJson["hits"], err, false))
+        if(!validJsonOfField(18, "modified_at", pJson["modified_at"], err, false))
             return false;
     }
     return true;
@@ -3134,11 +3149,11 @@ bool Categories::validJsonOfField(size_t index,
                 return false;
             }
             if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
-                .from_bytes(pJson.asCString()).size() > 255)
+                .from_bytes(pJson.asCString()).size() > 100)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 255)";
+                    " field (the maximum value is 100)";
                 return false;
             }
             break;
@@ -3154,11 +3169,11 @@ bool Categories::validJsonOfField(size_t index,
                 return false;
             }
             if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
-                .from_bytes(pJson.asCString()).size() > 400)
+                .from_bytes(pJson.asCString()).size() > 100)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 400)";
+                    " field (the maximum value is 100)";
                 return false;
             }
             break;
@@ -3221,7 +3236,7 @@ bool Categories::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isBool())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3233,7 +3248,7 @@ bool Categories::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isBool())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3274,11 +3289,11 @@ bool Categories::validJsonOfField(size_t index,
                 return false;
             }
             if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
-                .from_bytes(pJson.asCString()).size() > 1024)
+                .from_bytes(pJson.asCString()).size() > 50)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 1024)";
+                    " field (the maximum value is 50)";
                 return false;
             }
             break;
@@ -3305,19 +3320,27 @@ bool Categories::validJsonOfField(size_t index,
         case 13:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
             }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 1024)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 1024)";
+                return false;
+            }
             break;
         case 14:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -3328,8 +3351,7 @@ bool Categories::validJsonOfField(size_t index,
         case 15:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -3340,8 +3362,7 @@ bool Categories::validJsonOfField(size_t index,
         case 16:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -3352,8 +3373,7 @@ bool Categories::validJsonOfField(size_t index,
         case 17:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -3364,10 +3384,9 @@ bool Categories::validJsonOfField(size_t index,
         case 18:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;

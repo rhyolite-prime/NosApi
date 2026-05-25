@@ -8,7 +8,7 @@
 #include "DigitalContents.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
-#include <codecvt>
+
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::Nos;
@@ -17,29 +17,33 @@ const std::string DigitalContents::Cols::_id = "\"id\"";
 const std::string DigitalContents::Cols::_title = "\"title\"";
 const std::string DigitalContents::Cols::_alias = "\"alias\"";
 const std::string DigitalContents::Cols::_content_type_id = "\"content_type_id\"";
-const std::string DigitalContents::Cols::_content_type = "\"content_type\"";
+const std::string DigitalContents::Cols::_content_type_name = "\"content_type_name\"";
 const std::string DigitalContents::Cols::_introtext = "\"introtext\"";
 const std::string DigitalContents::Cols::_fulltext = "\"fulltext\"";
-const std::string DigitalContents::Cols::_primary_resource_id = "\"primary_resource_id\"";
 const std::string DigitalContents::Cols::_status = "\"status\"";
 const std::string DigitalContents::Cols::_category_id = "\"category_id\"";
+const std::string DigitalContents::Cols::_category_name = "\"category_name\"";
 const std::string DigitalContents::Cols::_ordering = "\"ordering\"";
-const std::string DigitalContents::Cols::_featured = "\"featured\"";
+const std::string DigitalContents::Cols::_is_featured = "\"is_featured\"";
 const std::string DigitalContents::Cols::_access_level_id = "\"access_level_id\"";
+const std::string DigitalContents::Cols::_access_level_name = "\"access_level_name\"";
+const std::string DigitalContents::Cols::_current_workflow_id = "\"current_workflow_id\"";
+const std::string DigitalContents::Cols::_current_workflow_name = "\"current_workflow_name\"";
+const std::string DigitalContents::Cols::_current_workflow_stage_id = "\"current_workflow_stage_id\"";
+const std::string DigitalContents::Cols::_current_workflow_stage_name = "\"current_workflow_stage_name\"";
+const std::string DigitalContents::Cols::_next_workflow_stage_id = "\"next_workflow_stage_id\"";
+const std::string DigitalContents::Cols::_next_workflow_stage_name = "\"next_workflow_stage_name\"";
 const std::string DigitalContents::Cols::_metakey = "\"metakey\"";
 const std::string DigitalContents::Cols::_metadesc = "\"metadesc\"";
 const std::string DigitalContents::Cols::_metadata = "\"metadata\"";
 const std::string DigitalContents::Cols::_presentation_config = "\"presentation_config\"";
-const std::string DigitalContents::Cols::_display_overrides = "\"display_overrides\"";
-const std::string DigitalContents::Cols::_publish_up = "\"publish_up\"";
-const std::string DigitalContents::Cols::_publish_down = "\"publish_down\"";
 const std::string DigitalContents::Cols::_version = "\"version\"";
 const std::string DigitalContents::Cols::_language = "\"language\"";
+const std::string DigitalContents::Cols::_views = "\"views\"";
 const std::string DigitalContents::Cols::_created_by = "\"created_by\"";
 const std::string DigitalContents::Cols::_created_at = "\"created_at\"";
 const std::string DigitalContents::Cols::_modified_by = "\"modified_by\"";
 const std::string DigitalContents::Cols::_modified_at = "\"modified_at\"";
-const std::string DigitalContents::Cols::_views = "\"views\"";
 const std::string DigitalContents::primaryKeyName = "id";
 const bool DigitalContents::hasPrimaryKey = true;
 const std::string DigitalContents::tableName = "\"digital_contents\"";
@@ -49,29 +53,33 @@ const std::vector<typename DigitalContents::MetaData> DigitalContents::metaData_
 {"title","std::string","character varying",255,0,0,1},
 {"alias","std::string","character varying",400,0,0,1},
 {"content_type_id","std::string","uuid",0,0,0,0},
-{"content_type","std::string","character varying",20,0,0,0},
+{"content_type_name","std::string","character varying",100,0,0,0},
 {"introtext","std::string","text",0,0,0,0},
 {"fulltext","std::string","text",0,0,0,0},
-{"primary_resource_id","std::string","uuid",0,0,0,0},
 {"status","int32_t","integer",4,0,0,1},
 {"category_id","std::string","uuid",0,0,0,0},
+{"category_name","std::string","character varying",100,0,0,0},
 {"ordering","int32_t","integer",4,0,0,1},
-{"featured","short","smallint",2,0,0,1},
+{"is_featured","bool","boolean",1,0,0,1},
 {"access_level_id","std::string","uuid",0,0,0,0},
+{"access_level_name","std::string","character varying",255,0,0,1},
+{"current_workflow_id","std::string","uuid",0,0,0,0},
+{"current_workflow_name","std::string","character varying",255,0,0,1},
+{"current_workflow_stage_id","std::string","uuid",0,0,0,0},
+{"current_workflow_stage_name","std::string","character varying",255,0,0,1},
+{"next_workflow_stage_id","std::string","uuid",0,0,0,0},
+{"next_workflow_stage_name","std::string","character varying",255,0,0,1},
 {"metakey","std::string","text",0,0,0,0},
 {"metadesc","std::string","text",0,0,0,0},
 {"metadata","std::string","jsonb",0,0,0,0},
 {"presentation_config","std::string","jsonb",0,0,0,0},
-{"display_overrides","std::string","jsonb",0,0,0,0},
-{"publish_up","::trantor::Date","timestamp without time zone",0,0,0,0},
-{"publish_down","::trantor::Date","timestamp without time zone",0,0,0,0},
 {"version","int32_t","integer",4,0,0,1},
 {"language","std::string","character",0,0,0,1},
+{"views","int32_t","integer",4,0,0,1},
 {"created_by","std::string","uuid",0,0,0,0},
 {"created_at","::trantor::Date","timestamp with time zone",0,0,0,0},
 {"modified_by","std::string","uuid",0,0,0,0},
-{"modified_at","::trantor::Date","timestamp with time zone",0,0,0,0},
-{"views","int32_t","integer",4,0,0,1}
+{"modified_at","::trantor::Date","timestamp with time zone",0,0,0,0}
 };
 const std::string &DigitalContents::getColumnName(size_t index) noexcept(false)
 {
@@ -98,9 +106,9 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         {
             contentTypeId_=std::make_shared<std::string>(r["content_type_id"].as<std::string>());
         }
-        if(!r["content_type"].isNull())
+        if(!r["content_type_name"].isNull())
         {
-            contentType_=std::make_shared<std::string>(r["content_type"].as<std::string>());
+            contentTypeName_=std::make_shared<std::string>(r["content_type_name"].as<std::string>());
         }
         if(!r["introtext"].isNull())
         {
@@ -110,10 +118,6 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         {
             fulltext_=std::make_shared<std::string>(r["fulltext"].as<std::string>());
         }
-        if(!r["primary_resource_id"].isNull())
-        {
-            primaryResourceId_=std::make_shared<std::string>(r["primary_resource_id"].as<std::string>());
-        }
         if(!r["status"].isNull())
         {
             status_=std::make_shared<int32_t>(r["status"].as<int32_t>());
@@ -122,17 +126,49 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         {
             categoryId_=std::make_shared<std::string>(r["category_id"].as<std::string>());
         }
+        if(!r["category_name"].isNull())
+        {
+            categoryName_=std::make_shared<std::string>(r["category_name"].as<std::string>());
+        }
         if(!r["ordering"].isNull())
         {
             ordering_=std::make_shared<int32_t>(r["ordering"].as<int32_t>());
         }
-        if(!r["featured"].isNull())
+        if(!r["is_featured"].isNull())
         {
-            featured_=std::make_shared<short>(r["featured"].as<short>());
+            isFeatured_=std::make_shared<bool>(r["is_featured"].as<bool>());
         }
         if(!r["access_level_id"].isNull())
         {
             accessLevelId_=std::make_shared<std::string>(r["access_level_id"].as<std::string>());
+        }
+        if(!r["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(r["access_level_name"].as<std::string>());
+        }
+        if(!r["current_workflow_id"].isNull())
+        {
+            currentWorkflowId_=std::make_shared<std::string>(r["current_workflow_id"].as<std::string>());
+        }
+        if(!r["current_workflow_name"].isNull())
+        {
+            currentWorkflowName_=std::make_shared<std::string>(r["current_workflow_name"].as<std::string>());
+        }
+        if(!r["current_workflow_stage_id"].isNull())
+        {
+            currentWorkflowStageId_=std::make_shared<std::string>(r["current_workflow_stage_id"].as<std::string>());
+        }
+        if(!r["current_workflow_stage_name"].isNull())
+        {
+            currentWorkflowStageName_=std::make_shared<std::string>(r["current_workflow_stage_name"].as<std::string>());
+        }
+        if(!r["next_workflow_stage_id"].isNull())
+        {
+            nextWorkflowStageId_=std::make_shared<std::string>(r["next_workflow_stage_id"].as<std::string>());
+        }
+        if(!r["next_workflow_stage_name"].isNull())
+        {
+            nextWorkflowStageName_=std::make_shared<std::string>(r["next_workflow_stage_name"].as<std::string>());
         }
         if(!r["metakey"].isNull())
         {
@@ -150,54 +186,6 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         {
             presentationConfig_=std::make_shared<std::string>(r["presentation_config"].as<std::string>());
         }
-        if(!r["display_overrides"].isNull())
-        {
-            displayOverrides_=std::make_shared<std::string>(r["display_overrides"].as<std::string>());
-        }
-        if(!r["publish_up"].isNull())
-        {
-            auto timeStr = r["publish_up"].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
-        if(!r["publish_down"].isNull())
-        {
-            auto timeStr = r["publish_down"].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
         if(!r["version"].isNull())
         {
             version_=std::make_shared<int32_t>(r["version"].as<int32_t>());
@@ -205,6 +193,10 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         if(!r["language"].isNull())
         {
             language_=std::make_shared<std::string>(r["language"].as<std::string>());
+        }
+        if(!r["views"].isNull())
+        {
+            views_=std::make_shared<int32_t>(r["views"].as<int32_t>());
         }
         if(!r["created_by"].isNull())
         {
@@ -258,15 +250,11 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["views"].isNull())
-        {
-            views_=std::make_shared<int32_t>(r["views"].as<int32_t>());
-        }
     }
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 27 > r.size())
+        if(offset + 31 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -295,7 +283,7 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 4;
         if(!r[index].isNull())
         {
-            contentType_=std::make_shared<std::string>(r[index].as<std::string>());
+            contentTypeName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
@@ -310,17 +298,17 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 7;
         if(!r[index].isNull())
         {
-            primaryResourceId_=std::make_shared<std::string>(r[index].as<std::string>());
+            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 8;
         if(!r[index].isNull())
         {
-            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            categoryId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 9;
         if(!r[index].isNull())
         {
-            categoryId_=std::make_shared<std::string>(r[index].as<std::string>());
+            categoryName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 10;
         if(!r[index].isNull())
@@ -330,7 +318,7 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 11;
         if(!r[index].isNull())
         {
-            featured_=std::make_shared<short>(r[index].as<short>());
+            isFeatured_=std::make_shared<bool>(r[index].as<bool>());
         }
         index = offset + 12;
         if(!r[index].isNull())
@@ -340,90 +328,79 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 13;
         if(!r[index].isNull())
         {
-            metakey_=std::make_shared<std::string>(r[index].as<std::string>());
+            accessLevelName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 14;
         if(!r[index].isNull())
         {
-            metadesc_=std::make_shared<std::string>(r[index].as<std::string>());
+            currentWorkflowId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 15;
         if(!r[index].isNull())
         {
-            metadata_=std::make_shared<std::string>(r[index].as<std::string>());
+            currentWorkflowName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 16;
         if(!r[index].isNull())
         {
-            presentationConfig_=std::make_shared<std::string>(r[index].as<std::string>());
+            currentWorkflowStageId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 17;
         if(!r[index].isNull())
         {
-            displayOverrides_=std::make_shared<std::string>(r[index].as<std::string>());
+            currentWorkflowStageName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 18;
         if(!r[index].isNull())
         {
-            auto timeStr = r[index].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 19;
         if(!r[index].isNull())
         {
-            auto timeStr = r[index].as<std::string>();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageName_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 20;
         if(!r[index].isNull())
         {
-            version_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            metakey_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 21;
         if(!r[index].isNull())
         {
-            language_=std::make_shared<std::string>(r[index].as<std::string>());
+            metadesc_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 22;
         if(!r[index].isNull())
         {
-            createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
+            metadata_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 23;
+        if(!r[index].isNull())
+        {
+            presentationConfig_=std::make_shared<std::string>(r[index].as<std::string>());
+        }
+        index = offset + 24;
+        if(!r[index].isNull())
+        {
+            version_=std::make_shared<int32_t>(r[index].as<int32_t>());
+        }
+        index = offset + 25;
+        if(!r[index].isNull())
+        {
+            language_=std::make_shared<std::string>(r[index].as<std::string>());
+        }
+        index = offset + 26;
+        if(!r[index].isNull())
+        {
+            views_=std::make_shared<int32_t>(r[index].as<int32_t>());
+        }
+        index = offset + 27;
+        if(!r[index].isNull())
+        {
+            createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
+        }
+        index = offset + 28;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -446,12 +423,12 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
                 createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 24;
+        index = offset + 29;
         if(!r[index].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(r[index].as<std::string>());
         }
-        index = offset + 25;
+        index = offset + 30;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -474,18 +451,13 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 26;
-        if(!r[index].isNull())
-        {
-            views_=std::make_shared<int32_t>(r[index].as<int32_t>());
-        }
     }
 
 }
 
 DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 27)
+    if(pMasqueradingVector.size() != 31)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -527,7 +499,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            contentType_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            contentTypeName_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -551,7 +523,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            primaryResourceId_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[7]].asInt64());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -559,7 +531,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
+            categoryId_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -567,7 +539,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            categoryId_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            categoryName_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -583,7 +555,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            featured_=std::make_shared<short>((short)pJson[pMasqueradingVector[11]].asInt64());
+            isFeatured_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -599,7 +571,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+            accessLevelName_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -607,7 +579,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
+            currentWorkflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -615,7 +587,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
+            currentWorkflowName_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -623,7 +595,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            presentationConfig_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
+            currentWorkflowStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
         }
     }
     if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
@@ -631,7 +603,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[17] = true;
         if(!pJson[pMasqueradingVector[17]].isNull())
         {
-            displayOverrides_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
+            currentWorkflowStageName_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -639,25 +611,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[18]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[18]].asString());
         }
     }
     if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
@@ -665,25 +619,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[19] = true;
         if(!pJson[pMasqueradingVector[19]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[19]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageName_=std::make_shared<std::string>(pJson[pMasqueradingVector[19]].asString());
         }
     }
     if(!pMasqueradingVector[20].empty() && pJson.isMember(pMasqueradingVector[20]))
@@ -691,7 +627,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[20] = true;
         if(!pJson[pMasqueradingVector[20]].isNull())
         {
-            version_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[20]].asInt64());
+            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[20]].asString());
         }
     }
     if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
@@ -699,7 +635,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[21] = true;
         if(!pJson[pMasqueradingVector[21]].isNull())
         {
-            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
+            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
         }
     }
     if(!pMasqueradingVector[22].empty() && pJson.isMember(pMasqueradingVector[22]))
@@ -707,7 +643,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[22] = true;
         if(!pJson[pMasqueradingVector[22]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
+            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
         }
     }
     if(!pMasqueradingVector[23].empty() && pJson.isMember(pMasqueradingVector[23]))
@@ -715,7 +651,47 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[23] = true;
         if(!pJson[pMasqueradingVector[23]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[23]].asString();
+            presentationConfig_=std::make_shared<std::string>(pJson[pMasqueradingVector[23]].asString());
+        }
+    }
+    if(!pMasqueradingVector[24].empty() && pJson.isMember(pMasqueradingVector[24]))
+    {
+        dirtyFlag_[24] = true;
+        if(!pJson[pMasqueradingVector[24]].isNull())
+        {
+            version_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[24]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[25].empty() && pJson.isMember(pMasqueradingVector[25]))
+    {
+        dirtyFlag_[25] = true;
+        if(!pJson[pMasqueradingVector[25]].isNull())
+        {
+            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[25]].asString());
+        }
+    }
+    if(!pMasqueradingVector[26].empty() && pJson.isMember(pMasqueradingVector[26]))
+    {
+        dirtyFlag_[26] = true;
+        if(!pJson[pMasqueradingVector[26]].isNull())
+        {
+            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[27].empty() && pJson.isMember(pMasqueradingVector[27]))
+    {
+        dirtyFlag_[27] = true;
+        if(!pJson[pMasqueradingVector[27]].isNull())
+        {
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[27]].asString());
+        }
+    }
+    if(!pMasqueradingVector[28].empty() && pJson.isMember(pMasqueradingVector[28]))
+    {
+        dirtyFlag_[28] = true;
+        if(!pJson[pMasqueradingVector[28]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[28]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -736,20 +712,20 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
             }
         }
     }
-    if(!pMasqueradingVector[24].empty() && pJson.isMember(pMasqueradingVector[24]))
+    if(!pMasqueradingVector[29].empty() && pJson.isMember(pMasqueradingVector[29]))
     {
-        dirtyFlag_[24] = true;
-        if(!pJson[pMasqueradingVector[24]].isNull())
+        dirtyFlag_[29] = true;
+        if(!pJson[pMasqueradingVector[29]].isNull())
         {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[24]].asString());
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[29]].asString());
         }
     }
-    if(!pMasqueradingVector[25].empty() && pJson.isMember(pMasqueradingVector[25]))
+    if(!pMasqueradingVector[30].empty() && pJson.isMember(pMasqueradingVector[30]))
     {
-        dirtyFlag_[25] = true;
-        if(!pJson[pMasqueradingVector[25]].isNull())
+        dirtyFlag_[30] = true;
+        if(!pJson[pMasqueradingVector[30]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[25]].asString();
+            auto timeStr = pJson[pMasqueradingVector[30]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -768,14 +744,6 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
                 }
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
-        }
-    }
-    if(!pMasqueradingVector[26].empty() && pJson.isMember(pMasqueradingVector[26]))
-    {
-        dirtyFlag_[26] = true;
-        if(!pJson[pMasqueradingVector[26]].isNull())
-        {
-            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
         }
     }
 }
@@ -814,12 +782,12 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             contentTypeId_=std::make_shared<std::string>(pJson["content_type_id"].asString());
         }
     }
-    if(pJson.isMember("content_type"))
+    if(pJson.isMember("content_type_name"))
     {
         dirtyFlag_[4]=true;
-        if(!pJson["content_type"].isNull())
+        if(!pJson["content_type_name"].isNull())
         {
-            contentType_=std::make_shared<std::string>(pJson["content_type"].asString());
+            contentTypeName_=std::make_shared<std::string>(pJson["content_type_name"].asString());
         }
     }
     if(pJson.isMember("introtext"))
@@ -838,17 +806,9 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             fulltext_=std::make_shared<std::string>(pJson["fulltext"].asString());
         }
     }
-    if(pJson.isMember("primary_resource_id"))
-    {
-        dirtyFlag_[7]=true;
-        if(!pJson["primary_resource_id"].isNull())
-        {
-            primaryResourceId_=std::make_shared<std::string>(pJson["primary_resource_id"].asString());
-        }
-    }
     if(pJson.isMember("status"))
     {
-        dirtyFlag_[8]=true;
+        dirtyFlag_[7]=true;
         if(!pJson["status"].isNull())
         {
             status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
@@ -856,10 +816,18 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("category_id"))
     {
-        dirtyFlag_[9]=true;
+        dirtyFlag_[8]=true;
         if(!pJson["category_id"].isNull())
         {
             categoryId_=std::make_shared<std::string>(pJson["category_id"].asString());
+        }
+    }
+    if(pJson.isMember("category_name"))
+    {
+        dirtyFlag_[9]=true;
+        if(!pJson["category_name"].isNull())
+        {
+            categoryName_=std::make_shared<std::string>(pJson["category_name"].asString());
         }
     }
     if(pJson.isMember("ordering"))
@@ -870,12 +838,12 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
         }
     }
-    if(pJson.isMember("featured"))
+    if(pJson.isMember("is_featured"))
     {
         dirtyFlag_[11]=true;
-        if(!pJson["featured"].isNull())
+        if(!pJson["is_featured"].isNull())
         {
-            featured_=std::make_shared<short>((short)pJson["featured"].asInt64());
+            isFeatured_=std::make_shared<bool>(pJson["is_featured"].asBool());
         }
     }
     if(pJson.isMember("access_level_id"))
@@ -886,9 +854,65 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             accessLevelId_=std::make_shared<std::string>(pJson["access_level_id"].asString());
         }
     }
-    if(pJson.isMember("metakey"))
+    if(pJson.isMember("access_level_name"))
     {
         dirtyFlag_[13]=true;
+        if(!pJson["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(pJson["access_level_name"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_id"))
+    {
+        dirtyFlag_[14]=true;
+        if(!pJson["current_workflow_id"].isNull())
+        {
+            currentWorkflowId_=std::make_shared<std::string>(pJson["current_workflow_id"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_name"))
+    {
+        dirtyFlag_[15]=true;
+        if(!pJson["current_workflow_name"].isNull())
+        {
+            currentWorkflowName_=std::make_shared<std::string>(pJson["current_workflow_name"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_stage_id"))
+    {
+        dirtyFlag_[16]=true;
+        if(!pJson["current_workflow_stage_id"].isNull())
+        {
+            currentWorkflowStageId_=std::make_shared<std::string>(pJson["current_workflow_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_stage_name"))
+    {
+        dirtyFlag_[17]=true;
+        if(!pJson["current_workflow_stage_name"].isNull())
+        {
+            currentWorkflowStageName_=std::make_shared<std::string>(pJson["current_workflow_stage_name"].asString());
+        }
+    }
+    if(pJson.isMember("next_workflow_stage_id"))
+    {
+        dirtyFlag_[18]=true;
+        if(!pJson["next_workflow_stage_id"].isNull())
+        {
+            nextWorkflowStageId_=std::make_shared<std::string>(pJson["next_workflow_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("next_workflow_stage_name"))
+    {
+        dirtyFlag_[19]=true;
+        if(!pJson["next_workflow_stage_name"].isNull())
+        {
+            nextWorkflowStageName_=std::make_shared<std::string>(pJson["next_workflow_stage_name"].asString());
+        }
+    }
+    if(pJson.isMember("metakey"))
+    {
+        dirtyFlag_[20]=true;
         if(!pJson["metakey"].isNull())
         {
             metakey_=std::make_shared<std::string>(pJson["metakey"].asString());
@@ -896,7 +920,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadesc"))
     {
-        dirtyFlag_[14]=true;
+        dirtyFlag_[21]=true;
         if(!pJson["metadesc"].isNull())
         {
             metadesc_=std::make_shared<std::string>(pJson["metadesc"].asString());
@@ -904,7 +928,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadata"))
     {
-        dirtyFlag_[15]=true;
+        dirtyFlag_[22]=true;
         if(!pJson["metadata"].isNull())
         {
             metadata_=std::make_shared<std::string>(pJson["metadata"].asString());
@@ -912,75 +936,15 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("presentation_config"))
     {
-        dirtyFlag_[16]=true;
+        dirtyFlag_[23]=true;
         if(!pJson["presentation_config"].isNull())
         {
             presentationConfig_=std::make_shared<std::string>(pJson["presentation_config"].asString());
         }
     }
-    if(pJson.isMember("display_overrides"))
-    {
-        dirtyFlag_[17]=true;
-        if(!pJson["display_overrides"].isNull())
-        {
-            displayOverrides_=std::make_shared<std::string>(pJson["display_overrides"].asString());
-        }
-    }
-    if(pJson.isMember("publish_up"))
-    {
-        dirtyFlag_[18]=true;
-        if(!pJson["publish_up"].isNull())
-        {
-            auto timeStr = pJson["publish_up"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
-    }
-    if(pJson.isMember("publish_down"))
-    {
-        dirtyFlag_[19]=true;
-        if(!pJson["publish_down"].isNull())
-        {
-            auto timeStr = pJson["publish_down"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
-    }
     if(pJson.isMember("version"))
     {
-        dirtyFlag_[20]=true;
+        dirtyFlag_[24]=true;
         if(!pJson["version"].isNull())
         {
             version_=std::make_shared<int32_t>((int32_t)pJson["version"].asInt64());
@@ -988,15 +952,23 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("language"))
     {
-        dirtyFlag_[21]=true;
+        dirtyFlag_[25]=true;
         if(!pJson["language"].isNull())
         {
             language_=std::make_shared<std::string>(pJson["language"].asString());
         }
     }
+    if(pJson.isMember("views"))
+    {
+        dirtyFlag_[26]=true;
+        if(!pJson["views"].isNull())
+        {
+            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
+        }
+    }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[22]=true;
+        dirtyFlag_[27]=true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -1004,7 +976,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[23]=true;
+        dirtyFlag_[28]=true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -1030,7 +1002,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[24]=true;
+        dirtyFlag_[29]=true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -1038,7 +1010,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[25]=true;
+        dirtyFlag_[30]=true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -1062,20 +1034,12 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("views"))
-    {
-        dirtyFlag_[26]=true;
-        if(!pJson["views"].isNull())
-        {
-            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
-        }
-    }
 }
 
 void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 27)
+    if(pMasqueradingVector.size() != 31)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -1116,7 +1080,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            contentType_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            contentTypeName_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -1140,7 +1104,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            primaryResourceId_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[7]].asInt64());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -1148,7 +1112,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[8]].asInt64());
+            categoryId_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -1156,7 +1120,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            categoryId_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            categoryName_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -1172,7 +1136,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            featured_=std::make_shared<short>((short)pJson[pMasqueradingVector[11]].asInt64());
+            isFeatured_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -1188,7 +1152,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+            accessLevelName_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -1196,7 +1160,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
+            currentWorkflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -1204,7 +1168,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
+            currentWorkflowName_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -1212,7 +1176,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            presentationConfig_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
+            currentWorkflowStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
         }
     }
     if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
@@ -1220,7 +1184,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[17] = true;
         if(!pJson[pMasqueradingVector[17]].isNull())
         {
-            displayOverrides_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
+            currentWorkflowStageName_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -1228,25 +1192,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[18]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[18]].asString());
         }
     }
     if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
@@ -1254,25 +1200,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[19] = true;
         if(!pJson[pMasqueradingVector[19]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[19]].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
+            nextWorkflowStageName_=std::make_shared<std::string>(pJson[pMasqueradingVector[19]].asString());
         }
     }
     if(!pMasqueradingVector[20].empty() && pJson.isMember(pMasqueradingVector[20]))
@@ -1280,7 +1208,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[20] = true;
         if(!pJson[pMasqueradingVector[20]].isNull())
         {
-            version_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[20]].asInt64());
+            metakey_=std::make_shared<std::string>(pJson[pMasqueradingVector[20]].asString());
         }
     }
     if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
@@ -1288,7 +1216,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[21] = true;
         if(!pJson[pMasqueradingVector[21]].isNull())
         {
-            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
+            metadesc_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
         }
     }
     if(!pMasqueradingVector[22].empty() && pJson.isMember(pMasqueradingVector[22]))
@@ -1296,7 +1224,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[22] = true;
         if(!pJson[pMasqueradingVector[22]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
+            metadata_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
         }
     }
     if(!pMasqueradingVector[23].empty() && pJson.isMember(pMasqueradingVector[23]))
@@ -1304,7 +1232,47 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[23] = true;
         if(!pJson[pMasqueradingVector[23]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[23]].asString();
+            presentationConfig_=std::make_shared<std::string>(pJson[pMasqueradingVector[23]].asString());
+        }
+    }
+    if(!pMasqueradingVector[24].empty() && pJson.isMember(pMasqueradingVector[24]))
+    {
+        dirtyFlag_[24] = true;
+        if(!pJson[pMasqueradingVector[24]].isNull())
+        {
+            version_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[24]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[25].empty() && pJson.isMember(pMasqueradingVector[25]))
+    {
+        dirtyFlag_[25] = true;
+        if(!pJson[pMasqueradingVector[25]].isNull())
+        {
+            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[25]].asString());
+        }
+    }
+    if(!pMasqueradingVector[26].empty() && pJson.isMember(pMasqueradingVector[26]))
+    {
+        dirtyFlag_[26] = true;
+        if(!pJson[pMasqueradingVector[26]].isNull())
+        {
+            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
+        }
+    }
+    if(!pMasqueradingVector[27].empty() && pJson.isMember(pMasqueradingVector[27]))
+    {
+        dirtyFlag_[27] = true;
+        if(!pJson[pMasqueradingVector[27]].isNull())
+        {
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[27]].asString());
+        }
+    }
+    if(!pMasqueradingVector[28].empty() && pJson.isMember(pMasqueradingVector[28]))
+    {
+        dirtyFlag_[28] = true;
+        if(!pJson[pMasqueradingVector[28]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[28]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -1325,20 +1293,20 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
-    if(!pMasqueradingVector[24].empty() && pJson.isMember(pMasqueradingVector[24]))
+    if(!pMasqueradingVector[29].empty() && pJson.isMember(pMasqueradingVector[29]))
     {
-        dirtyFlag_[24] = true;
-        if(!pJson[pMasqueradingVector[24]].isNull())
+        dirtyFlag_[29] = true;
+        if(!pJson[pMasqueradingVector[29]].isNull())
         {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[24]].asString());
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[29]].asString());
         }
     }
-    if(!pMasqueradingVector[25].empty() && pJson.isMember(pMasqueradingVector[25]))
+    if(!pMasqueradingVector[30].empty() && pJson.isMember(pMasqueradingVector[30]))
     {
-        dirtyFlag_[25] = true;
-        if(!pJson[pMasqueradingVector[25]].isNull())
+        dirtyFlag_[30] = true;
+        if(!pJson[pMasqueradingVector[30]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[25]].asString();
+            auto timeStr = pJson[pMasqueradingVector[30]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -1357,14 +1325,6 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
                 }
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
-        }
-    }
-    if(!pMasqueradingVector[26].empty() && pJson.isMember(pMasqueradingVector[26]))
-    {
-        dirtyFlag_[26] = true;
-        if(!pJson[pMasqueradingVector[26]].isNull())
-        {
-            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
         }
     }
 }
@@ -1402,12 +1362,12 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             contentTypeId_=std::make_shared<std::string>(pJson["content_type_id"].asString());
         }
     }
-    if(pJson.isMember("content_type"))
+    if(pJson.isMember("content_type_name"))
     {
         dirtyFlag_[4] = true;
-        if(!pJson["content_type"].isNull())
+        if(!pJson["content_type_name"].isNull())
         {
-            contentType_=std::make_shared<std::string>(pJson["content_type"].asString());
+            contentTypeName_=std::make_shared<std::string>(pJson["content_type_name"].asString());
         }
     }
     if(pJson.isMember("introtext"))
@@ -1426,17 +1386,9 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             fulltext_=std::make_shared<std::string>(pJson["fulltext"].asString());
         }
     }
-    if(pJson.isMember("primary_resource_id"))
-    {
-        dirtyFlag_[7] = true;
-        if(!pJson["primary_resource_id"].isNull())
-        {
-            primaryResourceId_=std::make_shared<std::string>(pJson["primary_resource_id"].asString());
-        }
-    }
     if(pJson.isMember("status"))
     {
-        dirtyFlag_[8] = true;
+        dirtyFlag_[7] = true;
         if(!pJson["status"].isNull())
         {
             status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
@@ -1444,10 +1396,18 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("category_id"))
     {
-        dirtyFlag_[9] = true;
+        dirtyFlag_[8] = true;
         if(!pJson["category_id"].isNull())
         {
             categoryId_=std::make_shared<std::string>(pJson["category_id"].asString());
+        }
+    }
+    if(pJson.isMember("category_name"))
+    {
+        dirtyFlag_[9] = true;
+        if(!pJson["category_name"].isNull())
+        {
+            categoryName_=std::make_shared<std::string>(pJson["category_name"].asString());
         }
     }
     if(pJson.isMember("ordering"))
@@ -1458,12 +1418,12 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
         }
     }
-    if(pJson.isMember("featured"))
+    if(pJson.isMember("is_featured"))
     {
         dirtyFlag_[11] = true;
-        if(!pJson["featured"].isNull())
+        if(!pJson["is_featured"].isNull())
         {
-            featured_=std::make_shared<short>((short)pJson["featured"].asInt64());
+            isFeatured_=std::make_shared<bool>(pJson["is_featured"].asBool());
         }
     }
     if(pJson.isMember("access_level_id"))
@@ -1474,9 +1434,65 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             accessLevelId_=std::make_shared<std::string>(pJson["access_level_id"].asString());
         }
     }
-    if(pJson.isMember("metakey"))
+    if(pJson.isMember("access_level_name"))
     {
         dirtyFlag_[13] = true;
+        if(!pJson["access_level_name"].isNull())
+        {
+            accessLevelName_=std::make_shared<std::string>(pJson["access_level_name"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_id"))
+    {
+        dirtyFlag_[14] = true;
+        if(!pJson["current_workflow_id"].isNull())
+        {
+            currentWorkflowId_=std::make_shared<std::string>(pJson["current_workflow_id"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_name"))
+    {
+        dirtyFlag_[15] = true;
+        if(!pJson["current_workflow_name"].isNull())
+        {
+            currentWorkflowName_=std::make_shared<std::string>(pJson["current_workflow_name"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_stage_id"))
+    {
+        dirtyFlag_[16] = true;
+        if(!pJson["current_workflow_stage_id"].isNull())
+        {
+            currentWorkflowStageId_=std::make_shared<std::string>(pJson["current_workflow_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("current_workflow_stage_name"))
+    {
+        dirtyFlag_[17] = true;
+        if(!pJson["current_workflow_stage_name"].isNull())
+        {
+            currentWorkflowStageName_=std::make_shared<std::string>(pJson["current_workflow_stage_name"].asString());
+        }
+    }
+    if(pJson.isMember("next_workflow_stage_id"))
+    {
+        dirtyFlag_[18] = true;
+        if(!pJson["next_workflow_stage_id"].isNull())
+        {
+            nextWorkflowStageId_=std::make_shared<std::string>(pJson["next_workflow_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("next_workflow_stage_name"))
+    {
+        dirtyFlag_[19] = true;
+        if(!pJson["next_workflow_stage_name"].isNull())
+        {
+            nextWorkflowStageName_=std::make_shared<std::string>(pJson["next_workflow_stage_name"].asString());
+        }
+    }
+    if(pJson.isMember("metakey"))
+    {
+        dirtyFlag_[20] = true;
         if(!pJson["metakey"].isNull())
         {
             metakey_=std::make_shared<std::string>(pJson["metakey"].asString());
@@ -1484,7 +1500,7 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadesc"))
     {
-        dirtyFlag_[14] = true;
+        dirtyFlag_[21] = true;
         if(!pJson["metadesc"].isNull())
         {
             metadesc_=std::make_shared<std::string>(pJson["metadesc"].asString());
@@ -1492,7 +1508,7 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("metadata"))
     {
-        dirtyFlag_[15] = true;
+        dirtyFlag_[22] = true;
         if(!pJson["metadata"].isNull())
         {
             metadata_=std::make_shared<std::string>(pJson["metadata"].asString());
@@ -1500,75 +1516,15 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("presentation_config"))
     {
-        dirtyFlag_[16] = true;
+        dirtyFlag_[23] = true;
         if(!pJson["presentation_config"].isNull())
         {
             presentationConfig_=std::make_shared<std::string>(pJson["presentation_config"].asString());
         }
     }
-    if(pJson.isMember("display_overrides"))
-    {
-        dirtyFlag_[17] = true;
-        if(!pJson["display_overrides"].isNull())
-        {
-            displayOverrides_=std::make_shared<std::string>(pJson["display_overrides"].asString());
-        }
-    }
-    if(pJson.isMember("publish_up"))
-    {
-        dirtyFlag_[18] = true;
-        if(!pJson["publish_up"].isNull())
-        {
-            auto timeStr = pJson["publish_up"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishUp_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
-    }
-    if(pJson.isMember("publish_down"))
-    {
-        dirtyFlag_[19] = true;
-        if(!pJson["publish_down"].isNull())
-        {
-            auto timeStr = pJson["publish_down"].asString();
-            struct tm stm;
-            memset(&stm,0,sizeof(stm));
-            auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
-            time_t t = mktime(&stm);
-            size_t decimalNum = 0;
-            if(p)
-            {
-                if(*p=='.')
-                {
-                    std::string decimals(p+1,&timeStr[timeStr.length()]);
-                    while(decimals.length()<6)
-                    {
-                        decimals += "0";
-                    }
-                    decimalNum = (size_t)atol(decimals.c_str());
-                }
-                publishDown_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
-            }
-        }
-    }
     if(pJson.isMember("version"))
     {
-        dirtyFlag_[20] = true;
+        dirtyFlag_[24] = true;
         if(!pJson["version"].isNull())
         {
             version_=std::make_shared<int32_t>((int32_t)pJson["version"].asInt64());
@@ -1576,15 +1532,23 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("language"))
     {
-        dirtyFlag_[21] = true;
+        dirtyFlag_[25] = true;
         if(!pJson["language"].isNull())
         {
             language_=std::make_shared<std::string>(pJson["language"].asString());
         }
     }
+    if(pJson.isMember("views"))
+    {
+        dirtyFlag_[26] = true;
+        if(!pJson["views"].isNull())
+        {
+            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
+        }
+    }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[22] = true;
+        dirtyFlag_[27] = true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -1592,7 +1556,7 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[23] = true;
+        dirtyFlag_[28] = true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -1618,7 +1582,7 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[24] = true;
+        dirtyFlag_[29] = true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -1626,7 +1590,7 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[25] = true;
+        dirtyFlag_[30] = true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -1648,14 +1612,6 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
                 }
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
-        }
-    }
-    if(pJson.isMember("views"))
-    {
-        dirtyFlag_[26] = true;
-        if(!pJson["views"].isNull())
-        {
-            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
         }
     }
 }
@@ -1758,30 +1714,30 @@ void DigitalContents::setContentTypeIdToNull() noexcept
     dirtyFlag_[3] = true;
 }
 
-const std::string &DigitalContents::getValueOfContentType() const noexcept
+const std::string &DigitalContents::getValueOfContentTypeName() const noexcept
 {
     static const std::string defaultValue = std::string();
-    if(contentType_)
-        return *contentType_;
+    if(contentTypeName_)
+        return *contentTypeName_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &DigitalContents::getContentType() const noexcept
+const std::shared_ptr<std::string> &DigitalContents::getContentTypeName() const noexcept
 {
-    return contentType_;
+    return contentTypeName_;
 }
-void DigitalContents::setContentType(const std::string &pContentType) noexcept
+void DigitalContents::setContentTypeName(const std::string &pContentTypeName) noexcept
 {
-    contentType_ = std::make_shared<std::string>(pContentType);
+    contentTypeName_ = std::make_shared<std::string>(pContentTypeName);
     dirtyFlag_[4] = true;
 }
-void DigitalContents::setContentType(std::string &&pContentType) noexcept
+void DigitalContents::setContentTypeName(std::string &&pContentTypeName) noexcept
 {
-    contentType_ = std::make_shared<std::string>(std::move(pContentType));
+    contentTypeName_ = std::make_shared<std::string>(std::move(pContentTypeName));
     dirtyFlag_[4] = true;
 }
-void DigitalContents::setContentTypeToNull() noexcept
+void DigitalContents::setContentTypeNameToNull() noexcept
 {
-    contentType_.reset();
+    contentTypeName_.reset();
     dirtyFlag_[4] = true;
 }
 
@@ -1839,33 +1795,6 @@ void DigitalContents::setFulltextToNull() noexcept
     dirtyFlag_[6] = true;
 }
 
-const std::string &DigitalContents::getValueOfPrimaryResourceId() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(primaryResourceId_)
-        return *primaryResourceId_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &DigitalContents::getPrimaryResourceId() const noexcept
-{
-    return primaryResourceId_;
-}
-void DigitalContents::setPrimaryResourceId(const std::string &pPrimaryResourceId) noexcept
-{
-    primaryResourceId_ = std::make_shared<std::string>(pPrimaryResourceId);
-    dirtyFlag_[7] = true;
-}
-void DigitalContents::setPrimaryResourceId(std::string &&pPrimaryResourceId) noexcept
-{
-    primaryResourceId_ = std::make_shared<std::string>(std::move(pPrimaryResourceId));
-    dirtyFlag_[7] = true;
-}
-void DigitalContents::setPrimaryResourceIdToNull() noexcept
-{
-    primaryResourceId_.reset();
-    dirtyFlag_[7] = true;
-}
-
 const int32_t &DigitalContents::getValueOfStatus() const noexcept
 {
     static const int32_t defaultValue = int32_t();
@@ -1880,7 +1809,7 @@ const std::shared_ptr<int32_t> &DigitalContents::getStatus() const noexcept
 void DigitalContents::setStatus(const int32_t &pStatus) noexcept
 {
     status_ = std::make_shared<int32_t>(pStatus);
-    dirtyFlag_[8] = true;
+    dirtyFlag_[7] = true;
 }
 
 const std::string &DigitalContents::getValueOfCategoryId() const noexcept
@@ -1897,16 +1826,43 @@ const std::shared_ptr<std::string> &DigitalContents::getCategoryId() const noexc
 void DigitalContents::setCategoryId(const std::string &pCategoryId) noexcept
 {
     categoryId_ = std::make_shared<std::string>(pCategoryId);
-    dirtyFlag_[9] = true;
+    dirtyFlag_[8] = true;
 }
 void DigitalContents::setCategoryId(std::string &&pCategoryId) noexcept
 {
     categoryId_ = std::make_shared<std::string>(std::move(pCategoryId));
-    dirtyFlag_[9] = true;
+    dirtyFlag_[8] = true;
 }
 void DigitalContents::setCategoryIdToNull() noexcept
 {
     categoryId_.reset();
+    dirtyFlag_[8] = true;
+}
+
+const std::string &DigitalContents::getValueOfCategoryName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(categoryName_)
+        return *categoryName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCategoryName() const noexcept
+{
+    return categoryName_;
+}
+void DigitalContents::setCategoryName(const std::string &pCategoryName) noexcept
+{
+    categoryName_ = std::make_shared<std::string>(pCategoryName);
+    dirtyFlag_[9] = true;
+}
+void DigitalContents::setCategoryName(std::string &&pCategoryName) noexcept
+{
+    categoryName_ = std::make_shared<std::string>(std::move(pCategoryName));
+    dirtyFlag_[9] = true;
+}
+void DigitalContents::setCategoryNameToNull() noexcept
+{
+    categoryName_.reset();
     dirtyFlag_[9] = true;
 }
 
@@ -1927,20 +1883,20 @@ void DigitalContents::setOrdering(const int32_t &pOrdering) noexcept
     dirtyFlag_[10] = true;
 }
 
-const short &DigitalContents::getValueOfFeatured() const noexcept
+const bool &DigitalContents::getValueOfIsFeatured() const noexcept
 {
-    static const short defaultValue = short();
-    if(featured_)
-        return *featured_;
+    static const bool defaultValue = bool();
+    if(isFeatured_)
+        return *isFeatured_;
     return defaultValue;
 }
-const std::shared_ptr<short> &DigitalContents::getFeatured() const noexcept
+const std::shared_ptr<bool> &DigitalContents::getIsFeatured() const noexcept
 {
-    return featured_;
+    return isFeatured_;
 }
-void DigitalContents::setFeatured(const short &pFeatured) noexcept
+void DigitalContents::setIsFeatured(const bool &pIsFeatured) noexcept
 {
-    featured_ = std::make_shared<short>(pFeatured);
+    isFeatured_ = std::make_shared<bool>(pIsFeatured);
     dirtyFlag_[11] = true;
 }
 
@@ -1971,6 +1927,175 @@ void DigitalContents::setAccessLevelIdToNull() noexcept
     dirtyFlag_[12] = true;
 }
 
+const std::string &DigitalContents::getValueOfAccessLevelName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(accessLevelName_)
+        return *accessLevelName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getAccessLevelName() const noexcept
+{
+    return accessLevelName_;
+}
+void DigitalContents::setAccessLevelName(const std::string &pAccessLevelName) noexcept
+{
+    accessLevelName_ = std::make_shared<std::string>(pAccessLevelName);
+    dirtyFlag_[13] = true;
+}
+void DigitalContents::setAccessLevelName(std::string &&pAccessLevelName) noexcept
+{
+    accessLevelName_ = std::make_shared<std::string>(std::move(pAccessLevelName));
+    dirtyFlag_[13] = true;
+}
+
+const std::string &DigitalContents::getValueOfCurrentWorkflowId() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(currentWorkflowId_)
+        return *currentWorkflowId_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCurrentWorkflowId() const noexcept
+{
+    return currentWorkflowId_;
+}
+void DigitalContents::setCurrentWorkflowId(const std::string &pCurrentWorkflowId) noexcept
+{
+    currentWorkflowId_ = std::make_shared<std::string>(pCurrentWorkflowId);
+    dirtyFlag_[14] = true;
+}
+void DigitalContents::setCurrentWorkflowId(std::string &&pCurrentWorkflowId) noexcept
+{
+    currentWorkflowId_ = std::make_shared<std::string>(std::move(pCurrentWorkflowId));
+    dirtyFlag_[14] = true;
+}
+void DigitalContents::setCurrentWorkflowIdToNull() noexcept
+{
+    currentWorkflowId_.reset();
+    dirtyFlag_[14] = true;
+}
+
+const std::string &DigitalContents::getValueOfCurrentWorkflowName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(currentWorkflowName_)
+        return *currentWorkflowName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCurrentWorkflowName() const noexcept
+{
+    return currentWorkflowName_;
+}
+void DigitalContents::setCurrentWorkflowName(const std::string &pCurrentWorkflowName) noexcept
+{
+    currentWorkflowName_ = std::make_shared<std::string>(pCurrentWorkflowName);
+    dirtyFlag_[15] = true;
+}
+void DigitalContents::setCurrentWorkflowName(std::string &&pCurrentWorkflowName) noexcept
+{
+    currentWorkflowName_ = std::make_shared<std::string>(std::move(pCurrentWorkflowName));
+    dirtyFlag_[15] = true;
+}
+
+const std::string &DigitalContents::getValueOfCurrentWorkflowStageId() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(currentWorkflowStageId_)
+        return *currentWorkflowStageId_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCurrentWorkflowStageId() const noexcept
+{
+    return currentWorkflowStageId_;
+}
+void DigitalContents::setCurrentWorkflowStageId(const std::string &pCurrentWorkflowStageId) noexcept
+{
+    currentWorkflowStageId_ = std::make_shared<std::string>(pCurrentWorkflowStageId);
+    dirtyFlag_[16] = true;
+}
+void DigitalContents::setCurrentWorkflowStageId(std::string &&pCurrentWorkflowStageId) noexcept
+{
+    currentWorkflowStageId_ = std::make_shared<std::string>(std::move(pCurrentWorkflowStageId));
+    dirtyFlag_[16] = true;
+}
+void DigitalContents::setCurrentWorkflowStageIdToNull() noexcept
+{
+    currentWorkflowStageId_.reset();
+    dirtyFlag_[16] = true;
+}
+
+const std::string &DigitalContents::getValueOfCurrentWorkflowStageName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(currentWorkflowStageName_)
+        return *currentWorkflowStageName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCurrentWorkflowStageName() const noexcept
+{
+    return currentWorkflowStageName_;
+}
+void DigitalContents::setCurrentWorkflowStageName(const std::string &pCurrentWorkflowStageName) noexcept
+{
+    currentWorkflowStageName_ = std::make_shared<std::string>(pCurrentWorkflowStageName);
+    dirtyFlag_[17] = true;
+}
+void DigitalContents::setCurrentWorkflowStageName(std::string &&pCurrentWorkflowStageName) noexcept
+{
+    currentWorkflowStageName_ = std::make_shared<std::string>(std::move(pCurrentWorkflowStageName));
+    dirtyFlag_[17] = true;
+}
+
+const std::string &DigitalContents::getValueOfNextWorkflowStageId() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(nextWorkflowStageId_)
+        return *nextWorkflowStageId_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getNextWorkflowStageId() const noexcept
+{
+    return nextWorkflowStageId_;
+}
+void DigitalContents::setNextWorkflowStageId(const std::string &pNextWorkflowStageId) noexcept
+{
+    nextWorkflowStageId_ = std::make_shared<std::string>(pNextWorkflowStageId);
+    dirtyFlag_[18] = true;
+}
+void DigitalContents::setNextWorkflowStageId(std::string &&pNextWorkflowStageId) noexcept
+{
+    nextWorkflowStageId_ = std::make_shared<std::string>(std::move(pNextWorkflowStageId));
+    dirtyFlag_[18] = true;
+}
+void DigitalContents::setNextWorkflowStageIdToNull() noexcept
+{
+    nextWorkflowStageId_.reset();
+    dirtyFlag_[18] = true;
+}
+
+const std::string &DigitalContents::getValueOfNextWorkflowStageName() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(nextWorkflowStageName_)
+        return *nextWorkflowStageName_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getNextWorkflowStageName() const noexcept
+{
+    return nextWorkflowStageName_;
+}
+void DigitalContents::setNextWorkflowStageName(const std::string &pNextWorkflowStageName) noexcept
+{
+    nextWorkflowStageName_ = std::make_shared<std::string>(pNextWorkflowStageName);
+    dirtyFlag_[19] = true;
+}
+void DigitalContents::setNextWorkflowStageName(std::string &&pNextWorkflowStageName) noexcept
+{
+    nextWorkflowStageName_ = std::make_shared<std::string>(std::move(pNextWorkflowStageName));
+    dirtyFlag_[19] = true;
+}
+
 const std::string &DigitalContents::getValueOfMetakey() const noexcept
 {
     static const std::string defaultValue = std::string();
@@ -1985,17 +2110,17 @@ const std::shared_ptr<std::string> &DigitalContents::getMetakey() const noexcept
 void DigitalContents::setMetakey(const std::string &pMetakey) noexcept
 {
     metakey_ = std::make_shared<std::string>(pMetakey);
-    dirtyFlag_[13] = true;
+    dirtyFlag_[20] = true;
 }
 void DigitalContents::setMetakey(std::string &&pMetakey) noexcept
 {
     metakey_ = std::make_shared<std::string>(std::move(pMetakey));
-    dirtyFlag_[13] = true;
+    dirtyFlag_[20] = true;
 }
 void DigitalContents::setMetakeyToNull() noexcept
 {
     metakey_.reset();
-    dirtyFlag_[13] = true;
+    dirtyFlag_[20] = true;
 }
 
 const std::string &DigitalContents::getValueOfMetadesc() const noexcept
@@ -2012,17 +2137,17 @@ const std::shared_ptr<std::string> &DigitalContents::getMetadesc() const noexcep
 void DigitalContents::setMetadesc(const std::string &pMetadesc) noexcept
 {
     metadesc_ = std::make_shared<std::string>(pMetadesc);
-    dirtyFlag_[14] = true;
+    dirtyFlag_[21] = true;
 }
 void DigitalContents::setMetadesc(std::string &&pMetadesc) noexcept
 {
     metadesc_ = std::make_shared<std::string>(std::move(pMetadesc));
-    dirtyFlag_[14] = true;
+    dirtyFlag_[21] = true;
 }
 void DigitalContents::setMetadescToNull() noexcept
 {
     metadesc_.reset();
-    dirtyFlag_[14] = true;
+    dirtyFlag_[21] = true;
 }
 
 const std::string &DigitalContents::getValueOfMetadata() const noexcept
@@ -2039,17 +2164,17 @@ const std::shared_ptr<std::string> &DigitalContents::getMetadata() const noexcep
 void DigitalContents::setMetadata(const std::string &pMetadata) noexcept
 {
     metadata_ = std::make_shared<std::string>(pMetadata);
-    dirtyFlag_[15] = true;
+    dirtyFlag_[22] = true;
 }
 void DigitalContents::setMetadata(std::string &&pMetadata) noexcept
 {
     metadata_ = std::make_shared<std::string>(std::move(pMetadata));
-    dirtyFlag_[15] = true;
+    dirtyFlag_[22] = true;
 }
 void DigitalContents::setMetadataToNull() noexcept
 {
     metadata_.reset();
-    dirtyFlag_[15] = true;
+    dirtyFlag_[22] = true;
 }
 
 const std::string &DigitalContents::getValueOfPresentationConfig() const noexcept
@@ -2066,88 +2191,17 @@ const std::shared_ptr<std::string> &DigitalContents::getPresentationConfig() con
 void DigitalContents::setPresentationConfig(const std::string &pPresentationConfig) noexcept
 {
     presentationConfig_ = std::make_shared<std::string>(pPresentationConfig);
-    dirtyFlag_[16] = true;
+    dirtyFlag_[23] = true;
 }
 void DigitalContents::setPresentationConfig(std::string &&pPresentationConfig) noexcept
 {
     presentationConfig_ = std::make_shared<std::string>(std::move(pPresentationConfig));
-    dirtyFlag_[16] = true;
+    dirtyFlag_[23] = true;
 }
 void DigitalContents::setPresentationConfigToNull() noexcept
 {
     presentationConfig_.reset();
-    dirtyFlag_[16] = true;
-}
-
-const std::string &DigitalContents::getValueOfDisplayOverrides() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(displayOverrides_)
-        return *displayOverrides_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &DigitalContents::getDisplayOverrides() const noexcept
-{
-    return displayOverrides_;
-}
-void DigitalContents::setDisplayOverrides(const std::string &pDisplayOverrides) noexcept
-{
-    displayOverrides_ = std::make_shared<std::string>(pDisplayOverrides);
-    dirtyFlag_[17] = true;
-}
-void DigitalContents::setDisplayOverrides(std::string &&pDisplayOverrides) noexcept
-{
-    displayOverrides_ = std::make_shared<std::string>(std::move(pDisplayOverrides));
-    dirtyFlag_[17] = true;
-}
-void DigitalContents::setDisplayOverridesToNull() noexcept
-{
-    displayOverrides_.reset();
-    dirtyFlag_[17] = true;
-}
-
-const ::trantor::Date &DigitalContents::getValueOfPublishUp() const noexcept
-{
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(publishUp_)
-        return *publishUp_;
-    return defaultValue;
-}
-const std::shared_ptr<::trantor::Date> &DigitalContents::getPublishUp() const noexcept
-{
-    return publishUp_;
-}
-void DigitalContents::setPublishUp(const ::trantor::Date &pPublishUp) noexcept
-{
-    publishUp_ = std::make_shared<::trantor::Date>(pPublishUp);
-    dirtyFlag_[18] = true;
-}
-void DigitalContents::setPublishUpToNull() noexcept
-{
-    publishUp_.reset();
-    dirtyFlag_[18] = true;
-}
-
-const ::trantor::Date &DigitalContents::getValueOfPublishDown() const noexcept
-{
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(publishDown_)
-        return *publishDown_;
-    return defaultValue;
-}
-const std::shared_ptr<::trantor::Date> &DigitalContents::getPublishDown() const noexcept
-{
-    return publishDown_;
-}
-void DigitalContents::setPublishDown(const ::trantor::Date &pPublishDown) noexcept
-{
-    publishDown_ = std::make_shared<::trantor::Date>(pPublishDown);
-    dirtyFlag_[19] = true;
-}
-void DigitalContents::setPublishDownToNull() noexcept
-{
-    publishDown_.reset();
-    dirtyFlag_[19] = true;
+    dirtyFlag_[23] = true;
 }
 
 const int32_t &DigitalContents::getValueOfVersion() const noexcept
@@ -2164,7 +2218,7 @@ const std::shared_ptr<int32_t> &DigitalContents::getVersion() const noexcept
 void DigitalContents::setVersion(const int32_t &pVersion) noexcept
 {
     version_ = std::make_shared<int32_t>(pVersion);
-    dirtyFlag_[20] = true;
+    dirtyFlag_[24] = true;
 }
 
 const std::string &DigitalContents::getValueOfLanguage() const noexcept
@@ -2181,109 +2235,11 @@ const std::shared_ptr<std::string> &DigitalContents::getLanguage() const noexcep
 void DigitalContents::setLanguage(const std::string &pLanguage) noexcept
 {
     language_ = std::make_shared<std::string>(pLanguage);
-    dirtyFlag_[21] = true;
+    dirtyFlag_[25] = true;
 }
 void DigitalContents::setLanguage(std::string &&pLanguage) noexcept
 {
     language_ = std::make_shared<std::string>(std::move(pLanguage));
-    dirtyFlag_[21] = true;
-}
-
-const std::string &DigitalContents::getValueOfCreatedBy() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(createdBy_)
-        return *createdBy_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &DigitalContents::getCreatedBy() const noexcept
-{
-    return createdBy_;
-}
-void DigitalContents::setCreatedBy(const std::string &pCreatedBy) noexcept
-{
-    createdBy_ = std::make_shared<std::string>(pCreatedBy);
-    dirtyFlag_[22] = true;
-}
-void DigitalContents::setCreatedBy(std::string &&pCreatedBy) noexcept
-{
-    createdBy_ = std::make_shared<std::string>(std::move(pCreatedBy));
-    dirtyFlag_[22] = true;
-}
-void DigitalContents::setCreatedByToNull() noexcept
-{
-    createdBy_.reset();
-    dirtyFlag_[22] = true;
-}
-
-const ::trantor::Date &DigitalContents::getValueOfCreatedAt() const noexcept
-{
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(createdAt_)
-        return *createdAt_;
-    return defaultValue;
-}
-const std::shared_ptr<::trantor::Date> &DigitalContents::getCreatedAt() const noexcept
-{
-    return createdAt_;
-}
-void DigitalContents::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
-{
-    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
-    dirtyFlag_[23] = true;
-}
-void DigitalContents::setCreatedAtToNull() noexcept
-{
-    createdAt_.reset();
-    dirtyFlag_[23] = true;
-}
-
-const std::string &DigitalContents::getValueOfModifiedBy() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(modifiedBy_)
-        return *modifiedBy_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &DigitalContents::getModifiedBy() const noexcept
-{
-    return modifiedBy_;
-}
-void DigitalContents::setModifiedBy(const std::string &pModifiedBy) noexcept
-{
-    modifiedBy_ = std::make_shared<std::string>(pModifiedBy);
-    dirtyFlag_[24] = true;
-}
-void DigitalContents::setModifiedBy(std::string &&pModifiedBy) noexcept
-{
-    modifiedBy_ = std::make_shared<std::string>(std::move(pModifiedBy));
-    dirtyFlag_[24] = true;
-}
-void DigitalContents::setModifiedByToNull() noexcept
-{
-    modifiedBy_.reset();
-    dirtyFlag_[24] = true;
-}
-
-const ::trantor::Date &DigitalContents::getValueOfModifiedAt() const noexcept
-{
-    static const ::trantor::Date defaultValue = ::trantor::Date();
-    if(modifiedAt_)
-        return *modifiedAt_;
-    return defaultValue;
-}
-const std::shared_ptr<::trantor::Date> &DigitalContents::getModifiedAt() const noexcept
-{
-    return modifiedAt_;
-}
-void DigitalContents::setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept
-{
-    modifiedAt_ = std::make_shared<::trantor::Date>(pModifiedAt);
-    dirtyFlag_[25] = true;
-}
-void DigitalContents::setModifiedAtToNull() noexcept
-{
-    modifiedAt_.reset();
     dirtyFlag_[25] = true;
 }
 
@@ -2304,6 +2260,104 @@ void DigitalContents::setViews(const int32_t &pViews) noexcept
     dirtyFlag_[26] = true;
 }
 
+const std::string &DigitalContents::getValueOfCreatedBy() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(createdBy_)
+        return *createdBy_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getCreatedBy() const noexcept
+{
+    return createdBy_;
+}
+void DigitalContents::setCreatedBy(const std::string &pCreatedBy) noexcept
+{
+    createdBy_ = std::make_shared<std::string>(pCreatedBy);
+    dirtyFlag_[27] = true;
+}
+void DigitalContents::setCreatedBy(std::string &&pCreatedBy) noexcept
+{
+    createdBy_ = std::make_shared<std::string>(std::move(pCreatedBy));
+    dirtyFlag_[27] = true;
+}
+void DigitalContents::setCreatedByToNull() noexcept
+{
+    createdBy_.reset();
+    dirtyFlag_[27] = true;
+}
+
+const ::trantor::Date &DigitalContents::getValueOfCreatedAt() const noexcept
+{
+    static const ::trantor::Date defaultValue = ::trantor::Date();
+    if(createdAt_)
+        return *createdAt_;
+    return defaultValue;
+}
+const std::shared_ptr<::trantor::Date> &DigitalContents::getCreatedAt() const noexcept
+{
+    return createdAt_;
+}
+void DigitalContents::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
+{
+    createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
+    dirtyFlag_[28] = true;
+}
+void DigitalContents::setCreatedAtToNull() noexcept
+{
+    createdAt_.reset();
+    dirtyFlag_[28] = true;
+}
+
+const std::string &DigitalContents::getValueOfModifiedBy() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(modifiedBy_)
+        return *modifiedBy_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &DigitalContents::getModifiedBy() const noexcept
+{
+    return modifiedBy_;
+}
+void DigitalContents::setModifiedBy(const std::string &pModifiedBy) noexcept
+{
+    modifiedBy_ = std::make_shared<std::string>(pModifiedBy);
+    dirtyFlag_[29] = true;
+}
+void DigitalContents::setModifiedBy(std::string &&pModifiedBy) noexcept
+{
+    modifiedBy_ = std::make_shared<std::string>(std::move(pModifiedBy));
+    dirtyFlag_[29] = true;
+}
+void DigitalContents::setModifiedByToNull() noexcept
+{
+    modifiedBy_.reset();
+    dirtyFlag_[29] = true;
+}
+
+const ::trantor::Date &DigitalContents::getValueOfModifiedAt() const noexcept
+{
+    static const ::trantor::Date defaultValue = ::trantor::Date();
+    if(modifiedAt_)
+        return *modifiedAt_;
+    return defaultValue;
+}
+const std::shared_ptr<::trantor::Date> &DigitalContents::getModifiedAt() const noexcept
+{
+    return modifiedAt_;
+}
+void DigitalContents::setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept
+{
+    modifiedAt_ = std::make_shared<::trantor::Date>(pModifiedAt);
+    dirtyFlag_[30] = true;
+}
+void DigitalContents::setModifiedAtToNull() noexcept
+{
+    modifiedAt_.reset();
+    dirtyFlag_[30] = true;
+}
+
 void DigitalContents::updateId(const uint64_t id)
 {
 }
@@ -2315,29 +2369,33 @@ const std::vector<std::string> &DigitalContents::insertColumns() noexcept
         "title",
         "alias",
         "content_type_id",
-        "content_type",
+        "content_type_name",
         "introtext",
         "fulltext",
-        "primary_resource_id",
         "status",
         "category_id",
+        "category_name",
         "ordering",
-        "featured",
+        "is_featured",
         "access_level_id",
+        "access_level_name",
+        "current_workflow_id",
+        "current_workflow_name",
+        "current_workflow_stage_id",
+        "current_workflow_stage_name",
+        "next_workflow_stage_id",
+        "next_workflow_stage_name",
         "metakey",
         "metadesc",
         "metadata",
         "presentation_config",
-        "display_overrides",
-        "publish_up",
-        "publish_down",
         "version",
         "language",
+        "views",
         "created_by",
         "created_at",
         "modified_by",
-        "modified_at",
-        "views"
+        "modified_at"
     };
     return inCols;
 }
@@ -2390,9 +2448,9 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getContentType())
+        if(getContentTypeName())
         {
-            binder << getValueOfContentType();
+            binder << getValueOfContentTypeName();
         }
         else
         {
@@ -2423,17 +2481,6 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getPrimaryResourceId())
-        {
-            binder << getValueOfPrimaryResourceId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[8])
-    {
         if(getStatus())
         {
             binder << getValueOfStatus();
@@ -2443,11 +2490,22 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[9])
+    if(dirtyFlag_[8])
     {
         if(getCategoryId())
         {
             binder << getValueOfCategoryId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[9])
+    {
+        if(getCategoryName())
+        {
+            binder << getValueOfCategoryName();
         }
         else
         {
@@ -2467,9 +2525,9 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[11])
     {
-        if(getFeatured())
+        if(getIsFeatured())
         {
-            binder << getValueOfFeatured();
+            binder << getValueOfIsFeatured();
         }
         else
         {
@@ -2489,6 +2547,83 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[13])
     {
+        if(getAccessLevelName())
+        {
+            binder << getValueOfAccessLevelName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[14])
+    {
+        if(getCurrentWorkflowId())
+        {
+            binder << getValueOfCurrentWorkflowId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[15])
+    {
+        if(getCurrentWorkflowName())
+        {
+            binder << getValueOfCurrentWorkflowName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[16])
+    {
+        if(getCurrentWorkflowStageId())
+        {
+            binder << getValueOfCurrentWorkflowStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[17])
+    {
+        if(getCurrentWorkflowStageName())
+        {
+            binder << getValueOfCurrentWorkflowStageName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[18])
+    {
+        if(getNextWorkflowStageId())
+        {
+            binder << getValueOfNextWorkflowStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[19])
+    {
+        if(getNextWorkflowStageName())
+        {
+            binder << getValueOfNextWorkflowStageName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[20])
+    {
         if(getMetakey())
         {
             binder << getValueOfMetakey();
@@ -2498,7 +2633,7 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
+    if(dirtyFlag_[21])
     {
         if(getMetadesc())
         {
@@ -2509,7 +2644,7 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[15])
+    if(dirtyFlag_[22])
     {
         if(getMetadata())
         {
@@ -2520,7 +2655,7 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[16])
+    if(dirtyFlag_[23])
     {
         if(getPresentationConfig())
         {
@@ -2531,40 +2666,7 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[17])
-    {
-        if(getDisplayOverrides())
-        {
-            binder << getValueOfDisplayOverrides();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[18])
-    {
-        if(getPublishUp())
-        {
-            binder << getValueOfPublishUp();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[19])
-    {
-        if(getPublishDown())
-        {
-            binder << getValueOfPublishDown();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[20])
+    if(dirtyFlag_[24])
     {
         if(getVersion())
         {
@@ -2575,55 +2677,11 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[21])
+    if(dirtyFlag_[25])
     {
         if(getLanguage())
         {
             binder << getValueOfLanguage();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[22])
-    {
-        if(getCreatedBy())
-        {
-            binder << getValueOfCreatedBy();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[23])
-    {
-        if(getCreatedAt())
-        {
-            binder << getValueOfCreatedAt();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[24])
-    {
-        if(getModifiedBy())
-        {
-            binder << getValueOfModifiedBy();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[25])
-    {
-        if(getModifiedAt())
-        {
-            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -2635,6 +2693,50 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
         if(getViews())
         {
             binder << getValueOfViews();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[27])
+    {
+        if(getCreatedBy())
+        {
+            binder << getValueOfCreatedBy();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[28])
+    {
+        if(getCreatedAt())
+        {
+            binder << getValueOfCreatedAt();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[29])
+    {
+        if(getModifiedBy())
+        {
+            binder << getValueOfModifiedBy();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[30])
+    {
+        if(getModifiedAt())
+        {
+            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -2754,6 +2856,22 @@ const std::vector<std::string> DigitalContents::updateColumns() const
     {
         ret.push_back(getColumnName(26));
     }
+    if(dirtyFlag_[27])
+    {
+        ret.push_back(getColumnName(27));
+    }
+    if(dirtyFlag_[28])
+    {
+        ret.push_back(getColumnName(28));
+    }
+    if(dirtyFlag_[29])
+    {
+        ret.push_back(getColumnName(29));
+    }
+    if(dirtyFlag_[30])
+    {
+        ret.push_back(getColumnName(30));
+    }
     return ret;
 }
 
@@ -2805,9 +2923,9 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[4])
     {
-        if(getContentType())
+        if(getContentTypeName())
         {
-            binder << getValueOfContentType();
+            binder << getValueOfContentTypeName();
         }
         else
         {
@@ -2838,17 +2956,6 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[7])
     {
-        if(getPrimaryResourceId())
-        {
-            binder << getValueOfPrimaryResourceId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[8])
-    {
         if(getStatus())
         {
             binder << getValueOfStatus();
@@ -2858,11 +2965,22 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[9])
+    if(dirtyFlag_[8])
     {
         if(getCategoryId())
         {
             binder << getValueOfCategoryId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[9])
+    {
+        if(getCategoryName())
+        {
+            binder << getValueOfCategoryName();
         }
         else
         {
@@ -2882,9 +3000,9 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[11])
     {
-        if(getFeatured())
+        if(getIsFeatured())
         {
-            binder << getValueOfFeatured();
+            binder << getValueOfIsFeatured();
         }
         else
         {
@@ -2904,6 +3022,83 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[13])
     {
+        if(getAccessLevelName())
+        {
+            binder << getValueOfAccessLevelName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[14])
+    {
+        if(getCurrentWorkflowId())
+        {
+            binder << getValueOfCurrentWorkflowId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[15])
+    {
+        if(getCurrentWorkflowName())
+        {
+            binder << getValueOfCurrentWorkflowName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[16])
+    {
+        if(getCurrentWorkflowStageId())
+        {
+            binder << getValueOfCurrentWorkflowStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[17])
+    {
+        if(getCurrentWorkflowStageName())
+        {
+            binder << getValueOfCurrentWorkflowStageName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[18])
+    {
+        if(getNextWorkflowStageId())
+        {
+            binder << getValueOfNextWorkflowStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[19])
+    {
+        if(getNextWorkflowStageName())
+        {
+            binder << getValueOfNextWorkflowStageName();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[20])
+    {
         if(getMetakey())
         {
             binder << getValueOfMetakey();
@@ -2913,7 +3108,7 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
+    if(dirtyFlag_[21])
     {
         if(getMetadesc())
         {
@@ -2924,7 +3119,7 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[15])
+    if(dirtyFlag_[22])
     {
         if(getMetadata())
         {
@@ -2935,7 +3130,7 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[16])
+    if(dirtyFlag_[23])
     {
         if(getPresentationConfig())
         {
@@ -2946,40 +3141,7 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[17])
-    {
-        if(getDisplayOverrides())
-        {
-            binder << getValueOfDisplayOverrides();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[18])
-    {
-        if(getPublishUp())
-        {
-            binder << getValueOfPublishUp();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[19])
-    {
-        if(getPublishDown())
-        {
-            binder << getValueOfPublishDown();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[20])
+    if(dirtyFlag_[24])
     {
         if(getVersion())
         {
@@ -2990,55 +3152,11 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[21])
+    if(dirtyFlag_[25])
     {
         if(getLanguage())
         {
             binder << getValueOfLanguage();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[22])
-    {
-        if(getCreatedBy())
-        {
-            binder << getValueOfCreatedBy();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[23])
-    {
-        if(getCreatedAt())
-        {
-            binder << getValueOfCreatedAt();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[24])
-    {
-        if(getModifiedBy())
-        {
-            binder << getValueOfModifiedBy();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[25])
-    {
-        if(getModifiedAt())
-        {
-            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -3050,6 +3168,50 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
         if(getViews())
         {
             binder << getValueOfViews();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[27])
+    {
+        if(getCreatedBy())
+        {
+            binder << getValueOfCreatedBy();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[28])
+    {
+        if(getCreatedAt())
+        {
+            binder << getValueOfCreatedAt();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[29])
+    {
+        if(getModifiedBy())
+        {
+            binder << getValueOfModifiedBy();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[30])
+    {
+        if(getModifiedAt())
+        {
+            binder << getValueOfModifiedAt();
         }
         else
         {
@@ -3092,13 +3254,13 @@ Json::Value DigitalContents::toJson() const
     {
         ret["content_type_id"]=Json::Value();
     }
-    if(getContentType())
+    if(getContentTypeName())
     {
-        ret["content_type"]=getValueOfContentType();
+        ret["content_type_name"]=getValueOfContentTypeName();
     }
     else
     {
-        ret["content_type"]=Json::Value();
+        ret["content_type_name"]=Json::Value();
     }
     if(getIntrotext())
     {
@@ -3116,14 +3278,6 @@ Json::Value DigitalContents::toJson() const
     {
         ret["fulltext"]=Json::Value();
     }
-    if(getPrimaryResourceId())
-    {
-        ret["primary_resource_id"]=getValueOfPrimaryResourceId();
-    }
-    else
-    {
-        ret["primary_resource_id"]=Json::Value();
-    }
     if(getStatus())
     {
         ret["status"]=getValueOfStatus();
@@ -3140,6 +3294,14 @@ Json::Value DigitalContents::toJson() const
     {
         ret["category_id"]=Json::Value();
     }
+    if(getCategoryName())
+    {
+        ret["category_name"]=getValueOfCategoryName();
+    }
+    else
+    {
+        ret["category_name"]=Json::Value();
+    }
     if(getOrdering())
     {
         ret["ordering"]=getValueOfOrdering();
@@ -3148,13 +3310,13 @@ Json::Value DigitalContents::toJson() const
     {
         ret["ordering"]=Json::Value();
     }
-    if(getFeatured())
+    if(getIsFeatured())
     {
-        ret["featured"]=getValueOfFeatured();
+        ret["is_featured"]=getValueOfIsFeatured();
     }
     else
     {
-        ret["featured"]=Json::Value();
+        ret["is_featured"]=Json::Value();
     }
     if(getAccessLevelId())
     {
@@ -3163,6 +3325,62 @@ Json::Value DigitalContents::toJson() const
     else
     {
         ret["access_level_id"]=Json::Value();
+    }
+    if(getAccessLevelName())
+    {
+        ret["access_level_name"]=getValueOfAccessLevelName();
+    }
+    else
+    {
+        ret["access_level_name"]=Json::Value();
+    }
+    if(getCurrentWorkflowId())
+    {
+        ret["current_workflow_id"]=getValueOfCurrentWorkflowId();
+    }
+    else
+    {
+        ret["current_workflow_id"]=Json::Value();
+    }
+    if(getCurrentWorkflowName())
+    {
+        ret["current_workflow_name"]=getValueOfCurrentWorkflowName();
+    }
+    else
+    {
+        ret["current_workflow_name"]=Json::Value();
+    }
+    if(getCurrentWorkflowStageId())
+    {
+        ret["current_workflow_stage_id"]=getValueOfCurrentWorkflowStageId();
+    }
+    else
+    {
+        ret["current_workflow_stage_id"]=Json::Value();
+    }
+    if(getCurrentWorkflowStageName())
+    {
+        ret["current_workflow_stage_name"]=getValueOfCurrentWorkflowStageName();
+    }
+    else
+    {
+        ret["current_workflow_stage_name"]=Json::Value();
+    }
+    if(getNextWorkflowStageId())
+    {
+        ret["next_workflow_stage_id"]=getValueOfNextWorkflowStageId();
+    }
+    else
+    {
+        ret["next_workflow_stage_id"]=Json::Value();
+    }
+    if(getNextWorkflowStageName())
+    {
+        ret["next_workflow_stage_name"]=getValueOfNextWorkflowStageName();
+    }
+    else
+    {
+        ret["next_workflow_stage_name"]=Json::Value();
     }
     if(getMetakey())
     {
@@ -3196,30 +3414,6 @@ Json::Value DigitalContents::toJson() const
     {
         ret["presentation_config"]=Json::Value();
     }
-    if(getDisplayOverrides())
-    {
-        ret["display_overrides"]=getValueOfDisplayOverrides();
-    }
-    else
-    {
-        ret["display_overrides"]=Json::Value();
-    }
-    if(getPublishUp())
-    {
-        ret["publish_up"]=getPublishUp()->toDbStringLocal();
-    }
-    else
-    {
-        ret["publish_up"]=Json::Value();
-    }
-    if(getPublishDown())
-    {
-        ret["publish_down"]=getPublishDown()->toDbStringLocal();
-    }
-    else
-    {
-        ret["publish_down"]=Json::Value();
-    }
     if(getVersion())
     {
         ret["version"]=getValueOfVersion();
@@ -3235,6 +3429,14 @@ Json::Value DigitalContents::toJson() const
     else
     {
         ret["language"]=Json::Value();
+    }
+    if(getViews())
+    {
+        ret["views"]=getValueOfViews();
+    }
+    else
+    {
+        ret["views"]=Json::Value();
     }
     if(getCreatedBy())
     {
@@ -3268,14 +3470,6 @@ Json::Value DigitalContents::toJson() const
     {
         ret["modified_at"]=Json::Value();
     }
-    if(getViews())
-    {
-        ret["views"]=getValueOfViews();
-    }
-    else
-    {
-        ret["views"]=Json::Value();
-    }
     return ret;
 }
 
@@ -3288,7 +3482,7 @@ Json::Value DigitalContents::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 27)
+    if(pMasqueradingVector.size() == 31)
     {
         if(!pMasqueradingVector[0].empty())
         {
@@ -3336,9 +3530,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getContentType())
+            if(getContentTypeName())
             {
-                ret[pMasqueradingVector[4]]=getValueOfContentType();
+                ret[pMasqueradingVector[4]]=getValueOfContentTypeName();
             }
             else
             {
@@ -3369,9 +3563,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[7].empty())
         {
-            if(getPrimaryResourceId())
+            if(getStatus())
             {
-                ret[pMasqueradingVector[7]]=getValueOfPrimaryResourceId();
+                ret[pMasqueradingVector[7]]=getValueOfStatus();
             }
             else
             {
@@ -3380,9 +3574,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getStatus())
+            if(getCategoryId())
             {
-                ret[pMasqueradingVector[8]]=getValueOfStatus();
+                ret[pMasqueradingVector[8]]=getValueOfCategoryId();
             }
             else
             {
@@ -3391,9 +3585,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getCategoryId())
+            if(getCategoryName())
             {
-                ret[pMasqueradingVector[9]]=getValueOfCategoryId();
+                ret[pMasqueradingVector[9]]=getValueOfCategoryName();
             }
             else
             {
@@ -3413,9 +3607,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[11].empty())
         {
-            if(getFeatured())
+            if(getIsFeatured())
             {
-                ret[pMasqueradingVector[11]]=getValueOfFeatured();
+                ret[pMasqueradingVector[11]]=getValueOfIsFeatured();
             }
             else
             {
@@ -3435,9 +3629,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[13].empty())
         {
-            if(getMetakey())
+            if(getAccessLevelName())
             {
-                ret[pMasqueradingVector[13]]=getValueOfMetakey();
+                ret[pMasqueradingVector[13]]=getValueOfAccessLevelName();
             }
             else
             {
@@ -3446,9 +3640,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[14].empty())
         {
-            if(getMetadesc())
+            if(getCurrentWorkflowId())
             {
-                ret[pMasqueradingVector[14]]=getValueOfMetadesc();
+                ret[pMasqueradingVector[14]]=getValueOfCurrentWorkflowId();
             }
             else
             {
@@ -3457,9 +3651,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[15].empty())
         {
-            if(getMetadata())
+            if(getCurrentWorkflowName())
             {
-                ret[pMasqueradingVector[15]]=getValueOfMetadata();
+                ret[pMasqueradingVector[15]]=getValueOfCurrentWorkflowName();
             }
             else
             {
@@ -3468,9 +3662,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[16].empty())
         {
-            if(getPresentationConfig())
+            if(getCurrentWorkflowStageId())
             {
-                ret[pMasqueradingVector[16]]=getValueOfPresentationConfig();
+                ret[pMasqueradingVector[16]]=getValueOfCurrentWorkflowStageId();
             }
             else
             {
@@ -3479,9 +3673,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[17].empty())
         {
-            if(getDisplayOverrides())
+            if(getCurrentWorkflowStageName())
             {
-                ret[pMasqueradingVector[17]]=getValueOfDisplayOverrides();
+                ret[pMasqueradingVector[17]]=getValueOfCurrentWorkflowStageName();
             }
             else
             {
@@ -3490,9 +3684,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[18].empty())
         {
-            if(getPublishUp())
+            if(getNextWorkflowStageId())
             {
-                ret[pMasqueradingVector[18]]=getPublishUp()->toDbStringLocal();
+                ret[pMasqueradingVector[18]]=getValueOfNextWorkflowStageId();
             }
             else
             {
@@ -3501,9 +3695,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[19].empty())
         {
-            if(getPublishDown())
+            if(getNextWorkflowStageName())
             {
-                ret[pMasqueradingVector[19]]=getPublishDown()->toDbStringLocal();
+                ret[pMasqueradingVector[19]]=getValueOfNextWorkflowStageName();
             }
             else
             {
@@ -3512,9 +3706,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[20].empty())
         {
-            if(getVersion())
+            if(getMetakey())
             {
-                ret[pMasqueradingVector[20]]=getValueOfVersion();
+                ret[pMasqueradingVector[20]]=getValueOfMetakey();
             }
             else
             {
@@ -3523,9 +3717,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[21].empty())
         {
-            if(getLanguage())
+            if(getMetadesc())
             {
-                ret[pMasqueradingVector[21]]=getValueOfLanguage();
+                ret[pMasqueradingVector[21]]=getValueOfMetadesc();
             }
             else
             {
@@ -3534,9 +3728,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[22].empty())
         {
-            if(getCreatedBy())
+            if(getMetadata())
             {
-                ret[pMasqueradingVector[22]]=getValueOfCreatedBy();
+                ret[pMasqueradingVector[22]]=getValueOfMetadata();
             }
             else
             {
@@ -3545,9 +3739,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[23].empty())
         {
-            if(getCreatedAt())
+            if(getPresentationConfig())
             {
-                ret[pMasqueradingVector[23]]=getCreatedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[23]]=getValueOfPresentationConfig();
             }
             else
             {
@@ -3556,9 +3750,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[24].empty())
         {
-            if(getModifiedBy())
+            if(getVersion())
             {
-                ret[pMasqueradingVector[24]]=getValueOfModifiedBy();
+                ret[pMasqueradingVector[24]]=getValueOfVersion();
             }
             else
             {
@@ -3567,9 +3761,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[25].empty())
         {
-            if(getModifiedAt())
+            if(getLanguage())
             {
-                ret[pMasqueradingVector[25]]=getModifiedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[25]]=getValueOfLanguage();
             }
             else
             {
@@ -3585,6 +3779,50 @@ Json::Value DigitalContents::toMasqueradedJson(
             else
             {
                 ret[pMasqueradingVector[26]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[27].empty())
+        {
+            if(getCreatedBy())
+            {
+                ret[pMasqueradingVector[27]]=getValueOfCreatedBy();
+            }
+            else
+            {
+                ret[pMasqueradingVector[27]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[28].empty())
+        {
+            if(getCreatedAt())
+            {
+                ret[pMasqueradingVector[28]]=getCreatedAt()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[28]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[29].empty())
+        {
+            if(getModifiedBy())
+            {
+                ret[pMasqueradingVector[29]]=getValueOfModifiedBy();
+            }
+            else
+            {
+                ret[pMasqueradingVector[29]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[30].empty())
+        {
+            if(getModifiedAt())
+            {
+                ret[pMasqueradingVector[30]]=getModifiedAt()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[30]]=Json::Value();
             }
         }
         return ret;
@@ -3622,13 +3860,13 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["content_type_id"]=Json::Value();
     }
-    if(getContentType())
+    if(getContentTypeName())
     {
-        ret["content_type"]=getValueOfContentType();
+        ret["content_type_name"]=getValueOfContentTypeName();
     }
     else
     {
-        ret["content_type"]=Json::Value();
+        ret["content_type_name"]=Json::Value();
     }
     if(getIntrotext())
     {
@@ -3646,14 +3884,6 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["fulltext"]=Json::Value();
     }
-    if(getPrimaryResourceId())
-    {
-        ret["primary_resource_id"]=getValueOfPrimaryResourceId();
-    }
-    else
-    {
-        ret["primary_resource_id"]=Json::Value();
-    }
     if(getStatus())
     {
         ret["status"]=getValueOfStatus();
@@ -3670,6 +3900,14 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["category_id"]=Json::Value();
     }
+    if(getCategoryName())
+    {
+        ret["category_name"]=getValueOfCategoryName();
+    }
+    else
+    {
+        ret["category_name"]=Json::Value();
+    }
     if(getOrdering())
     {
         ret["ordering"]=getValueOfOrdering();
@@ -3678,13 +3916,13 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["ordering"]=Json::Value();
     }
-    if(getFeatured())
+    if(getIsFeatured())
     {
-        ret["featured"]=getValueOfFeatured();
+        ret["is_featured"]=getValueOfIsFeatured();
     }
     else
     {
-        ret["featured"]=Json::Value();
+        ret["is_featured"]=Json::Value();
     }
     if(getAccessLevelId())
     {
@@ -3693,6 +3931,62 @@ Json::Value DigitalContents::toMasqueradedJson(
     else
     {
         ret["access_level_id"]=Json::Value();
+    }
+    if(getAccessLevelName())
+    {
+        ret["access_level_name"]=getValueOfAccessLevelName();
+    }
+    else
+    {
+        ret["access_level_name"]=Json::Value();
+    }
+    if(getCurrentWorkflowId())
+    {
+        ret["current_workflow_id"]=getValueOfCurrentWorkflowId();
+    }
+    else
+    {
+        ret["current_workflow_id"]=Json::Value();
+    }
+    if(getCurrentWorkflowName())
+    {
+        ret["current_workflow_name"]=getValueOfCurrentWorkflowName();
+    }
+    else
+    {
+        ret["current_workflow_name"]=Json::Value();
+    }
+    if(getCurrentWorkflowStageId())
+    {
+        ret["current_workflow_stage_id"]=getValueOfCurrentWorkflowStageId();
+    }
+    else
+    {
+        ret["current_workflow_stage_id"]=Json::Value();
+    }
+    if(getCurrentWorkflowStageName())
+    {
+        ret["current_workflow_stage_name"]=getValueOfCurrentWorkflowStageName();
+    }
+    else
+    {
+        ret["current_workflow_stage_name"]=Json::Value();
+    }
+    if(getNextWorkflowStageId())
+    {
+        ret["next_workflow_stage_id"]=getValueOfNextWorkflowStageId();
+    }
+    else
+    {
+        ret["next_workflow_stage_id"]=Json::Value();
+    }
+    if(getNextWorkflowStageName())
+    {
+        ret["next_workflow_stage_name"]=getValueOfNextWorkflowStageName();
+    }
+    else
+    {
+        ret["next_workflow_stage_name"]=Json::Value();
     }
     if(getMetakey())
     {
@@ -3726,30 +4020,6 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["presentation_config"]=Json::Value();
     }
-    if(getDisplayOverrides())
-    {
-        ret["display_overrides"]=getValueOfDisplayOverrides();
-    }
-    else
-    {
-        ret["display_overrides"]=Json::Value();
-    }
-    if(getPublishUp())
-    {
-        ret["publish_up"]=getPublishUp()->toDbStringLocal();
-    }
-    else
-    {
-        ret["publish_up"]=Json::Value();
-    }
-    if(getPublishDown())
-    {
-        ret["publish_down"]=getPublishDown()->toDbStringLocal();
-    }
-    else
-    {
-        ret["publish_down"]=Json::Value();
-    }
     if(getVersion())
     {
         ret["version"]=getValueOfVersion();
@@ -3765,6 +4035,14 @@ Json::Value DigitalContents::toMasqueradedJson(
     else
     {
         ret["language"]=Json::Value();
+    }
+    if(getViews())
+    {
+        ret["views"]=getValueOfViews();
+    }
+    else
+    {
+        ret["views"]=Json::Value();
     }
     if(getCreatedBy())
     {
@@ -3797,14 +4075,6 @@ Json::Value DigitalContents::toMasqueradedJson(
     else
     {
         ret["modified_at"]=Json::Value();
-    }
-    if(getViews())
-    {
-        ret["views"]=getValueOfViews();
-    }
-    else
-    {
-        ret["views"]=Json::Value();
     }
     return ret;
 }
@@ -3841,9 +4111,9 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(3, "content_type_id", pJson["content_type_id"], err, true))
             return false;
     }
-    if(pJson.isMember("content_type"))
+    if(pJson.isMember("content_type_name"))
     {
-        if(!validJsonOfField(4, "content_type", pJson["content_type"], err, true))
+        if(!validJsonOfField(4, "content_type_name", pJson["content_type_name"], err, true))
             return false;
     }
     if(pJson.isMember("introtext"))
@@ -3856,19 +4126,19 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(6, "fulltext", pJson["fulltext"], err, true))
             return false;
     }
-    if(pJson.isMember("primary_resource_id"))
-    {
-        if(!validJsonOfField(7, "primary_resource_id", pJson["primary_resource_id"], err, true))
-            return false;
-    }
     if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(8, "status", pJson["status"], err, true))
+        if(!validJsonOfField(7, "status", pJson["status"], err, true))
             return false;
     }
     if(pJson.isMember("category_id"))
     {
-        if(!validJsonOfField(9, "category_id", pJson["category_id"], err, true))
+        if(!validJsonOfField(8, "category_id", pJson["category_id"], err, true))
+            return false;
+    }
+    if(pJson.isMember("category_name"))
+    {
+        if(!validJsonOfField(9, "category_name", pJson["category_name"], err, true))
             return false;
     }
     if(pJson.isMember("ordering"))
@@ -3876,9 +4146,9 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(10, "ordering", pJson["ordering"], err, true))
             return false;
     }
-    if(pJson.isMember("featured"))
+    if(pJson.isMember("is_featured"))
     {
-        if(!validJsonOfField(11, "featured", pJson["featured"], err, true))
+        if(!validJsonOfField(11, "is_featured", pJson["is_featured"], err, true))
             return false;
     }
     if(pJson.isMember("access_level_id"))
@@ -3886,74 +4156,114 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(12, "access_level_id", pJson["access_level_id"], err, true))
             return false;
     }
+    if(pJson.isMember("access_level_name"))
+    {
+        if(!validJsonOfField(13, "access_level_name", pJson["access_level_name"], err, true))
+            return false;
+    }
+    else
+    {
+        err="The access_level_name column cannot be null";
+        return false;
+    }
+    if(pJson.isMember("current_workflow_id"))
+    {
+        if(!validJsonOfField(14, "current_workflow_id", pJson["current_workflow_id"], err, true))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_name"))
+    {
+        if(!validJsonOfField(15, "current_workflow_name", pJson["current_workflow_name"], err, true))
+            return false;
+    }
+    else
+    {
+        err="The current_workflow_name column cannot be null";
+        return false;
+    }
+    if(pJson.isMember("current_workflow_stage_id"))
+    {
+        if(!validJsonOfField(16, "current_workflow_stage_id", pJson["current_workflow_stage_id"], err, true))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_stage_name"))
+    {
+        if(!validJsonOfField(17, "current_workflow_stage_name", pJson["current_workflow_stage_name"], err, true))
+            return false;
+    }
+    else
+    {
+        err="The current_workflow_stage_name column cannot be null";
+        return false;
+    }
+    if(pJson.isMember("next_workflow_stage_id"))
+    {
+        if(!validJsonOfField(18, "next_workflow_stage_id", pJson["next_workflow_stage_id"], err, true))
+            return false;
+    }
+    if(pJson.isMember("next_workflow_stage_name"))
+    {
+        if(!validJsonOfField(19, "next_workflow_stage_name", pJson["next_workflow_stage_name"], err, true))
+            return false;
+    }
+    else
+    {
+        err="The next_workflow_stage_name column cannot be null";
+        return false;
+    }
     if(pJson.isMember("metakey"))
     {
-        if(!validJsonOfField(13, "metakey", pJson["metakey"], err, true))
+        if(!validJsonOfField(20, "metakey", pJson["metakey"], err, true))
             return false;
     }
     if(pJson.isMember("metadesc"))
     {
-        if(!validJsonOfField(14, "metadesc", pJson["metadesc"], err, true))
+        if(!validJsonOfField(21, "metadesc", pJson["metadesc"], err, true))
             return false;
     }
     if(pJson.isMember("metadata"))
     {
-        if(!validJsonOfField(15, "metadata", pJson["metadata"], err, true))
+        if(!validJsonOfField(22, "metadata", pJson["metadata"], err, true))
             return false;
     }
     if(pJson.isMember("presentation_config"))
     {
-        if(!validJsonOfField(16, "presentation_config", pJson["presentation_config"], err, true))
-            return false;
-    }
-    if(pJson.isMember("display_overrides"))
-    {
-        if(!validJsonOfField(17, "display_overrides", pJson["display_overrides"], err, true))
-            return false;
-    }
-    if(pJson.isMember("publish_up"))
-    {
-        if(!validJsonOfField(18, "publish_up", pJson["publish_up"], err, true))
-            return false;
-    }
-    if(pJson.isMember("publish_down"))
-    {
-        if(!validJsonOfField(19, "publish_down", pJson["publish_down"], err, true))
+        if(!validJsonOfField(23, "presentation_config", pJson["presentation_config"], err, true))
             return false;
     }
     if(pJson.isMember("version"))
     {
-        if(!validJsonOfField(20, "version", pJson["version"], err, true))
+        if(!validJsonOfField(24, "version", pJson["version"], err, true))
             return false;
     }
     if(pJson.isMember("language"))
     {
-        if(!validJsonOfField(21, "language", pJson["language"], err, true))
-            return false;
-    }
-    if(pJson.isMember("created_by"))
-    {
-        if(!validJsonOfField(22, "created_by", pJson["created_by"], err, true))
-            return false;
-    }
-    if(pJson.isMember("created_at"))
-    {
-        if(!validJsonOfField(23, "created_at", pJson["created_at"], err, true))
-            return false;
-    }
-    if(pJson.isMember("modified_by"))
-    {
-        if(!validJsonOfField(24, "modified_by", pJson["modified_by"], err, true))
-            return false;
-    }
-    if(pJson.isMember("modified_at"))
-    {
-        if(!validJsonOfField(25, "modified_at", pJson["modified_at"], err, true))
+        if(!validJsonOfField(25, "language", pJson["language"], err, true))
             return false;
     }
     if(pJson.isMember("views"))
     {
         if(!validJsonOfField(26, "views", pJson["views"], err, true))
+            return false;
+    }
+    if(pJson.isMember("created_by"))
+    {
+        if(!validJsonOfField(27, "created_by", pJson["created_by"], err, true))
+            return false;
+    }
+    if(pJson.isMember("created_at"))
+    {
+        if(!validJsonOfField(28, "created_at", pJson["created_at"], err, true))
+            return false;
+    }
+    if(pJson.isMember("modified_by"))
+    {
+        if(!validJsonOfField(29, "modified_by", pJson["modified_by"], err, true))
+            return false;
+    }
+    if(pJson.isMember("modified_at"))
+    {
+        if(!validJsonOfField(30, "modified_at", pJson["modified_at"], err, true))
             return false;
     }
     return true;
@@ -3962,7 +4272,7 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
                                                          const std::vector<std::string> &pMasqueradingVector,
                                                          std::string &err)
 {
-    if(pMasqueradingVector.size() != 27)
+    if(pMasqueradingVector.size() != 31)
     {
         err = "Bad masquerading vector";
         return false;
@@ -4089,6 +4399,11 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
               if(!validJsonOfField(13, pMasqueradingVector[13], pJson[pMasqueradingVector[13]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[13] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[14].empty())
       {
@@ -4105,6 +4420,11 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
               if(!validJsonOfField(15, pMasqueradingVector[15], pJson[pMasqueradingVector[15]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[15] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[16].empty())
       {
@@ -4121,6 +4441,11 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
               if(!validJsonOfField(17, pMasqueradingVector[17], pJson[pMasqueradingVector[17]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[17] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[18].empty())
       {
@@ -4137,6 +4462,11 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
               if(!validJsonOfField(19, pMasqueradingVector[19], pJson[pMasqueradingVector[19]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[19] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[20].empty())
       {
@@ -4194,6 +4524,38 @@ bool DigitalContents::validateMasqueradedJsonForCreation(const Json::Value &pJso
                   return false;
           }
       }
+      if(!pMasqueradingVector[27].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[27]))
+          {
+              if(!validJsonOfField(27, pMasqueradingVector[27], pJson[pMasqueradingVector[27]], err, true))
+                  return false;
+          }
+      }
+      if(!pMasqueradingVector[28].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[28]))
+          {
+              if(!validJsonOfField(28, pMasqueradingVector[28], pJson[pMasqueradingVector[28]], err, true))
+                  return false;
+          }
+      }
+      if(!pMasqueradingVector[29].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[29]))
+          {
+              if(!validJsonOfField(29, pMasqueradingVector[29], pJson[pMasqueradingVector[29]], err, true))
+                  return false;
+          }
+      }
+      if(!pMasqueradingVector[30].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[30]))
+          {
+              if(!validJsonOfField(30, pMasqueradingVector[30], pJson[pMasqueradingVector[30]], err, true))
+                  return false;
+          }
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -4229,9 +4591,9 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(3, "content_type_id", pJson["content_type_id"], err, false))
             return false;
     }
-    if(pJson.isMember("content_type"))
+    if(pJson.isMember("content_type_name"))
     {
-        if(!validJsonOfField(4, "content_type", pJson["content_type"], err, false))
+        if(!validJsonOfField(4, "content_type_name", pJson["content_type_name"], err, false))
             return false;
     }
     if(pJson.isMember("introtext"))
@@ -4244,19 +4606,19 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(6, "fulltext", pJson["fulltext"], err, false))
             return false;
     }
-    if(pJson.isMember("primary_resource_id"))
-    {
-        if(!validJsonOfField(7, "primary_resource_id", pJson["primary_resource_id"], err, false))
-            return false;
-    }
     if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(8, "status", pJson["status"], err, false))
+        if(!validJsonOfField(7, "status", pJson["status"], err, false))
             return false;
     }
     if(pJson.isMember("category_id"))
     {
-        if(!validJsonOfField(9, "category_id", pJson["category_id"], err, false))
+        if(!validJsonOfField(8, "category_id", pJson["category_id"], err, false))
+            return false;
+    }
+    if(pJson.isMember("category_name"))
+    {
+        if(!validJsonOfField(9, "category_name", pJson["category_name"], err, false))
             return false;
     }
     if(pJson.isMember("ordering"))
@@ -4264,9 +4626,9 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(10, "ordering", pJson["ordering"], err, false))
             return false;
     }
-    if(pJson.isMember("featured"))
+    if(pJson.isMember("is_featured"))
     {
-        if(!validJsonOfField(11, "featured", pJson["featured"], err, false))
+        if(!validJsonOfField(11, "is_featured", pJson["is_featured"], err, false))
             return false;
     }
     if(pJson.isMember("access_level_id"))
@@ -4274,74 +4636,94 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(12, "access_level_id", pJson["access_level_id"], err, false))
             return false;
     }
+    if(pJson.isMember("access_level_name"))
+    {
+        if(!validJsonOfField(13, "access_level_name", pJson["access_level_name"], err, false))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_id"))
+    {
+        if(!validJsonOfField(14, "current_workflow_id", pJson["current_workflow_id"], err, false))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_name"))
+    {
+        if(!validJsonOfField(15, "current_workflow_name", pJson["current_workflow_name"], err, false))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_stage_id"))
+    {
+        if(!validJsonOfField(16, "current_workflow_stage_id", pJson["current_workflow_stage_id"], err, false))
+            return false;
+    }
+    if(pJson.isMember("current_workflow_stage_name"))
+    {
+        if(!validJsonOfField(17, "current_workflow_stage_name", pJson["current_workflow_stage_name"], err, false))
+            return false;
+    }
+    if(pJson.isMember("next_workflow_stage_id"))
+    {
+        if(!validJsonOfField(18, "next_workflow_stage_id", pJson["next_workflow_stage_id"], err, false))
+            return false;
+    }
+    if(pJson.isMember("next_workflow_stage_name"))
+    {
+        if(!validJsonOfField(19, "next_workflow_stage_name", pJson["next_workflow_stage_name"], err, false))
+            return false;
+    }
     if(pJson.isMember("metakey"))
     {
-        if(!validJsonOfField(13, "metakey", pJson["metakey"], err, false))
+        if(!validJsonOfField(20, "metakey", pJson["metakey"], err, false))
             return false;
     }
     if(pJson.isMember("metadesc"))
     {
-        if(!validJsonOfField(14, "metadesc", pJson["metadesc"], err, false))
+        if(!validJsonOfField(21, "metadesc", pJson["metadesc"], err, false))
             return false;
     }
     if(pJson.isMember("metadata"))
     {
-        if(!validJsonOfField(15, "metadata", pJson["metadata"], err, false))
+        if(!validJsonOfField(22, "metadata", pJson["metadata"], err, false))
             return false;
     }
     if(pJson.isMember("presentation_config"))
     {
-        if(!validJsonOfField(16, "presentation_config", pJson["presentation_config"], err, false))
-            return false;
-    }
-    if(pJson.isMember("display_overrides"))
-    {
-        if(!validJsonOfField(17, "display_overrides", pJson["display_overrides"], err, false))
-            return false;
-    }
-    if(pJson.isMember("publish_up"))
-    {
-        if(!validJsonOfField(18, "publish_up", pJson["publish_up"], err, false))
-            return false;
-    }
-    if(pJson.isMember("publish_down"))
-    {
-        if(!validJsonOfField(19, "publish_down", pJson["publish_down"], err, false))
+        if(!validJsonOfField(23, "presentation_config", pJson["presentation_config"], err, false))
             return false;
     }
     if(pJson.isMember("version"))
     {
-        if(!validJsonOfField(20, "version", pJson["version"], err, false))
+        if(!validJsonOfField(24, "version", pJson["version"], err, false))
             return false;
     }
     if(pJson.isMember("language"))
     {
-        if(!validJsonOfField(21, "language", pJson["language"], err, false))
-            return false;
-    }
-    if(pJson.isMember("created_by"))
-    {
-        if(!validJsonOfField(22, "created_by", pJson["created_by"], err, false))
-            return false;
-    }
-    if(pJson.isMember("created_at"))
-    {
-        if(!validJsonOfField(23, "created_at", pJson["created_at"], err, false))
-            return false;
-    }
-    if(pJson.isMember("modified_by"))
-    {
-        if(!validJsonOfField(24, "modified_by", pJson["modified_by"], err, false))
-            return false;
-    }
-    if(pJson.isMember("modified_at"))
-    {
-        if(!validJsonOfField(25, "modified_at", pJson["modified_at"], err, false))
+        if(!validJsonOfField(25, "language", pJson["language"], err, false))
             return false;
     }
     if(pJson.isMember("views"))
     {
         if(!validJsonOfField(26, "views", pJson["views"], err, false))
+            return false;
+    }
+    if(pJson.isMember("created_by"))
+    {
+        if(!validJsonOfField(27, "created_by", pJson["created_by"], err, false))
+            return false;
+    }
+    if(pJson.isMember("created_at"))
+    {
+        if(!validJsonOfField(28, "created_at", pJson["created_at"], err, false))
+            return false;
+    }
+    if(pJson.isMember("modified_by"))
+    {
+        if(!validJsonOfField(29, "modified_by", pJson["modified_by"], err, false))
+            return false;
+    }
+    if(pJson.isMember("modified_at"))
+    {
+        if(!validJsonOfField(30, "modified_at", pJson["modified_at"], err, false))
             return false;
     }
     return true;
@@ -4350,7 +4732,7 @@ bool DigitalContents::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
                                                        const std::vector<std::string> &pMasqueradingVector,
                                                        std::string &err)
 {
-    if(pMasqueradingVector.size() != 27)
+    if(pMasqueradingVector.size() != 31)
     {
         err = "Bad masquerading vector";
         return false;
@@ -4496,6 +4878,26 @@ bool DigitalContents::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
           if(!validJsonOfField(26, pMasqueradingVector[26], pJson[pMasqueradingVector[26]], err, false))
               return false;
       }
+      if(!pMasqueradingVector[27].empty() && pJson.isMember(pMasqueradingVector[27]))
+      {
+          if(!validJsonOfField(27, pMasqueradingVector[27], pJson[pMasqueradingVector[27]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[28].empty() && pJson.isMember(pMasqueradingVector[28]))
+      {
+          if(!validJsonOfField(28, pMasqueradingVector[28], pJson[pMasqueradingVector[28]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[29].empty() && pJson.isMember(pMasqueradingVector[29]))
+      {
+          if(!validJsonOfField(29, pMasqueradingVector[29], pJson[pMasqueradingVector[29]], err, false))
+              return false;
+      }
+      if(!pMasqueradingVector[30].empty() && pJson.isMember(pMasqueradingVector[30]))
+      {
+          if(!validJsonOfField(30, pMasqueradingVector[30], pJson[pMasqueradingVector[30]], err, false))
+              return false;
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -4586,11 +4988,11 @@ bool DigitalContents::validJsonOfField(size_t index,
                 return false;
             }
             if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
-                .from_bytes(pJson.asCString()).size() > 20)
+                .from_bytes(pJson.asCString()).size() > 100)
             {
                 err="String length exceeds limit for the " +
                     fieldName +
-                    " field (the maximum value is 20)";
+                    " field (the maximum value is 100)";
                 return false;
             }
             break;
@@ -4619,9 +5021,10 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 7:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -4630,10 +5033,9 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 8:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -4647,6 +5049,14 @@ bool DigitalContents::validJsonOfField(size_t index,
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 100)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 100)";
                 return false;
             }
             break;
@@ -4668,7 +5078,7 @@ bool DigitalContents::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isInt())
+            if(!pJson.isBool())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -4688,11 +5098,20 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 13:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 255)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 255)";
                 return false;
             }
             break;
@@ -4710,11 +5129,20 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 15:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 255)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 255)";
                 return false;
             }
             break;
@@ -4732,11 +5160,20 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 17:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 255)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 255)";
                 return false;
             }
             break;
@@ -4754,6 +5191,26 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 19:
             if(pJson.isNull())
             {
+                err="The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 255)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 255)";
+                return false;
+            }
+            break;
+        case 20:
+            if(pJson.isNull())
+            {
                 return true;
             }
             if(!pJson.isString())
@@ -4762,23 +5219,10 @@ bool DigitalContents::validJsonOfField(size_t index,
                 return false;
             }
             break;
-        case 20:
-            if(pJson.isNull())
-            {
-                err="The " + fieldName + " column cannot be null";
-                return false;
-            }
-            if(!pJson.isInt())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
         case 21:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -4811,9 +5255,10 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 24:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -4822,7 +5267,8 @@ bool DigitalContents::validJsonOfField(size_t index,
         case 25:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -4837,6 +5283,50 @@ bool DigitalContents::validJsonOfField(size_t index,
                 return false;
             }
             if(!pJson.isInt())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 27:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 28:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 29:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 30:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;

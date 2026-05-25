@@ -51,18 +51,18 @@ class Categories
         static const std::string _description;
         static const std::string _parent_id;
         static const std::string _path;
-        static const std::string _is_active;
-        static const std::string _published;
+        static const std::string _status;
         static const std::string _article_count;
+        static const std::string _view_count;
         static const std::string _access_level_id;
+        static const std::string _access_level_name;
         static const std::string _metadesc;
         static const std::string _metakey;
         static const std::string _metadata;
-        static const std::string _created_user_id;
-        static const std::string _created_time;
-        static const std::string _modified_user_id;
-        static const std::string _modified_time;
-        static const std::string _hits;
+        static const std::string _created_by;
+        static const std::string _created_at;
+        static const std::string _modified_by;
+        static const std::string _modified_at;
     };
 
     static const int primaryKeyNumber;
@@ -180,21 +180,13 @@ class Categories
     void setPath(std::string &&pPath) noexcept;
     void setPathToNull() noexcept;
 
-    /**  For column is_active  */
-    ///Get the value of the column is_active, returns the default value if the column is null
-    const bool &getValueOfIsActive() const noexcept;
+    /**  For column status  */
+    ///Get the value of the column status, returns the default value if the column is null
+    const int32_t &getValueOfStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<bool> &getIsActive() const noexcept;
-    ///Set the value of the column is_active
-    void setIsActive(const bool &pIsActive) noexcept;
-
-    /**  For column published  */
-    ///Get the value of the column published, returns the default value if the column is null
-    const bool &getValueOfPublished() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<bool> &getPublished() const noexcept;
-    ///Set the value of the column published
-    void setPublished(const bool &pPublished) noexcept;
+    const std::shared_ptr<int32_t> &getStatus() const noexcept;
+    ///Set the value of the column status
+    void setStatus(const int32_t &pStatus) noexcept;
 
     /**  For column article_count  */
     ///Get the value of the column article_count, returns the default value if the column is null
@@ -203,6 +195,14 @@ class Categories
     const std::shared_ptr<int32_t> &getArticleCount() const noexcept;
     ///Set the value of the column article_count
     void setArticleCount(const int32_t &pArticleCount) noexcept;
+
+    /**  For column view_count  */
+    ///Get the value of the column view_count, returns the default value if the column is null
+    const int32_t &getValueOfViewCount() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getViewCount() const noexcept;
+    ///Set the value of the column view_count
+    void setViewCount(const int32_t &pViewCount) noexcept;
 
     /**  For column access_level_id  */
     ///Get the value of the column access_level_id, returns the default value if the column is null
@@ -213,6 +213,15 @@ class Categories
     void setAccessLevelId(const std::string &pAccessLevelId) noexcept;
     void setAccessLevelId(std::string &&pAccessLevelId) noexcept;
     void setAccessLevelIdToNull() noexcept;
+
+    /**  For column access_level_name  */
+    ///Get the value of the column access_level_name, returns the default value if the column is null
+    const std::string &getValueOfAccessLevelName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getAccessLevelName() const noexcept;
+    ///Set the value of the column access_level_name
+    void setAccessLevelName(const std::string &pAccessLevelName) noexcept;
+    void setAccessLevelName(std::string &&pAccessLevelName) noexcept;
 
     /**  For column metadesc  */
     ///Get the value of the column metadesc, returns the default value if the column is null
@@ -242,47 +251,43 @@ class Categories
     void setMetadata(std::string &&pMetadata) noexcept;
     void setMetadataToNull() noexcept;
 
-    /**  For column created_user_id  */
-    ///Get the value of the column created_user_id, returns the default value if the column is null
-    const std::string &getValueOfCreatedUserId() const noexcept;
+    /**  For column created_by  */
+    ///Get the value of the column created_by, returns the default value if the column is null
+    const std::string &getValueOfCreatedBy() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getCreatedUserId() const noexcept;
-    ///Set the value of the column created_user_id
-    void setCreatedUserId(const std::string &pCreatedUserId) noexcept;
-    void setCreatedUserId(std::string &&pCreatedUserId) noexcept;
+    const std::shared_ptr<std::string> &getCreatedBy() const noexcept;
+    ///Set the value of the column created_by
+    void setCreatedBy(const std::string &pCreatedBy) noexcept;
+    void setCreatedBy(std::string &&pCreatedBy) noexcept;
+    void setCreatedByToNull() noexcept;
 
-    /**  For column created_time  */
-    ///Get the value of the column created_time, returns the default value if the column is null
-    const ::trantor::Date &getValueOfCreatedTime() const noexcept;
+    /**  For column created_at  */
+    ///Get the value of the column created_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfCreatedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getCreatedTime() const noexcept;
-    ///Set the value of the column created_time
-    void setCreatedTime(const ::trantor::Date &pCreatedTime) noexcept;
+    const std::shared_ptr<::trantor::Date> &getCreatedAt() const noexcept;
+    ///Set the value of the column created_at
+    void setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept;
+    void setCreatedAtToNull() noexcept;
 
-    /**  For column modified_user_id  */
-    ///Get the value of the column modified_user_id, returns the default value if the column is null
-    const std::string &getValueOfModifiedUserId() const noexcept;
+    /**  For column modified_by  */
+    ///Get the value of the column modified_by, returns the default value if the column is null
+    const std::string &getValueOfModifiedBy() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getModifiedUserId() const noexcept;
-    ///Set the value of the column modified_user_id
-    void setModifiedUserId(const std::string &pModifiedUserId) noexcept;
-    void setModifiedUserId(std::string &&pModifiedUserId) noexcept;
+    const std::shared_ptr<std::string> &getModifiedBy() const noexcept;
+    ///Set the value of the column modified_by
+    void setModifiedBy(const std::string &pModifiedBy) noexcept;
+    void setModifiedBy(std::string &&pModifiedBy) noexcept;
+    void setModifiedByToNull() noexcept;
 
-    /**  For column modified_time  */
-    ///Get the value of the column modified_time, returns the default value if the column is null
-    const ::trantor::Date &getValueOfModifiedTime() const noexcept;
+    /**  For column modified_at  */
+    ///Get the value of the column modified_at, returns the default value if the column is null
+    const ::trantor::Date &getValueOfModifiedAt() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getModifiedTime() const noexcept;
-    ///Set the value of the column modified_time
-    void setModifiedTime(const ::trantor::Date &pModifiedTime) noexcept;
-
-    /**  For column hits  */
-    ///Get the value of the column hits, returns the default value if the column is null
-    const int32_t &getValueOfHits() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getHits() const noexcept;
-    ///Set the value of the column hits
-    void setHits(const int32_t &pHits) noexcept;
+    const std::shared_ptr<::trantor::Date> &getModifiedAt() const noexcept;
+    ///Set the value of the column modified_at
+    void setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept;
+    void setModifiedAtToNull() noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 19;  }
@@ -314,18 +319,18 @@ class Categories
     std::shared_ptr<std::string> description_;
     std::shared_ptr<std::string> parentId_;
     std::shared_ptr<std::string> path_;
-    std::shared_ptr<bool> isActive_;
-    std::shared_ptr<bool> published_;
+    std::shared_ptr<int32_t> status_;
     std::shared_ptr<int32_t> articleCount_;
+    std::shared_ptr<int32_t> viewCount_;
     std::shared_ptr<std::string> accessLevelId_;
+    std::shared_ptr<std::string> accessLevelName_;
     std::shared_ptr<std::string> metadesc_;
     std::shared_ptr<std::string> metakey_;
     std::shared_ptr<std::string> metadata_;
-    std::shared_ptr<std::string> createdUserId_;
-    std::shared_ptr<::trantor::Date> createdTime_;
-    std::shared_ptr<std::string> modifiedUserId_;
-    std::shared_ptr<::trantor::Date> modifiedTime_;
-    std::shared_ptr<int32_t> hits_;
+    std::shared_ptr<std::string> createdBy_;
+    std::shared_ptr<::trantor::Date> createdAt_;
+    std::shared_ptr<std::string> modifiedBy_;
+    std::shared_ptr<::trantor::Date> modifiedAt_;
     struct MetaData
     {
         const std::string colName_;
@@ -394,19 +399,19 @@ class Categories
             sql += "path,";
             ++parametersCount;
         }
-        sql += "is_active,";
+        sql += "status,";
         ++parametersCount;
         if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
-        sql += "published,";
+        sql += "article_count,";
         ++parametersCount;
         if(!dirtyFlag_[8])
         {
             needSelection=true;
         }
-        sql += "article_count,";
+        sql += "view_count,";
         ++parametersCount;
         if(!dirtyFlag_[9])
         {
@@ -417,35 +422,34 @@ class Categories
             sql += "access_level_id,";
             ++parametersCount;
         }
-        sql += "metadesc,";
-        ++parametersCount;
-        if(!dirtyFlag_[11])
+        if(dirtyFlag_[11])
         {
-            needSelection=true;
+            sql += "access_level_name,";
+            ++parametersCount;
         }
-        sql += "metakey,";
+        sql += "metadesc,";
         ++parametersCount;
         if(!dirtyFlag_[12])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[13])
+        sql += "metakey,";
+        ++parametersCount;
+        if(!dirtyFlag_[13])
+        {
+            needSelection=true;
+        }
+        if(dirtyFlag_[14])
         {
             sql += "metadata,";
             ++parametersCount;
         }
-        sql += "created_user_id,";
-        ++parametersCount;
-        if(!dirtyFlag_[14])
-        {
-            needSelection=true;
-        }
         if(dirtyFlag_[15])
         {
-            sql += "created_time,";
+            sql += "created_by,";
             ++parametersCount;
         }
-        sql += "modified_user_id,";
+        sql += "created_at,";
         ++parametersCount;
         if(!dirtyFlag_[16])
         {
@@ -453,10 +457,10 @@ class Categories
         }
         if(dirtyFlag_[17])
         {
-            sql += "modified_time,";
+            sql += "modified_by,";
             ++parametersCount;
         }
-        sql += "hits,";
+        sql += "modified_at,";
         ++parametersCount;
         if(!dirtyFlag_[18])
         {
@@ -561,10 +565,6 @@ class Categories
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[12])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -579,14 +579,14 @@ class Categories
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[14])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[15])
         {
