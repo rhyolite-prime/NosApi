@@ -70,7 +70,7 @@ class DigitalContents
         static const std::string _created_at;
         static const std::string _modified_by;
         static const std::string _modified_at;
-        static const std::string _hits;
+        static const std::string _views;
     };
 
     static const int primaryKeyNumber;
@@ -366,13 +366,13 @@ class DigitalContents
     void setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept;
     void setModifiedAtToNull() noexcept;
 
-    /**  For column hits  */
-    ///Get the value of the column hits, returns the default value if the column is null
-    const int32_t &getValueOfHits() const noexcept;
+    /**  For column views  */
+    ///Get the value of the column views, returns the default value if the column is null
+    const int32_t &getValueOfViews() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getHits() const noexcept;
-    ///Set the value of the column hits
-    void setHits(const int32_t &pHits) noexcept;
+    const std::shared_ptr<int32_t> &getViews() const noexcept;
+    ///Set the value of the column views
+    void setViews(const int32_t &pViews) noexcept;
 
 
     static size_t getColumnNumber() noexcept {  return 27;  }
@@ -423,7 +423,7 @@ class DigitalContents
     std::shared_ptr<::trantor::Date> createdAt_;
     std::shared_ptr<std::string> modifiedBy_;
     std::shared_ptr<::trantor::Date> modifiedAt_;
-    std::shared_ptr<int32_t> hits_;
+    std::shared_ptr<int32_t> views_;
     struct MetaData
     {
         const std::string colName_;
@@ -594,7 +594,7 @@ class DigitalContents
         {
             needSelection=true;
         }
-        sql += "hits,";
+        sql += "views,";
         ++parametersCount;
         if(!dirtyFlag_[26])
         {

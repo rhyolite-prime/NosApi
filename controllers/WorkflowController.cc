@@ -2,6 +2,7 @@
 
 #include "plugins/NosApiPlugin.h"
 
+
 Task<HttpResponsePtr> WorkflowController::getAll(HttpRequestPtr req) {
     int pageNo = 1;
     int pageSize = 10;
@@ -42,6 +43,7 @@ Task<HttpResponsePtr> WorkflowController::getWorkflowDetails(HttpRequestPtr req,
     co_return resp;
 }
 
+
 Task<HttpResponsePtr> WorkflowController::createWorkflow(HttpRequestPtr req) {
     auto jsonBody = req->getJsonObject();
     if (!jsonBody) {
@@ -75,7 +77,7 @@ Task<HttpResponsePtr> WorkflowController::createWorkflow(HttpRequestPtr req) {
     co_return resp;
 }
 
-Task<HttpResponsePtr> WorkflowController::updateWorkflow(HttpRequestPtr req, std::string userId) {
+Task<HttpResponsePtr> WorkflowController::updateWorkflow(HttpRequestPtr req, std::string workflowId) {
     auto jsonBody = req->getJsonObject();
     if (!jsonBody) {
         nos::dto::BaseApiResponse response;
@@ -101,7 +103,7 @@ Task<HttpResponsePtr> WorkflowController::updateWorkflow(HttpRequestPtr req, std
     auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
     auto &workflowService = plugin->getWorkflowService();
 
-    auto result = co_await workflowService.update(dto, userId);
+    auto result = co_await workflowService.update(dto, workflowId);
 
     auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
     bool notFound = !result.success && result.error.isMember("code") && result.error["code"].asInt() == 1004;
@@ -180,6 +182,7 @@ Task<HttpResponsePtr> WorkflowController::updateStage(HttpRequestPtr req, const 
     }
 
     nos::dto::WorkflowStageDto dto;
+
     try {
         dto.fromJson(*jsonBody);
     } catch (const std::exception &e) {

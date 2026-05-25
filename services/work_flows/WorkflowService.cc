@@ -269,8 +269,8 @@ namespace nos::services {
                 if (sJson.isMember("target_users") && sJson["target_users"].isString()) {
                     reader.parse(sJson["target_users"].asString(), targetUsersArray);
                 }
-                camelCaseS["targetUsers"] = targetUsersArray.isArray() ? targetUsersArray : Json::arrayValue;
 
+                camelCaseS["targetUsers"] = targetUsersArray.isArray() ? targetUsersArray : Json::arrayValue;
 
                 Json::Value targetGroupsArray;
 
@@ -333,8 +333,8 @@ namespace nos::services {
             stage.setIsDefault(workflowStageDto.getIsDefault());
 
             Json::Value targetUsersArray = Json::arrayValue;
-            for (const auto& perm : workflowStageDto.getTargetUsers()) {
-                targetUsersArray.append(perm);
+            for (const auto& target_user : workflowStageDto.getTargetUsers()) {
+                targetUsersArray.append(target_user);
             }
             Json::FastWriter writer;
             std::string targetUsersStr = writer.write(targetUsersArray);
@@ -344,8 +344,8 @@ namespace nos::services {
             stage.setTargetUsers(targetUsersStr);
 
             Json::Value targetGroupsArray = Json::arrayValue;
-            for (const auto& perm : workflowStageDto.getTargetUsers()) {
-                targetGroupsArray.append(perm);
+            for (const auto& target_group : workflowStageDto.getTargetGroups()) {
+                targetGroupsArray.append(target_group);
             }
 
             std::string targetGroupsStr = writer.write(targetGroupsArray);
@@ -362,7 +362,6 @@ namespace nos::services {
 
             response.success = true;
             response.message = "Workflow stage created successfully";
-            response.result["stageId"] = stage.getValueOfId();
 
         } catch (const DrogonDbException &e) {
             response.success = false;
@@ -399,6 +398,29 @@ namespace nos::services {
             if (!workflowStageDto.getDescription().empty()) {
                 stage.setDescription(workflowStageDto.getDescription());
             }
+
+            Json::Value targetUsersArray = Json::arrayValue;
+            for (const auto& target_user : workflowStageDto.getTargetUsers()) {
+                targetUsersArray.append(target_user);
+            }
+            Json::FastWriter writer;
+            std::string targetUsersStr = writer.write(targetUsersArray);
+            if (!targetUsersStr.empty() && targetUsersStr.back() == '\n') {
+                targetUsersStr.pop_back();
+            }
+            stage.setTargetUsers(targetUsersStr);
+
+            Json::Value targetGroupsArray = Json::arrayValue;
+            for (const auto& target_group : workflowStageDto.getTargetGroups()) {
+                targetGroupsArray.append(target_group);
+            }
+
+            std::string targetGroupsStr = writer.write(targetGroupsArray);
+            if (!targetGroupsStr.empty() && targetGroupsStr.back() == '\n') {
+                targetGroupsStr.pop_back();
+            }
+
+            stage.setTargetGroups(targetGroupsStr);
 
             stage.setStatus(workflowStageDto.getStatus());
             stage.setOrdering(workflowStageDto.getOrdering());
@@ -466,16 +488,31 @@ namespace nos::services {
                 Json::Value tJson = trans.toJson();
                 Json::Value camelCaseT;
                 camelCaseT["id"] = tJson["id"];
-                camelCaseT["assetId"] = tJson["asset_id"];
                 camelCaseT["ordering"] = tJson["ordering"];
                 camelCaseT["workflowId"] = tJson["workflow_id"];
-                camelCaseT["published"] = tJson["published"];
+                camelCaseT["status"] = tJson["status"];
                 camelCaseT["title"] = tJson["title"];
                 camelCaseT["description"] = tJson["description"];
-                camelCaseT["fromStageId"] = tJson["from_stage_id"];
-                camelCaseT["toStageId"] = tJson["to_stage_id"];
-                camelCaseT["options"] = tJson["options"];
-                
+                camelCaseT["currentStageId"] = tJson["current_stage_id"];
+                camelCaseT["targetStageId"] = tJson["target_stage_id"];
+
+                Json::Value targetUsersArray;
+                Json::Reader reader;
+                if (tJson.isMember("target_users") && tJson["target_users"].isString()) {
+                    reader.parse(tJson["target_users"].asString(), targetUsersArray);
+                }
+
+                camelCaseT["targetUsers"] = targetUsersArray.isArray() ? targetUsersArray : Json::arrayValue;
+
+                Json::Value targetGroupsArray;
+
+                if (tJson.isMember("target_groups") && tJson["target_groups"].isString()) {
+                    reader.parse(tJson["target_groups"].asString(), targetGroupsArray);
+                }
+
+                camelCaseT["targetGroups"] = targetGroupsArray.isArray() ? targetGroupsArray : Json::arrayValue;
+
+                //camelCaseT["options"] = tJson["options"];
                 camelCaseT["createdAt"] = tJson["created_at"];
                 
                 data.append(camelCaseT);
@@ -509,11 +546,11 @@ namespace nos::services {
 
             auto stageMp = CoroMapper<WorkflowStages>(dbClient);
             size_t fromExists = co_await stageMp.count(
-                Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getFromStageId()) &&
+                Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getCurrentStageId()) &&
                 Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
             );
             size_t toExists = co_await stageMp.count(
-                Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getToStageId()) &&
+                Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getTargetStageId()) &&
                 Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
             );
             if (fromExists == 0 || toExists == 0) {
@@ -544,8 +581,8 @@ namespace nos::services {
             transition.setDescription(workflowTransitionDto.getDescription());
             transition.setStatus(workflowTransitionDto.getStatus());
             transition.setOrdering(workflowTransitionDto.getOrdering());
-            transition.setFromStageId(workflowTransitionDto.getFromStageId());
-            transition.setToStageId(workflowTransitionDto.getToStageId());
+            transition.setCurrentStageId(workflowTransitionDto.getCurrentStageId());
+            transition.setTargetStageId(workflowTransitionDto.getTargetStageId());
             transition.setOptions(workflowTransitionDto.getOptions());
 
 
@@ -591,9 +628,9 @@ namespace nos::services {
             }
 
             auto stageMp = CoroMapper<WorkflowStages>(dbClient);
-            if (!workflowTransitionDto.getFromStageId().empty() && workflowTransitionDto.getFromStageId() != transition.getValueOfFromStageId()) {
+            if (!workflowTransitionDto.getCurrentStageId().empty() && workflowTransitionDto.getCurrentStageId() != transition.getValueOfCurrentStageId()) {
                 size_t fromExists = co_await stageMp.count(
-                    Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getFromStageId()) &&
+                    Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getCurrentStageId()) &&
                     Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
                 );
                 if (fromExists == 0) {
@@ -602,12 +639,12 @@ namespace nos::services {
                     response.error["code"] = constants::ERR_RESOURCE_NOT_FOUND;
                     co_return response;
                 }
-                transition.setFromStageId(workflowTransitionDto.getFromStageId());
+                transition.setCurrentStageId(workflowTransitionDto.getCurrentStageId());
             }
 
-            if (!workflowTransitionDto.getToStageId().empty() && workflowTransitionDto.getToStageId() != transition.getValueOfToStageId()) {
+            if (!workflowTransitionDto.getTargetStageId().empty() && workflowTransitionDto.getTargetStageId() != transition.getValueOfTargetStageId()) {
                 size_t toExists = co_await stageMp.count(
-                    Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getToStageId()) &&
+                    Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, workflowTransitionDto.getTargetStageId()) &&
                     Criteria(WorkflowStages::Cols::_workflow_id, CompareOperator::EQ, workflowTransitionDto.getWorkflowId())
                 );
                 if (toExists == 0) {
@@ -616,7 +653,7 @@ namespace nos::services {
                     response.error["code"] = constants::ERR_RESOURCE_NOT_FOUND;
                     co_return response;
                 }
-                transition.setToStageId(workflowTransitionDto.getToStageId());
+                transition.setTargetStageId(workflowTransitionDto.getTargetStageId());
             }
 
             if (!workflowTransitionDto.getDescription().empty()) {

@@ -9,7 +9,6 @@
 #include <drogon/utils/Utilities.h>
 #include <string>
 #include <codecvt>
-
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::Nos;
@@ -40,7 +39,7 @@ const std::string DigitalContents::Cols::_created_by = "\"created_by\"";
 const std::string DigitalContents::Cols::_created_at = "\"created_at\"";
 const std::string DigitalContents::Cols::_modified_by = "\"modified_by\"";
 const std::string DigitalContents::Cols::_modified_at = "\"modified_at\"";
-const std::string DigitalContents::Cols::_hits = "\"hits\"";
+const std::string DigitalContents::Cols::_views = "\"views\"";
 const std::string DigitalContents::primaryKeyName = "id";
 const bool DigitalContents::hasPrimaryKey = true;
 const std::string DigitalContents::tableName = "\"digital_contents\"";
@@ -72,7 +71,7 @@ const std::vector<typename DigitalContents::MetaData> DigitalContents::metaData_
 {"created_at","::trantor::Date","timestamp with time zone",0,0,0,0},
 {"modified_by","std::string","uuid",0,0,0,0},
 {"modified_at","::trantor::Date","timestamp with time zone",0,0,0,0},
-{"hits","int32_t","integer",4,0,0,1}
+{"views","int32_t","integer",4,0,0,1}
 };
 const std::string &DigitalContents::getColumnName(size_t index) noexcept(false)
 {
@@ -259,9 +258,9 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        if(!r["hits"].isNull())
+        if(!r["views"].isNull())
         {
-            hits_=std::make_shared<int32_t>(r["hits"].as<int32_t>());
+            views_=std::make_shared<int32_t>(r["views"].as<int32_t>());
         }
     }
     else
@@ -478,7 +477,7 @@ DigitalContents::DigitalContents(const Row &r, const ssize_t indexOffset) noexce
         index = offset + 26;
         if(!r[index].isNull())
         {
-            hits_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            views_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
     }
 
@@ -776,7 +775,7 @@ DigitalContents::DigitalContents(const Json::Value &pJson, const std::vector<std
         dirtyFlag_[26] = true;
         if(!pJson[pMasqueradingVector[26]].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
+            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
         }
     }
 }
@@ -1063,12 +1062,12 @@ DigitalContents::DigitalContents(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("views"))
     {
         dirtyFlag_[26]=true;
-        if(!pJson["hits"].isNull())
+        if(!pJson["views"].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson["hits"].asInt64());
+            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
         }
     }
 }
@@ -1365,7 +1364,7 @@ void DigitalContents::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[26] = true;
         if(!pJson[pMasqueradingVector[26]].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
+            views_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[26]].asInt64());
         }
     }
 }
@@ -1651,12 +1650,12 @@ void DigitalContents::updateByJson(const Json::Value &pJson) noexcept(false)
             }
         }
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("views"))
     {
         dirtyFlag_[26] = true;
-        if(!pJson["hits"].isNull())
+        if(!pJson["views"].isNull())
         {
-            hits_=std::make_shared<int32_t>((int32_t)pJson["hits"].asInt64());
+            views_=std::make_shared<int32_t>((int32_t)pJson["views"].asInt64());
         }
     }
 }
@@ -2288,20 +2287,20 @@ void DigitalContents::setModifiedAtToNull() noexcept
     dirtyFlag_[25] = true;
 }
 
-const int32_t &DigitalContents::getValueOfHits() const noexcept
+const int32_t &DigitalContents::getValueOfViews() const noexcept
 {
     static const int32_t defaultValue = int32_t();
-    if(hits_)
-        return *hits_;
+    if(views_)
+        return *views_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &DigitalContents::getHits() const noexcept
+const std::shared_ptr<int32_t> &DigitalContents::getViews() const noexcept
 {
-    return hits_;
+    return views_;
 }
-void DigitalContents::setHits(const int32_t &pHits) noexcept
+void DigitalContents::setViews(const int32_t &pViews) noexcept
 {
-    hits_ = std::make_shared<int32_t>(pHits);
+    views_ = std::make_shared<int32_t>(pViews);
     dirtyFlag_[26] = true;
 }
 
@@ -2338,7 +2337,7 @@ const std::vector<std::string> &DigitalContents::insertColumns() noexcept
         "created_at",
         "modified_by",
         "modified_at",
-        "hits"
+        "views"
     };
     return inCols;
 }
@@ -2633,9 +2632,9 @@ void DigitalContents::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[26])
     {
-        if(getHits())
+        if(getViews())
         {
-            binder << getValueOfHits();
+            binder << getValueOfViews();
         }
         else
         {
@@ -3048,9 +3047,9 @@ void DigitalContents::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[26])
     {
-        if(getHits())
+        if(getViews())
         {
-            binder << getValueOfHits();
+            binder << getValueOfViews();
         }
         else
         {
@@ -3269,13 +3268,13 @@ Json::Value DigitalContents::toJson() const
     {
         ret["modified_at"]=Json::Value();
     }
-    if(getHits())
+    if(getViews())
     {
-        ret["hits"]=getValueOfHits();
+        ret["views"]=getValueOfViews();
     }
     else
     {
-        ret["hits"]=Json::Value();
+        ret["views"]=Json::Value();
     }
     return ret;
 }
@@ -3579,9 +3578,9 @@ Json::Value DigitalContents::toMasqueradedJson(
         }
         if(!pMasqueradingVector[26].empty())
         {
-            if(getHits())
+            if(getViews())
             {
-                ret[pMasqueradingVector[26]]=getValueOfHits();
+                ret[pMasqueradingVector[26]]=getValueOfViews();
             }
             else
             {
@@ -3799,13 +3798,13 @@ Json::Value DigitalContents::toMasqueradedJson(
     {
         ret["modified_at"]=Json::Value();
     }
-    if(getHits())
+    if(getViews())
     {
-        ret["hits"]=getValueOfHits();
+        ret["views"]=getValueOfViews();
     }
     else
     {
-        ret["hits"]=Json::Value();
+        ret["views"]=Json::Value();
     }
     return ret;
 }
@@ -3952,9 +3951,9 @@ bool DigitalContents::validateJsonForCreation(const Json::Value &pJson, std::str
         if(!validJsonOfField(25, "modified_at", pJson["modified_at"], err, true))
             return false;
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("views"))
     {
-        if(!validJsonOfField(26, "hits", pJson["hits"], err, true))
+        if(!validJsonOfField(26, "views", pJson["views"], err, true))
             return false;
     }
     return true;
@@ -4340,9 +4339,9 @@ bool DigitalContents::validateJsonForUpdate(const Json::Value &pJson, std::strin
         if(!validJsonOfField(25, "modified_at", pJson["modified_at"], err, false))
             return false;
     }
-    if(pJson.isMember("hits"))
+    if(pJson.isMember("views"))
     {
-        if(!validJsonOfField(26, "hits", pJson["hits"], err, false))
+        if(!validJsonOfField(26, "views", pJson["views"], err, false))
             return false;
     }
     return true;

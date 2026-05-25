@@ -49,8 +49,10 @@ class WorkflowTransitions
         static const std::string _status;
         static const std::string _title;
         static const std::string _description;
-        static const std::string _from_stage_id;
-        static const std::string _to_stage_id;
+        static const std::string _current_stage_id;
+        static const std::string _target_stage_id;
+        static const std::string _target_users;
+        static const std::string _target_groups;
         static const std::string _ordering;
         static const std::string _options;
         static const std::string _created_by;
@@ -153,25 +155,45 @@ class WorkflowTransitions
     void setDescription(const std::string &pDescription) noexcept;
     void setDescription(std::string &&pDescription) noexcept;
 
-    /**  For column from_stage_id  */
-    ///Get the value of the column from_stage_id, returns the default value if the column is null
-    const std::string &getValueOfFromStageId() const noexcept;
+    /**  For column current_stage_id  */
+    ///Get the value of the column current_stage_id, returns the default value if the column is null
+    const std::string &getValueOfCurrentStageId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getFromStageId() const noexcept;
-    ///Set the value of the column from_stage_id
-    void setFromStageId(const std::string &pFromStageId) noexcept;
-    void setFromStageId(std::string &&pFromStageId) noexcept;
-    void setFromStageIdToNull() noexcept;
+    const std::shared_ptr<std::string> &getCurrentStageId() const noexcept;
+    ///Set the value of the column current_stage_id
+    void setCurrentStageId(const std::string &pCurrentStageId) noexcept;
+    void setCurrentStageId(std::string &&pCurrentStageId) noexcept;
+    void setCurrentStageIdToNull() noexcept;
 
-    /**  For column to_stage_id  */
-    ///Get the value of the column to_stage_id, returns the default value if the column is null
-    const std::string &getValueOfToStageId() const noexcept;
+    /**  For column target_stage_id  */
+    ///Get the value of the column target_stage_id, returns the default value if the column is null
+    const std::string &getValueOfTargetStageId() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getToStageId() const noexcept;
-    ///Set the value of the column to_stage_id
-    void setToStageId(const std::string &pToStageId) noexcept;
-    void setToStageId(std::string &&pToStageId) noexcept;
-    void setToStageIdToNull() noexcept;
+    const std::shared_ptr<std::string> &getTargetStageId() const noexcept;
+    ///Set the value of the column target_stage_id
+    void setTargetStageId(const std::string &pTargetStageId) noexcept;
+    void setTargetStageId(std::string &&pTargetStageId) noexcept;
+    void setTargetStageIdToNull() noexcept;
+
+    /**  For column target_users  */
+    ///Get the value of the column target_users, returns the default value if the column is null
+    const std::string &getValueOfTargetUsers() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getTargetUsers() const noexcept;
+    ///Set the value of the column target_users
+    void setTargetUsers(const std::string &pTargetUsers) noexcept;
+    void setTargetUsers(std::string &&pTargetUsers) noexcept;
+    void setTargetUsersToNull() noexcept;
+
+    /**  For column target_groups  */
+    ///Get the value of the column target_groups, returns the default value if the column is null
+    const std::string &getValueOfTargetGroups() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getTargetGroups() const noexcept;
+    ///Set the value of the column target_groups
+    void setTargetGroups(const std::string &pTargetGroups) noexcept;
+    void setTargetGroups(std::string &&pTargetGroups) noexcept;
+    void setTargetGroupsToNull() noexcept;
 
     /**  For column ordering  */
     ///Get the value of the column ordering, returns the default value if the column is null
@@ -230,7 +252,7 @@ class WorkflowTransitions
     void setModifiedAtToNull() noexcept;
 
 
-    static size_t getColumnNumber() noexcept {  return 13;  }
+    static size_t getColumnNumber() noexcept {  return 15;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -257,8 +279,10 @@ class WorkflowTransitions
     std::shared_ptr<int32_t> status_;
     std::shared_ptr<std::string> title_;
     std::shared_ptr<std::string> description_;
-    std::shared_ptr<std::string> fromStageId_;
-    std::shared_ptr<std::string> toStageId_;
+    std::shared_ptr<std::string> currentStageId_;
+    std::shared_ptr<std::string> targetStageId_;
+    std::shared_ptr<std::string> targetUsers_;
+    std::shared_ptr<std::string> targetGroups_;
     std::shared_ptr<int32_t> ordering_;
     std::shared_ptr<std::string> options_;
     std::shared_ptr<std::string> createdBy_;
@@ -276,7 +300,7 @@ class WorkflowTransitions
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[13]={ false };
+    bool dirtyFlag_[15]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -323,44 +347,54 @@ class WorkflowTransitions
         }
         if(dirtyFlag_[5])
         {
-            sql += "from_stage_id,";
+            sql += "current_stage_id,";
             ++parametersCount;
         }
         if(dirtyFlag_[6])
         {
-            sql += "to_stage_id,";
+            sql += "target_stage_id,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[7])
+        {
+            sql += "target_users,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[8])
+        {
+            sql += "target_groups,";
             ++parametersCount;
         }
         sql += "ordering,";
         ++parametersCount;
-        if(!dirtyFlag_[7])
+        if(!dirtyFlag_[9])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[8])
+        if(dirtyFlag_[10])
         {
             sql += "options,";
             ++parametersCount;
         }
-        if(dirtyFlag_[9])
+        if(dirtyFlag_[11])
         {
             sql += "created_by,";
             ++parametersCount;
         }
         sql += "created_at,";
         ++parametersCount;
-        if(!dirtyFlag_[10])
+        if(!dirtyFlag_[12])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[11])
+        if(dirtyFlag_[13])
         {
             sql += "modified_by,";
             ++parametersCount;
         }
         sql += "modified_at,";
         ++parametersCount;
-        if(!dirtyFlag_[12])
+        if(!dirtyFlag_[14])
         {
             needSelection=true;
         }
@@ -423,10 +457,6 @@ class WorkflowTransitions
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[8])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -437,7 +467,21 @@ class WorkflowTransitions
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[10])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[11])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[12])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
@@ -446,12 +490,12 @@ class WorkflowTransitions
         {
             sql +="default,";
         }
-        if(dirtyFlag_[11])
+        if(dirtyFlag_[13])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        if(dirtyFlag_[12])
+        if(dirtyFlag_[14])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

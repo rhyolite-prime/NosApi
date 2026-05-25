@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME} main.cc
         services/subscription_plans/SubscriptionPlanService.h
         services/roles/RoleService.h
         services/resources/ResourceService.h
-        services/content/ContentService.h
+        services/content/DigitalContentService.h
         services/user_groups/UserGroupService.cc
         services/work_flows/WorkflowService.h
         services/work_flows/WorkflowService.cc
@@ -35,7 +35,7 @@ add_executable(${PROJECT_NAME} main.cc
         services/folders/FolderService.cc
         services/fields/FieldService.cc
         services/field_groups/FieldGroupService.cc
-        services/content/ContentService.cc
+        services/content/DigitalContentService.cc
         services/collections/CollectionService.cc
         filters/JwtAuthFilter.h
         dto/BaseApiResponse.h
@@ -51,7 +51,10 @@ add_executable(${PROJECT_NAME} main.cc
         dto/AccessLevelDto.h
         dto/WorkflowDto.h
         dto/WorkflowStageDto.h
-        dto/WorkflowTransitionDto.h)
+        dto/WorkflowTransitionDto.h
+        services/email/EmailService.h
+        services/email/EmailService.cc
+        dto/DigitalContentDto.h)
 
 # ##############################################################################
 # If you include the drogon source code locally in your project, use this method
