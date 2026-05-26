@@ -26,6 +26,7 @@ class UserDto {
         [[nodiscard]] const std::string& getPassword() const { return password_; }
         [[nodiscard]] const std::string& getPhoneNumber() const { return phone_number_; }
         [[nodiscard]] const std::string& getCountry() const { return country_; }
+        [[nodiscard]] const std::vector<std::string> &getUserGroups() const { return user_groups_; }
 
         // Setters
         void setFirstName(const std::string& value) { first_name_ = value; }
@@ -35,6 +36,7 @@ class UserDto {
         void setPassword(const std::string& value) { password_ = value; }
         void setPhoneNumber(const std::string& value) { phone_number_ = value; }
         void setCountry(const std::string& value) { country_ = value; }
+        void setUserGroups(const std::vector<std::string> &value) { user_groups_ = value; }
 
 
     private:
@@ -46,6 +48,7 @@ class UserDto {
         std::string password_;
         std::string phone_number_;
         std::string country_;
+        std::vector<std::string> user_groups_;
     };
 
     inline void UserDto::fromJson(const Json::Value& json) {
@@ -76,6 +79,12 @@ class UserDto {
 
         if (json.isMember("country") && !json["country"].isNull()) {
             country_ = json["country"].asString();
+        }
+
+        if (json.isMember("userGroups") && json["userGroups"].isArray()) {
+            for (const auto &ip : json["userGroups"]) {
+                user_groups_.push_back(ip.asString());
+            }
         }
 
     }

@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME} main.cc
         services/subscription_plans/SubscriptionPlanService.h
         services/roles/RoleService.h
         services/resources/ResourceService.h
-        services/content/ContentService.h
+        services/content/DigitalContentService.h
         services/user_groups/UserGroupService.cc
         services/work_flows/WorkflowService.h
         services/work_flows/WorkflowService.cc
@@ -35,7 +35,7 @@ add_executable(${PROJECT_NAME} main.cc
         services/folders/FolderService.cc
         services/fields/FieldService.cc
         services/field_groups/FieldGroupService.cc
-        services/content/ContentService.cc
+        services/content/DigitalContentService.cc
         services/collections/CollectionService.cc
         filters/JwtAuthFilter.h
         dto/BaseApiResponse.h
@@ -51,7 +51,16 @@ add_executable(${PROJECT_NAME} main.cc
         dto/AccessLevelDto.h
         dto/WorkflowDto.h
         dto/WorkflowStageDto.h
-        dto/WorkflowTransitionDto.h)
+        dto/WorkflowTransitionDto.h
+        services/email/EmailService.h
+        services/email/EmailService.cc
+        dto/DigitalContentDto.h
+        services/content_types/ContentTypeService.h
+        services/content_types/ContentTypeService.cc
+        dto/ContentTypeDto.h
+        dto/CategoryDto.h
+        dto/SendEmailDto.h
+)
 
 # ##############################################################################
 # If you include the drogon source code locally in your project, use this method
@@ -111,6 +120,9 @@ target_sources(${PROJECT_NAME}
                ${FILTER_SRC}
                ${PLUGIN_SRC}
                ${MODEL_SRC})
+
+target_compile_options(${PROJECT_NAME} PRIVATE "-include" "${CMAKE_CURRENT_SOURCE_DIR}/utils/codecvt_helper.h" "-Wno-deprecated-declarations")
+
 # ##############################################################################
 # uncomment the following line for dynamically loading views 
 # set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)

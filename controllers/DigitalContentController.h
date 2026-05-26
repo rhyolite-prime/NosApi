@@ -1,15 +1,26 @@
 #pragma once
 
-#include <drogon/HttpSimpleController.h>
+#include <drogon/HttpController.h>
 
 using namespace drogon;
 
-class DigitalContentController : public drogon::HttpSimpleController<DigitalContentController>
+class DigitalContentController : public drogon::HttpController<DigitalContentController>
 {
   public:
-    void asyncHandleHttpRequest(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback) override;
-    PATH_LIST_BEGIN
-    // list path definitions here;
-    // PATH_ADD("/path", "filter1", "filter2", HttpMethod1, HttpMethod2...);
-    PATH_LIST_END
+    static constexpr const char *PREFIX = "/api/v1/digital-content/";
+    METHOD_LIST_BEGIN
+    ADD_METHOD_TO(DigitalContentController::getAll, std::string(PREFIX) + "get-all", Get, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::getContentDetails, std::string(PREFIX) + "{1}", Get, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::createDigitalContent, std::string(PREFIX) + "create", Post, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::transitionContent, std::string(PREFIX) + "transition/{1}", Get, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::updateDigitalContent,std::string(PREFIX) + "update/{1}", Put, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::deleteDigitalContent, std::string(PREFIX) + "delete/{1}", Delete, Options, "JwtAuthFilter");
+    METHOD_LIST_END
+
+    Task<HttpResponsePtr> getAll(HttpRequestPtr req);
+    Task<HttpResponsePtr> getContentDetails(HttpRequestPtr req, std::string id);
+    Task<HttpResponsePtr> createDigitalContent(HttpRequestPtr req);
+    Task<HttpResponsePtr> transitionContent(HttpRequestPtr req, std::string id);
+    Task<HttpResponsePtr> updateDigitalContent(HttpRequestPtr req, std::string id);
+    Task<HttpResponsePtr> deleteDigitalContent(HttpRequestPtr req, std::string id);
 };

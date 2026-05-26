@@ -8,13 +8,12 @@
 #include "Fields.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
-#include <codecvt>
+
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::Nos;
 
 const std::string Fields::Cols::_id = "\"id\"";
-const std::string Fields::Cols::_asset_id = "\"asset_id\"";
 const std::string Fields::Cols::_context = "\"context\"";
 const std::string Fields::Cols::_group_id = "\"group_id\"";
 const std::string Fields::Cols::_title = "\"title\"";
@@ -42,7 +41,6 @@ const std::string Fields::tableName = "\"fields\"";
 
 const std::vector<typename Fields::MetaData> Fields::metaData_={
 {"id","std::string","uuid",0,0,1,1},
-{"asset_id","std::string","uuid",0,0,0,0},
 {"context","std::string","character varying",255,0,0,1},
 {"group_id","std::string","uuid",0,0,0,0},
 {"title","std::string","character varying",255,0,0,1},
@@ -77,10 +75,6 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
         if(!r["id"].isNull())
         {
             id_=std::make_shared<std::string>(r["id"].as<std::string>());
-        }
-        if(!r["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(r["asset_id"].as<std::string>());
         }
         if(!r["context"].isNull())
         {
@@ -206,7 +200,7 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 23 > r.size())
+        if(offset + 22 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -220,94 +214,89 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
         index = offset + 1;
         if(!r[index].isNull())
         {
-            assetId_=std::make_shared<std::string>(r[index].as<std::string>());
+            context_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 2;
         if(!r[index].isNull())
         {
-            context_=std::make_shared<std::string>(r[index].as<std::string>());
+            groupId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 3;
         if(!r[index].isNull())
         {
-            groupId_=std::make_shared<std::string>(r[index].as<std::string>());
+            title_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            title_=std::make_shared<std::string>(r[index].as<std::string>());
+            name_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
         {
-            name_=std::make_shared<std::string>(r[index].as<std::string>());
+            label_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 6;
         if(!r[index].isNull())
         {
-            label_=std::make_shared<std::string>(r[index].as<std::string>());
+            defaultValue_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 7;
         if(!r[index].isNull())
         {
-            defaultValue_=std::make_shared<std::string>(r[index].as<std::string>());
+            type_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 8;
         if(!r[index].isNull())
         {
-            type_=std::make_shared<std::string>(r[index].as<std::string>());
+            note_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 9;
         if(!r[index].isNull())
         {
-            note_=std::make_shared<std::string>(r[index].as<std::string>());
+            description_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 10;
         if(!r[index].isNull())
         {
-            description_=std::make_shared<std::string>(r[index].as<std::string>());
+            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 11;
         if(!r[index].isNull())
         {
-            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            required_=std::make_shared<bool>(r[index].as<bool>());
         }
         index = offset + 12;
         if(!r[index].isNull())
         {
-            required_=std::make_shared<bool>(r[index].as<bool>());
+            onlyUseInSubform_=std::make_shared<bool>(r[index].as<bool>());
         }
         index = offset + 13;
         if(!r[index].isNull())
         {
-            onlyUseInSubform_=std::make_shared<bool>(r[index].as<bool>());
+            ordering_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 14;
         if(!r[index].isNull())
         {
-            ordering_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            params_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 15;
         if(!r[index].isNull())
         {
-            params_=std::make_shared<std::string>(r[index].as<std::string>());
+            fieldparams_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 16;
         if(!r[index].isNull())
         {
-            fieldparams_=std::make_shared<std::string>(r[index].as<std::string>());
+            language_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 17;
         if(!r[index].isNull())
         {
-            language_=std::make_shared<std::string>(r[index].as<std::string>());
-        }
-        index = offset + 18;
-        if(!r[index].isNull())
-        {
             createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
         }
-        index = offset + 19;
+        index = offset + 18;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -330,12 +319,12 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
                 createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 20;
+        index = offset + 19;
         if(!r[index].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(r[index].as<std::string>());
         }
-        index = offset + 21;
+        index = offset + 20;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -358,7 +347,7 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
                 modifiedAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 22;
+        index = offset + 21;
         if(!r[index].isNull())
         {
             accessLevel_=std::make_shared<std::string>(r[index].as<std::string>());
@@ -369,7 +358,7 @@ Fields::Fields(const Row &r, const ssize_t indexOffset) noexcept
 
 Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 23)
+    if(pMasqueradingVector.size() != 22)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -387,7 +376,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            assetId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            context_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -395,7 +384,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            context_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            groupId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -403,7 +392,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            groupId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -411,7 +400,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            name_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -419,7 +408,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            name_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
+            label_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -427,7 +416,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            label_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            defaultValue_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -435,7 +424,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            defaultValue_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            type_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -443,7 +432,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            type_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            note_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -451,7 +440,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            note_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -459,7 +448,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[10]].asInt64());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -467,7 +456,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[11]].asInt64());
+            required_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -475,7 +464,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[12] = true;
         if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            required_=std::make_shared<bool>(pJson[pMasqueradingVector[12]].asBool());
+            onlyUseInSubform_=std::make_shared<bool>(pJson[pMasqueradingVector[12]].asBool());
         }
     }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
@@ -483,7 +472,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            onlyUseInSubform_=std::make_shared<bool>(pJson[pMasqueradingVector[13]].asBool());
+            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[13]].asInt64());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -491,7 +480,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[14]].asInt64());
+            params_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -499,7 +488,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            params_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
+            fieldparams_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -507,7 +496,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            fieldparams_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
+            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
         }
     }
     if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
@@ -515,7 +504,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[17] = true;
         if(!pJson[pMasqueradingVector[17]].isNull())
         {
-            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -523,15 +512,7 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[18]].asString());
-        }
-    }
-    if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
-    {
-        dirtyFlag_[19] = true;
-        if(!pJson[pMasqueradingVector[19]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[19]].asString();
+            auto timeStr = pJson[pMasqueradingVector[18]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -552,20 +533,20 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
             }
         }
     }
+    if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
+    {
+        dirtyFlag_[19] = true;
+        if(!pJson[pMasqueradingVector[19]].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[19]].asString());
+        }
+    }
     if(!pMasqueradingVector[20].empty() && pJson.isMember(pMasqueradingVector[20]))
     {
         dirtyFlag_[20] = true;
         if(!pJson[pMasqueradingVector[20]].isNull())
         {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[20]].asString());
-        }
-    }
-    if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
-    {
-        dirtyFlag_[21] = true;
-        if(!pJson[pMasqueradingVector[21]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[21]].asString();
+            auto timeStr = pJson[pMasqueradingVector[20]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -586,12 +567,12 @@ Fields::Fields(const Json::Value &pJson, const std::vector<std::string> &pMasque
             }
         }
     }
-    if(!pMasqueradingVector[22].empty() && pJson.isMember(pMasqueradingVector[22]))
+    if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
     {
-        dirtyFlag_[22] = true;
-        if(!pJson[pMasqueradingVector[22]].isNull())
+        dirtyFlag_[21] = true;
+        if(!pJson[pMasqueradingVector[21]].isNull())
         {
-            accessLevel_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
+            accessLevel_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
         }
     }
 }
@@ -606,17 +587,9 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
             id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("asset_id"))
-    {
-        dirtyFlag_[1]=true;
-        if(!pJson["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(pJson["asset_id"].asString());
-        }
-    }
     if(pJson.isMember("context"))
     {
-        dirtyFlag_[2]=true;
+        dirtyFlag_[1]=true;
         if(!pJson["context"].isNull())
         {
             context_=std::make_shared<std::string>(pJson["context"].asString());
@@ -624,7 +597,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("group_id"))
     {
-        dirtyFlag_[3]=true;
+        dirtyFlag_[2]=true;
         if(!pJson["group_id"].isNull())
         {
             groupId_=std::make_shared<std::string>(pJson["group_id"].asString());
@@ -632,7 +605,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("title"))
     {
-        dirtyFlag_[4]=true;
+        dirtyFlag_[3]=true;
         if(!pJson["title"].isNull())
         {
             title_=std::make_shared<std::string>(pJson["title"].asString());
@@ -640,7 +613,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("name"))
     {
-        dirtyFlag_[5]=true;
+        dirtyFlag_[4]=true;
         if(!pJson["name"].isNull())
         {
             name_=std::make_shared<std::string>(pJson["name"].asString());
@@ -648,7 +621,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("label"))
     {
-        dirtyFlag_[6]=true;
+        dirtyFlag_[5]=true;
         if(!pJson["label"].isNull())
         {
             label_=std::make_shared<std::string>(pJson["label"].asString());
@@ -656,7 +629,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("default_value"))
     {
-        dirtyFlag_[7]=true;
+        dirtyFlag_[6]=true;
         if(!pJson["default_value"].isNull())
         {
             defaultValue_=std::make_shared<std::string>(pJson["default_value"].asString());
@@ -664,7 +637,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("type"))
     {
-        dirtyFlag_[8]=true;
+        dirtyFlag_[7]=true;
         if(!pJson["type"].isNull())
         {
             type_=std::make_shared<std::string>(pJson["type"].asString());
@@ -672,7 +645,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("note"))
     {
-        dirtyFlag_[9]=true;
+        dirtyFlag_[8]=true;
         if(!pJson["note"].isNull())
         {
             note_=std::make_shared<std::string>(pJson["note"].asString());
@@ -680,7 +653,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("description"))
     {
-        dirtyFlag_[10]=true;
+        dirtyFlag_[9]=true;
         if(!pJson["description"].isNull())
         {
             description_=std::make_shared<std::string>(pJson["description"].asString());
@@ -688,7 +661,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("status"))
     {
-        dirtyFlag_[11]=true;
+        dirtyFlag_[10]=true;
         if(!pJson["status"].isNull())
         {
             status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
@@ -696,7 +669,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("required"))
     {
-        dirtyFlag_[12]=true;
+        dirtyFlag_[11]=true;
         if(!pJson["required"].isNull())
         {
             required_=std::make_shared<bool>(pJson["required"].asBool());
@@ -704,7 +677,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("only_use_in_subform"))
     {
-        dirtyFlag_[13]=true;
+        dirtyFlag_[12]=true;
         if(!pJson["only_use_in_subform"].isNull())
         {
             onlyUseInSubform_=std::make_shared<bool>(pJson["only_use_in_subform"].asBool());
@@ -712,7 +685,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("ordering"))
     {
-        dirtyFlag_[14]=true;
+        dirtyFlag_[13]=true;
         if(!pJson["ordering"].isNull())
         {
             ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
@@ -720,7 +693,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("params"))
     {
-        dirtyFlag_[15]=true;
+        dirtyFlag_[14]=true;
         if(!pJson["params"].isNull())
         {
             params_=std::make_shared<std::string>(pJson["params"].asString());
@@ -728,7 +701,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("fieldparams"))
     {
-        dirtyFlag_[16]=true;
+        dirtyFlag_[15]=true;
         if(!pJson["fieldparams"].isNull())
         {
             fieldparams_=std::make_shared<std::string>(pJson["fieldparams"].asString());
@@ -736,7 +709,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("language"))
     {
-        dirtyFlag_[17]=true;
+        dirtyFlag_[16]=true;
         if(!pJson["language"].isNull())
         {
             language_=std::make_shared<std::string>(pJson["language"].asString());
@@ -744,7 +717,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[18]=true;
+        dirtyFlag_[17]=true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -752,7 +725,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[19]=true;
+        dirtyFlag_[18]=true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -778,7 +751,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[20]=true;
+        dirtyFlag_[19]=true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -786,7 +759,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[21]=true;
+        dirtyFlag_[20]=true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -812,7 +785,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("access_level"))
     {
-        dirtyFlag_[22]=true;
+        dirtyFlag_[21]=true;
         if(!pJson["access_level"].isNull())
         {
             accessLevel_=std::make_shared<std::string>(pJson["access_level"].asString());
@@ -823,7 +796,7 @@ Fields::Fields(const Json::Value &pJson) noexcept(false)
 void Fields::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 23)
+    if(pMasqueradingVector.size() != 22)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -840,7 +813,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            assetId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            context_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -848,7 +821,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            context_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
+            groupId_=std::make_shared<std::string>(pJson[pMasqueradingVector[2]].asString());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -856,7 +829,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            groupId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -864,7 +837,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
+            name_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -872,7 +845,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            name_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
+            label_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -880,7 +853,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            label_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            defaultValue_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -888,7 +861,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            defaultValue_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            type_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -896,7 +869,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            type_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            note_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -904,7 +877,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            note_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -912,7 +885,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[10]].asInt64());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -920,7 +893,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[11]].asInt64());
+            required_=std::make_shared<bool>(pJson[pMasqueradingVector[11]].asBool());
         }
     }
     if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
@@ -928,7 +901,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[12] = true;
         if(!pJson[pMasqueradingVector[12]].isNull())
         {
-            required_=std::make_shared<bool>(pJson[pMasqueradingVector[12]].asBool());
+            onlyUseInSubform_=std::make_shared<bool>(pJson[pMasqueradingVector[12]].asBool());
         }
     }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
@@ -936,7 +909,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            onlyUseInSubform_=std::make_shared<bool>(pJson[pMasqueradingVector[13]].asBool());
+            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[13]].asInt64());
         }
     }
     if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
@@ -944,7 +917,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[14] = true;
         if(!pJson[pMasqueradingVector[14]].isNull())
         {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[14]].asInt64());
+            params_=std::make_shared<std::string>(pJson[pMasqueradingVector[14]].asString());
         }
     }
     if(!pMasqueradingVector[15].empty() && pJson.isMember(pMasqueradingVector[15]))
@@ -952,7 +925,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[15] = true;
         if(!pJson[pMasqueradingVector[15]].isNull())
         {
-            params_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
+            fieldparams_=std::make_shared<std::string>(pJson[pMasqueradingVector[15]].asString());
         }
     }
     if(!pMasqueradingVector[16].empty() && pJson.isMember(pMasqueradingVector[16]))
@@ -960,7 +933,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[16] = true;
         if(!pJson[pMasqueradingVector[16]].isNull())
         {
-            fieldparams_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
+            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[16]].asString());
         }
     }
     if(!pMasqueradingVector[17].empty() && pJson.isMember(pMasqueradingVector[17]))
@@ -968,7 +941,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[17] = true;
         if(!pJson[pMasqueradingVector[17]].isNull())
         {
-            language_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[17]].asString());
         }
     }
     if(!pMasqueradingVector[18].empty() && pJson.isMember(pMasqueradingVector[18]))
@@ -976,15 +949,7 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[18] = true;
         if(!pJson[pMasqueradingVector[18]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[18]].asString());
-        }
-    }
-    if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
-    {
-        dirtyFlag_[19] = true;
-        if(!pJson[pMasqueradingVector[19]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[19]].asString();
+            auto timeStr = pJson[pMasqueradingVector[18]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -1005,20 +970,20 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
+    if(!pMasqueradingVector[19].empty() && pJson.isMember(pMasqueradingVector[19]))
+    {
+        dirtyFlag_[19] = true;
+        if(!pJson[pMasqueradingVector[19]].isNull())
+        {
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[19]].asString());
+        }
+    }
     if(!pMasqueradingVector[20].empty() && pJson.isMember(pMasqueradingVector[20]))
     {
         dirtyFlag_[20] = true;
         if(!pJson[pMasqueradingVector[20]].isNull())
         {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[20]].asString());
-        }
-    }
-    if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
-    {
-        dirtyFlag_[21] = true;
-        if(!pJson[pMasqueradingVector[21]].isNull())
-        {
-            auto timeStr = pJson[pMasqueradingVector[21]].asString();
+            auto timeStr = pJson[pMasqueradingVector[20]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -1039,12 +1004,12 @@ void Fields::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
-    if(!pMasqueradingVector[22].empty() && pJson.isMember(pMasqueradingVector[22]))
+    if(!pMasqueradingVector[21].empty() && pJson.isMember(pMasqueradingVector[21]))
     {
-        dirtyFlag_[22] = true;
-        if(!pJson[pMasqueradingVector[22]].isNull())
+        dirtyFlag_[21] = true;
+        if(!pJson[pMasqueradingVector[21]].isNull())
         {
-            accessLevel_=std::make_shared<std::string>(pJson[pMasqueradingVector[22]].asString());
+            accessLevel_=std::make_shared<std::string>(pJson[pMasqueradingVector[21]].asString());
         }
     }
 }
@@ -1058,17 +1023,9 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
             id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("asset_id"))
-    {
-        dirtyFlag_[1] = true;
-        if(!pJson["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(pJson["asset_id"].asString());
-        }
-    }
     if(pJson.isMember("context"))
     {
-        dirtyFlag_[2] = true;
+        dirtyFlag_[1] = true;
         if(!pJson["context"].isNull())
         {
             context_=std::make_shared<std::string>(pJson["context"].asString());
@@ -1076,7 +1033,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("group_id"))
     {
-        dirtyFlag_[3] = true;
+        dirtyFlag_[2] = true;
         if(!pJson["group_id"].isNull())
         {
             groupId_=std::make_shared<std::string>(pJson["group_id"].asString());
@@ -1084,7 +1041,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("title"))
     {
-        dirtyFlag_[4] = true;
+        dirtyFlag_[3] = true;
         if(!pJson["title"].isNull())
         {
             title_=std::make_shared<std::string>(pJson["title"].asString());
@@ -1092,7 +1049,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("name"))
     {
-        dirtyFlag_[5] = true;
+        dirtyFlag_[4] = true;
         if(!pJson["name"].isNull())
         {
             name_=std::make_shared<std::string>(pJson["name"].asString());
@@ -1100,7 +1057,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("label"))
     {
-        dirtyFlag_[6] = true;
+        dirtyFlag_[5] = true;
         if(!pJson["label"].isNull())
         {
             label_=std::make_shared<std::string>(pJson["label"].asString());
@@ -1108,7 +1065,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("default_value"))
     {
-        dirtyFlag_[7] = true;
+        dirtyFlag_[6] = true;
         if(!pJson["default_value"].isNull())
         {
             defaultValue_=std::make_shared<std::string>(pJson["default_value"].asString());
@@ -1116,7 +1073,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("type"))
     {
-        dirtyFlag_[8] = true;
+        dirtyFlag_[7] = true;
         if(!pJson["type"].isNull())
         {
             type_=std::make_shared<std::string>(pJson["type"].asString());
@@ -1124,7 +1081,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("note"))
     {
-        dirtyFlag_[9] = true;
+        dirtyFlag_[8] = true;
         if(!pJson["note"].isNull())
         {
             note_=std::make_shared<std::string>(pJson["note"].asString());
@@ -1132,7 +1089,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("description"))
     {
-        dirtyFlag_[10] = true;
+        dirtyFlag_[9] = true;
         if(!pJson["description"].isNull())
         {
             description_=std::make_shared<std::string>(pJson["description"].asString());
@@ -1140,7 +1097,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("status"))
     {
-        dirtyFlag_[11] = true;
+        dirtyFlag_[10] = true;
         if(!pJson["status"].isNull())
         {
             status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
@@ -1148,7 +1105,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("required"))
     {
-        dirtyFlag_[12] = true;
+        dirtyFlag_[11] = true;
         if(!pJson["required"].isNull())
         {
             required_=std::make_shared<bool>(pJson["required"].asBool());
@@ -1156,7 +1113,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("only_use_in_subform"))
     {
-        dirtyFlag_[13] = true;
+        dirtyFlag_[12] = true;
         if(!pJson["only_use_in_subform"].isNull())
         {
             onlyUseInSubform_=std::make_shared<bool>(pJson["only_use_in_subform"].asBool());
@@ -1164,7 +1121,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("ordering"))
     {
-        dirtyFlag_[14] = true;
+        dirtyFlag_[13] = true;
         if(!pJson["ordering"].isNull())
         {
             ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
@@ -1172,7 +1129,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("params"))
     {
-        dirtyFlag_[15] = true;
+        dirtyFlag_[14] = true;
         if(!pJson["params"].isNull())
         {
             params_=std::make_shared<std::string>(pJson["params"].asString());
@@ -1180,7 +1137,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("fieldparams"))
     {
-        dirtyFlag_[16] = true;
+        dirtyFlag_[15] = true;
         if(!pJson["fieldparams"].isNull())
         {
             fieldparams_=std::make_shared<std::string>(pJson["fieldparams"].asString());
@@ -1188,7 +1145,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("language"))
     {
-        dirtyFlag_[17] = true;
+        dirtyFlag_[16] = true;
         if(!pJson["language"].isNull())
         {
             language_=std::make_shared<std::string>(pJson["language"].asString());
@@ -1196,7 +1153,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[18] = true;
+        dirtyFlag_[17] = true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -1204,7 +1161,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[19] = true;
+        dirtyFlag_[18] = true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -1230,7 +1187,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[20] = true;
+        dirtyFlag_[19] = true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -1238,7 +1195,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[21] = true;
+        dirtyFlag_[20] = true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -1264,7 +1221,7 @@ void Fields::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("access_level"))
     {
-        dirtyFlag_[22] = true;
+        dirtyFlag_[21] = true;
         if(!pJson["access_level"].isNull())
         {
             accessLevel_=std::make_shared<std::string>(pJson["access_level"].asString());
@@ -1299,33 +1256,6 @@ const typename Fields::PrimaryKeyType & Fields::getPrimaryKey() const
     return *id_;
 }
 
-const std::string &Fields::getValueOfAssetId() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(assetId_)
-        return *assetId_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &Fields::getAssetId() const noexcept
-{
-    return assetId_;
-}
-void Fields::setAssetId(const std::string &pAssetId) noexcept
-{
-    assetId_ = std::make_shared<std::string>(pAssetId);
-    dirtyFlag_[1] = true;
-}
-void Fields::setAssetId(std::string &&pAssetId) noexcept
-{
-    assetId_ = std::make_shared<std::string>(std::move(pAssetId));
-    dirtyFlag_[1] = true;
-}
-void Fields::setAssetIdToNull() noexcept
-{
-    assetId_.reset();
-    dirtyFlag_[1] = true;
-}
-
 const std::string &Fields::getValueOfContext() const noexcept
 {
     static const std::string defaultValue = std::string();
@@ -1340,12 +1270,12 @@ const std::shared_ptr<std::string> &Fields::getContext() const noexcept
 void Fields::setContext(const std::string &pContext) noexcept
 {
     context_ = std::make_shared<std::string>(pContext);
-    dirtyFlag_[2] = true;
+    dirtyFlag_[1] = true;
 }
 void Fields::setContext(std::string &&pContext) noexcept
 {
     context_ = std::make_shared<std::string>(std::move(pContext));
-    dirtyFlag_[2] = true;
+    dirtyFlag_[1] = true;
 }
 
 const std::string &Fields::getValueOfGroupId() const noexcept
@@ -1362,17 +1292,17 @@ const std::shared_ptr<std::string> &Fields::getGroupId() const noexcept
 void Fields::setGroupId(const std::string &pGroupId) noexcept
 {
     groupId_ = std::make_shared<std::string>(pGroupId);
-    dirtyFlag_[3] = true;
+    dirtyFlag_[2] = true;
 }
 void Fields::setGroupId(std::string &&pGroupId) noexcept
 {
     groupId_ = std::make_shared<std::string>(std::move(pGroupId));
-    dirtyFlag_[3] = true;
+    dirtyFlag_[2] = true;
 }
 void Fields::setGroupIdToNull() noexcept
 {
     groupId_.reset();
-    dirtyFlag_[3] = true;
+    dirtyFlag_[2] = true;
 }
 
 const std::string &Fields::getValueOfTitle() const noexcept
@@ -1389,12 +1319,12 @@ const std::shared_ptr<std::string> &Fields::getTitle() const noexcept
 void Fields::setTitle(const std::string &pTitle) noexcept
 {
     title_ = std::make_shared<std::string>(pTitle);
-    dirtyFlag_[4] = true;
+    dirtyFlag_[3] = true;
 }
 void Fields::setTitle(std::string &&pTitle) noexcept
 {
     title_ = std::make_shared<std::string>(std::move(pTitle));
-    dirtyFlag_[4] = true;
+    dirtyFlag_[3] = true;
 }
 
 const std::string &Fields::getValueOfName() const noexcept
@@ -1411,12 +1341,12 @@ const std::shared_ptr<std::string> &Fields::getName() const noexcept
 void Fields::setName(const std::string &pName) noexcept
 {
     name_ = std::make_shared<std::string>(pName);
-    dirtyFlag_[5] = true;
+    dirtyFlag_[4] = true;
 }
 void Fields::setName(std::string &&pName) noexcept
 {
     name_ = std::make_shared<std::string>(std::move(pName));
-    dirtyFlag_[5] = true;
+    dirtyFlag_[4] = true;
 }
 
 const std::string &Fields::getValueOfLabel() const noexcept
@@ -1433,12 +1363,12 @@ const std::shared_ptr<std::string> &Fields::getLabel() const noexcept
 void Fields::setLabel(const std::string &pLabel) noexcept
 {
     label_ = std::make_shared<std::string>(pLabel);
-    dirtyFlag_[6] = true;
+    dirtyFlag_[5] = true;
 }
 void Fields::setLabel(std::string &&pLabel) noexcept
 {
     label_ = std::make_shared<std::string>(std::move(pLabel));
-    dirtyFlag_[6] = true;
+    dirtyFlag_[5] = true;
 }
 
 const std::string &Fields::getValueOfDefaultValue() const noexcept
@@ -1455,17 +1385,17 @@ const std::shared_ptr<std::string> &Fields::getDefaultValue() const noexcept
 void Fields::setDefaultValue(const std::string &pDefaultValue) noexcept
 {
     defaultValue_ = std::make_shared<std::string>(pDefaultValue);
-    dirtyFlag_[7] = true;
+    dirtyFlag_[6] = true;
 }
 void Fields::setDefaultValue(std::string &&pDefaultValue) noexcept
 {
     defaultValue_ = std::make_shared<std::string>(std::move(pDefaultValue));
-    dirtyFlag_[7] = true;
+    dirtyFlag_[6] = true;
 }
 void Fields::setDefaultValueToNull() noexcept
 {
     defaultValue_.reset();
-    dirtyFlag_[7] = true;
+    dirtyFlag_[6] = true;
 }
 
 const std::string &Fields::getValueOfType() const noexcept
@@ -1482,12 +1412,12 @@ const std::shared_ptr<std::string> &Fields::getType() const noexcept
 void Fields::setType(const std::string &pType) noexcept
 {
     type_ = std::make_shared<std::string>(pType);
-    dirtyFlag_[8] = true;
+    dirtyFlag_[7] = true;
 }
 void Fields::setType(std::string &&pType) noexcept
 {
     type_ = std::make_shared<std::string>(std::move(pType));
-    dirtyFlag_[8] = true;
+    dirtyFlag_[7] = true;
 }
 
 const std::string &Fields::getValueOfNote() const noexcept
@@ -1504,12 +1434,12 @@ const std::shared_ptr<std::string> &Fields::getNote() const noexcept
 void Fields::setNote(const std::string &pNote) noexcept
 {
     note_ = std::make_shared<std::string>(pNote);
-    dirtyFlag_[9] = true;
+    dirtyFlag_[8] = true;
 }
 void Fields::setNote(std::string &&pNote) noexcept
 {
     note_ = std::make_shared<std::string>(std::move(pNote));
-    dirtyFlag_[9] = true;
+    dirtyFlag_[8] = true;
 }
 
 const std::string &Fields::getValueOfDescription() const noexcept
@@ -1526,12 +1456,12 @@ const std::shared_ptr<std::string> &Fields::getDescription() const noexcept
 void Fields::setDescription(const std::string &pDescription) noexcept
 {
     description_ = std::make_shared<std::string>(pDescription);
-    dirtyFlag_[10] = true;
+    dirtyFlag_[9] = true;
 }
 void Fields::setDescription(std::string &&pDescription) noexcept
 {
     description_ = std::make_shared<std::string>(std::move(pDescription));
-    dirtyFlag_[10] = true;
+    dirtyFlag_[9] = true;
 }
 
 const int32_t &Fields::getValueOfStatus() const noexcept
@@ -1548,7 +1478,7 @@ const std::shared_ptr<int32_t> &Fields::getStatus() const noexcept
 void Fields::setStatus(const int32_t &pStatus) noexcept
 {
     status_ = std::make_shared<int32_t>(pStatus);
-    dirtyFlag_[11] = true;
+    dirtyFlag_[10] = true;
 }
 
 const bool &Fields::getValueOfRequired() const noexcept
@@ -1565,12 +1495,12 @@ const std::shared_ptr<bool> &Fields::getRequired() const noexcept
 void Fields::setRequired(const bool &pRequired) noexcept
 {
     required_ = std::make_shared<bool>(pRequired);
-    dirtyFlag_[12] = true;
+    dirtyFlag_[11] = true;
 }
 void Fields::setRequiredToNull() noexcept
 {
     required_.reset();
-    dirtyFlag_[12] = true;
+    dirtyFlag_[11] = true;
 }
 
 const bool &Fields::getValueOfOnlyUseInSubform() const noexcept
@@ -1587,12 +1517,12 @@ const std::shared_ptr<bool> &Fields::getOnlyUseInSubform() const noexcept
 void Fields::setOnlyUseInSubform(const bool &pOnlyUseInSubform) noexcept
 {
     onlyUseInSubform_ = std::make_shared<bool>(pOnlyUseInSubform);
-    dirtyFlag_[13] = true;
+    dirtyFlag_[12] = true;
 }
 void Fields::setOnlyUseInSubformToNull() noexcept
 {
     onlyUseInSubform_.reset();
-    dirtyFlag_[13] = true;
+    dirtyFlag_[12] = true;
 }
 
 const int32_t &Fields::getValueOfOrdering() const noexcept
@@ -1609,7 +1539,7 @@ const std::shared_ptr<int32_t> &Fields::getOrdering() const noexcept
 void Fields::setOrdering(const int32_t &pOrdering) noexcept
 {
     ordering_ = std::make_shared<int32_t>(pOrdering);
-    dirtyFlag_[14] = true;
+    dirtyFlag_[13] = true;
 }
 
 const std::string &Fields::getValueOfParams() const noexcept
@@ -1626,17 +1556,17 @@ const std::shared_ptr<std::string> &Fields::getParams() const noexcept
 void Fields::setParams(const std::string &pParams) noexcept
 {
     params_ = std::make_shared<std::string>(pParams);
-    dirtyFlag_[15] = true;
+    dirtyFlag_[14] = true;
 }
 void Fields::setParams(std::string &&pParams) noexcept
 {
     params_ = std::make_shared<std::string>(std::move(pParams));
-    dirtyFlag_[15] = true;
+    dirtyFlag_[14] = true;
 }
 void Fields::setParamsToNull() noexcept
 {
     params_.reset();
-    dirtyFlag_[15] = true;
+    dirtyFlag_[14] = true;
 }
 
 const std::string &Fields::getValueOfFieldparams() const noexcept
@@ -1653,17 +1583,17 @@ const std::shared_ptr<std::string> &Fields::getFieldparams() const noexcept
 void Fields::setFieldparams(const std::string &pFieldparams) noexcept
 {
     fieldparams_ = std::make_shared<std::string>(pFieldparams);
-    dirtyFlag_[16] = true;
+    dirtyFlag_[15] = true;
 }
 void Fields::setFieldparams(std::string &&pFieldparams) noexcept
 {
     fieldparams_ = std::make_shared<std::string>(std::move(pFieldparams));
-    dirtyFlag_[16] = true;
+    dirtyFlag_[15] = true;
 }
 void Fields::setFieldparamsToNull() noexcept
 {
     fieldparams_.reset();
-    dirtyFlag_[16] = true;
+    dirtyFlag_[15] = true;
 }
 
 const std::string &Fields::getValueOfLanguage() const noexcept
@@ -1680,12 +1610,12 @@ const std::shared_ptr<std::string> &Fields::getLanguage() const noexcept
 void Fields::setLanguage(const std::string &pLanguage) noexcept
 {
     language_ = std::make_shared<std::string>(pLanguage);
-    dirtyFlag_[17] = true;
+    dirtyFlag_[16] = true;
 }
 void Fields::setLanguage(std::string &&pLanguage) noexcept
 {
     language_ = std::make_shared<std::string>(std::move(pLanguage));
-    dirtyFlag_[17] = true;
+    dirtyFlag_[16] = true;
 }
 
 const std::string &Fields::getValueOfCreatedBy() const noexcept
@@ -1702,17 +1632,17 @@ const std::shared_ptr<std::string> &Fields::getCreatedBy() const noexcept
 void Fields::setCreatedBy(const std::string &pCreatedBy) noexcept
 {
     createdBy_ = std::make_shared<std::string>(pCreatedBy);
-    dirtyFlag_[18] = true;
+    dirtyFlag_[17] = true;
 }
 void Fields::setCreatedBy(std::string &&pCreatedBy) noexcept
 {
     createdBy_ = std::make_shared<std::string>(std::move(pCreatedBy));
-    dirtyFlag_[18] = true;
+    dirtyFlag_[17] = true;
 }
 void Fields::setCreatedByToNull() noexcept
 {
     createdBy_.reset();
-    dirtyFlag_[18] = true;
+    dirtyFlag_[17] = true;
 }
 
 const ::trantor::Date &Fields::getValueOfCreatedAt() const noexcept
@@ -1729,12 +1659,12 @@ const std::shared_ptr<::trantor::Date> &Fields::getCreatedAt() const noexcept
 void Fields::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
     createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
-    dirtyFlag_[19] = true;
+    dirtyFlag_[18] = true;
 }
 void Fields::setCreatedAtToNull() noexcept
 {
     createdAt_.reset();
-    dirtyFlag_[19] = true;
+    dirtyFlag_[18] = true;
 }
 
 const std::string &Fields::getValueOfModifiedBy() const noexcept
@@ -1751,17 +1681,17 @@ const std::shared_ptr<std::string> &Fields::getModifiedBy() const noexcept
 void Fields::setModifiedBy(const std::string &pModifiedBy) noexcept
 {
     modifiedBy_ = std::make_shared<std::string>(pModifiedBy);
-    dirtyFlag_[20] = true;
+    dirtyFlag_[19] = true;
 }
 void Fields::setModifiedBy(std::string &&pModifiedBy) noexcept
 {
     modifiedBy_ = std::make_shared<std::string>(std::move(pModifiedBy));
-    dirtyFlag_[20] = true;
+    dirtyFlag_[19] = true;
 }
 void Fields::setModifiedByToNull() noexcept
 {
     modifiedBy_.reset();
-    dirtyFlag_[20] = true;
+    dirtyFlag_[19] = true;
 }
 
 const ::trantor::Date &Fields::getValueOfModifiedAt() const noexcept
@@ -1778,12 +1708,12 @@ const std::shared_ptr<::trantor::Date> &Fields::getModifiedAt() const noexcept
 void Fields::setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept
 {
     modifiedAt_ = std::make_shared<::trantor::Date>(pModifiedAt);
-    dirtyFlag_[21] = true;
+    dirtyFlag_[20] = true;
 }
 void Fields::setModifiedAtToNull() noexcept
 {
     modifiedAt_.reset();
-    dirtyFlag_[21] = true;
+    dirtyFlag_[20] = true;
 }
 
 const std::string &Fields::getValueOfAccessLevel() const noexcept
@@ -1800,17 +1730,17 @@ const std::shared_ptr<std::string> &Fields::getAccessLevel() const noexcept
 void Fields::setAccessLevel(const std::string &pAccessLevel) noexcept
 {
     accessLevel_ = std::make_shared<std::string>(pAccessLevel);
-    dirtyFlag_[22] = true;
+    dirtyFlag_[21] = true;
 }
 void Fields::setAccessLevel(std::string &&pAccessLevel) noexcept
 {
     accessLevel_ = std::make_shared<std::string>(std::move(pAccessLevel));
-    dirtyFlag_[22] = true;
+    dirtyFlag_[21] = true;
 }
 void Fields::setAccessLevelToNull() noexcept
 {
     accessLevel_.reset();
-    dirtyFlag_[22] = true;
+    dirtyFlag_[21] = true;
 }
 
 void Fields::updateId(const uint64_t id)
@@ -1821,7 +1751,6 @@ const std::vector<std::string> &Fields::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
         "id",
-        "asset_id",
         "context",
         "group_id",
         "title",
@@ -1862,17 +1791,6 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[1])
     {
-        if(getAssetId())
-        {
-            binder << getValueOfAssetId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[2])
-    {
         if(getContext())
         {
             binder << getValueOfContext();
@@ -1882,7 +1800,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[3])
+    if(dirtyFlag_[2])
     {
         if(getGroupId())
         {
@@ -1893,7 +1811,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[4])
+    if(dirtyFlag_[3])
     {
         if(getTitle())
         {
@@ -1904,7 +1822,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[5])
+    if(dirtyFlag_[4])
     {
         if(getName())
         {
@@ -1915,7 +1833,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[6])
+    if(dirtyFlag_[5])
     {
         if(getLabel())
         {
@@ -1926,7 +1844,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[7])
+    if(dirtyFlag_[6])
     {
         if(getDefaultValue())
         {
@@ -1937,7 +1855,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[8])
+    if(dirtyFlag_[7])
     {
         if(getType())
         {
@@ -1948,7 +1866,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[9])
+    if(dirtyFlag_[8])
     {
         if(getNote())
         {
@@ -1959,7 +1877,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[9])
     {
         if(getDescription())
         {
@@ -1970,7 +1888,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[10])
     {
         if(getStatus())
         {
@@ -1981,7 +1899,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[11])
     {
         if(getRequired())
         {
@@ -1992,7 +1910,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[12])
     {
         if(getOnlyUseInSubform())
         {
@@ -2003,7 +1921,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
+    if(dirtyFlag_[13])
     {
         if(getOrdering())
         {
@@ -2014,7 +1932,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[15])
+    if(dirtyFlag_[14])
     {
         if(getParams())
         {
@@ -2025,7 +1943,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[16])
+    if(dirtyFlag_[15])
     {
         if(getFieldparams())
         {
@@ -2036,7 +1954,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[17])
+    if(dirtyFlag_[16])
     {
         if(getLanguage())
         {
@@ -2047,7 +1965,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[18])
+    if(dirtyFlag_[17])
     {
         if(getCreatedBy())
         {
@@ -2058,7 +1976,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[19])
+    if(dirtyFlag_[18])
     {
         if(getCreatedAt())
         {
@@ -2069,7 +1987,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[20])
+    if(dirtyFlag_[19])
     {
         if(getModifiedBy())
         {
@@ -2080,7 +1998,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[21])
+    if(dirtyFlag_[20])
     {
         if(getModifiedAt())
         {
@@ -2091,7 +2009,7 @@ void Fields::outputArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[22])
+    if(dirtyFlag_[21])
     {
         if(getAccessLevel())
         {
@@ -2195,10 +2113,6 @@ const std::vector<std::string> Fields::updateColumns() const
     {
         ret.push_back(getColumnName(21));
     }
-    if(dirtyFlag_[22])
-    {
-        ret.push_back(getColumnName(22));
-    }
     return ret;
 }
 
@@ -2217,17 +2131,6 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
     }
     if(dirtyFlag_[1])
     {
-        if(getAssetId())
-        {
-            binder << getValueOfAssetId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[2])
-    {
         if(getContext())
         {
             binder << getValueOfContext();
@@ -2237,7 +2140,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[3])
+    if(dirtyFlag_[2])
     {
         if(getGroupId())
         {
@@ -2248,7 +2151,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[4])
+    if(dirtyFlag_[3])
     {
         if(getTitle())
         {
@@ -2259,7 +2162,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[5])
+    if(dirtyFlag_[4])
     {
         if(getName())
         {
@@ -2270,7 +2173,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[6])
+    if(dirtyFlag_[5])
     {
         if(getLabel())
         {
@@ -2281,7 +2184,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[7])
+    if(dirtyFlag_[6])
     {
         if(getDefaultValue())
         {
@@ -2292,7 +2195,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[8])
+    if(dirtyFlag_[7])
     {
         if(getType())
         {
@@ -2303,7 +2206,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[9])
+    if(dirtyFlag_[8])
     {
         if(getNote())
         {
@@ -2314,7 +2217,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[9])
     {
         if(getDescription())
         {
@@ -2325,7 +2228,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[10])
     {
         if(getStatus())
         {
@@ -2336,7 +2239,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[11])
     {
         if(getRequired())
         {
@@ -2347,7 +2250,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[12])
     {
         if(getOnlyUseInSubform())
         {
@@ -2358,7 +2261,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[14])
+    if(dirtyFlag_[13])
     {
         if(getOrdering())
         {
@@ -2369,7 +2272,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[15])
+    if(dirtyFlag_[14])
     {
         if(getParams())
         {
@@ -2380,7 +2283,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[16])
+    if(dirtyFlag_[15])
     {
         if(getFieldparams())
         {
@@ -2391,7 +2294,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[17])
+    if(dirtyFlag_[16])
     {
         if(getLanguage())
         {
@@ -2402,7 +2305,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[18])
+    if(dirtyFlag_[17])
     {
         if(getCreatedBy())
         {
@@ -2413,7 +2316,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[19])
+    if(dirtyFlag_[18])
     {
         if(getCreatedAt())
         {
@@ -2424,7 +2327,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[20])
+    if(dirtyFlag_[19])
     {
         if(getModifiedBy())
         {
@@ -2435,7 +2338,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[21])
+    if(dirtyFlag_[20])
     {
         if(getModifiedAt())
         {
@@ -2446,7 +2349,7 @@ void Fields::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[22])
+    if(dirtyFlag_[21])
     {
         if(getAccessLevel())
         {
@@ -2468,14 +2371,6 @@ Json::Value Fields::toJson() const
     else
     {
         ret["id"]=Json::Value();
-    }
-    if(getAssetId())
-    {
-        ret["asset_id"]=getValueOfAssetId();
-    }
-    else
-    {
-        ret["asset_id"]=Json::Value();
     }
     if(getContext())
     {
@@ -2657,7 +2552,7 @@ Json::Value Fields::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 23)
+    if(pMasqueradingVector.size() == 22)
     {
         if(!pMasqueradingVector[0].empty())
         {
@@ -2672,9 +2567,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[1].empty())
         {
-            if(getAssetId())
+            if(getContext())
             {
-                ret[pMasqueradingVector[1]]=getValueOfAssetId();
+                ret[pMasqueradingVector[1]]=getValueOfContext();
             }
             else
             {
@@ -2683,9 +2578,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getContext())
+            if(getGroupId())
             {
-                ret[pMasqueradingVector[2]]=getValueOfContext();
+                ret[pMasqueradingVector[2]]=getValueOfGroupId();
             }
             else
             {
@@ -2694,9 +2589,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getGroupId())
+            if(getTitle())
             {
-                ret[pMasqueradingVector[3]]=getValueOfGroupId();
+                ret[pMasqueradingVector[3]]=getValueOfTitle();
             }
             else
             {
@@ -2705,9 +2600,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getTitle())
+            if(getName())
             {
-                ret[pMasqueradingVector[4]]=getValueOfTitle();
+                ret[pMasqueradingVector[4]]=getValueOfName();
             }
             else
             {
@@ -2716,9 +2611,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getName())
+            if(getLabel())
             {
-                ret[pMasqueradingVector[5]]=getValueOfName();
+                ret[pMasqueradingVector[5]]=getValueOfLabel();
             }
             else
             {
@@ -2727,9 +2622,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getLabel())
+            if(getDefaultValue())
             {
-                ret[pMasqueradingVector[6]]=getValueOfLabel();
+                ret[pMasqueradingVector[6]]=getValueOfDefaultValue();
             }
             else
             {
@@ -2738,9 +2633,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[7].empty())
         {
-            if(getDefaultValue())
+            if(getType())
             {
-                ret[pMasqueradingVector[7]]=getValueOfDefaultValue();
+                ret[pMasqueradingVector[7]]=getValueOfType();
             }
             else
             {
@@ -2749,9 +2644,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getType())
+            if(getNote())
             {
-                ret[pMasqueradingVector[8]]=getValueOfType();
+                ret[pMasqueradingVector[8]]=getValueOfNote();
             }
             else
             {
@@ -2760,9 +2655,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getNote())
+            if(getDescription())
             {
-                ret[pMasqueradingVector[9]]=getValueOfNote();
+                ret[pMasqueradingVector[9]]=getValueOfDescription();
             }
             else
             {
@@ -2771,9 +2666,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getDescription())
+            if(getStatus())
             {
-                ret[pMasqueradingVector[10]]=getValueOfDescription();
+                ret[pMasqueradingVector[10]]=getValueOfStatus();
             }
             else
             {
@@ -2782,9 +2677,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[11].empty())
         {
-            if(getStatus())
+            if(getRequired())
             {
-                ret[pMasqueradingVector[11]]=getValueOfStatus();
+                ret[pMasqueradingVector[11]]=getValueOfRequired();
             }
             else
             {
@@ -2793,9 +2688,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[12].empty())
         {
-            if(getRequired())
+            if(getOnlyUseInSubform())
             {
-                ret[pMasqueradingVector[12]]=getValueOfRequired();
+                ret[pMasqueradingVector[12]]=getValueOfOnlyUseInSubform();
             }
             else
             {
@@ -2804,9 +2699,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[13].empty())
         {
-            if(getOnlyUseInSubform())
+            if(getOrdering())
             {
-                ret[pMasqueradingVector[13]]=getValueOfOnlyUseInSubform();
+                ret[pMasqueradingVector[13]]=getValueOfOrdering();
             }
             else
             {
@@ -2815,9 +2710,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[14].empty())
         {
-            if(getOrdering())
+            if(getParams())
             {
-                ret[pMasqueradingVector[14]]=getValueOfOrdering();
+                ret[pMasqueradingVector[14]]=getValueOfParams();
             }
             else
             {
@@ -2826,9 +2721,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[15].empty())
         {
-            if(getParams())
+            if(getFieldparams())
             {
-                ret[pMasqueradingVector[15]]=getValueOfParams();
+                ret[pMasqueradingVector[15]]=getValueOfFieldparams();
             }
             else
             {
@@ -2837,9 +2732,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[16].empty())
         {
-            if(getFieldparams())
+            if(getLanguage())
             {
-                ret[pMasqueradingVector[16]]=getValueOfFieldparams();
+                ret[pMasqueradingVector[16]]=getValueOfLanguage();
             }
             else
             {
@@ -2848,9 +2743,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[17].empty())
         {
-            if(getLanguage())
+            if(getCreatedBy())
             {
-                ret[pMasqueradingVector[17]]=getValueOfLanguage();
+                ret[pMasqueradingVector[17]]=getValueOfCreatedBy();
             }
             else
             {
@@ -2859,9 +2754,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[18].empty())
         {
-            if(getCreatedBy())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[18]]=getValueOfCreatedBy();
+                ret[pMasqueradingVector[18]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -2870,9 +2765,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[19].empty())
         {
-            if(getCreatedAt())
+            if(getModifiedBy())
             {
-                ret[pMasqueradingVector[19]]=getCreatedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[19]]=getValueOfModifiedBy();
             }
             else
             {
@@ -2881,9 +2776,9 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[20].empty())
         {
-            if(getModifiedBy())
+            if(getModifiedAt())
             {
-                ret[pMasqueradingVector[20]]=getValueOfModifiedBy();
+                ret[pMasqueradingVector[20]]=getModifiedAt()->toDbStringLocal();
             }
             else
             {
@@ -2892,24 +2787,13 @@ Json::Value Fields::toMasqueradedJson(
         }
         if(!pMasqueradingVector[21].empty())
         {
-            if(getModifiedAt())
+            if(getAccessLevel())
             {
-                ret[pMasqueradingVector[21]]=getModifiedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[21]]=getValueOfAccessLevel();
             }
             else
             {
                 ret[pMasqueradingVector[21]]=Json::Value();
-            }
-        }
-        if(!pMasqueradingVector[22].empty())
-        {
-            if(getAccessLevel())
-            {
-                ret[pMasqueradingVector[22]]=getValueOfAccessLevel();
-            }
-            else
-            {
-                ret[pMasqueradingVector[22]]=Json::Value();
             }
         }
         return ret;
@@ -2922,14 +2806,6 @@ Json::Value Fields::toMasqueradedJson(
     else
     {
         ret["id"]=Json::Value();
-    }
-    if(getAssetId())
-    {
-        ret["asset_id"]=getValueOfAssetId();
-    }
-    else
-    {
-        ret["asset_id"]=Json::Value();
     }
     if(getContext())
     {
@@ -3109,54 +2985,49 @@ bool Fields::validateJsonForCreation(const Json::Value &pJson, std::string &err)
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("asset_id"))
-    {
-        if(!validJsonOfField(1, "asset_id", pJson["asset_id"], err, true))
-            return false;
-    }
     if(pJson.isMember("context"))
     {
-        if(!validJsonOfField(2, "context", pJson["context"], err, true))
+        if(!validJsonOfField(1, "context", pJson["context"], err, true))
             return false;
     }
     if(pJson.isMember("group_id"))
     {
-        if(!validJsonOfField(3, "group_id", pJson["group_id"], err, true))
+        if(!validJsonOfField(2, "group_id", pJson["group_id"], err, true))
             return false;
     }
     if(pJson.isMember("title"))
     {
-        if(!validJsonOfField(4, "title", pJson["title"], err, true))
+        if(!validJsonOfField(3, "title", pJson["title"], err, true))
             return false;
     }
     if(pJson.isMember("name"))
     {
-        if(!validJsonOfField(5, "name", pJson["name"], err, true))
+        if(!validJsonOfField(4, "name", pJson["name"], err, true))
             return false;
     }
     if(pJson.isMember("label"))
     {
-        if(!validJsonOfField(6, "label", pJson["label"], err, true))
+        if(!validJsonOfField(5, "label", pJson["label"], err, true))
             return false;
     }
     if(pJson.isMember("default_value"))
     {
-        if(!validJsonOfField(7, "default_value", pJson["default_value"], err, true))
+        if(!validJsonOfField(6, "default_value", pJson["default_value"], err, true))
             return false;
     }
     if(pJson.isMember("type"))
     {
-        if(!validJsonOfField(8, "type", pJson["type"], err, true))
+        if(!validJsonOfField(7, "type", pJson["type"], err, true))
             return false;
     }
     if(pJson.isMember("note"))
     {
-        if(!validJsonOfField(9, "note", pJson["note"], err, true))
+        if(!validJsonOfField(8, "note", pJson["note"], err, true))
             return false;
     }
     if(pJson.isMember("description"))
     {
-        if(!validJsonOfField(10, "description", pJson["description"], err, true))
+        if(!validJsonOfField(9, "description", pJson["description"], err, true))
             return false;
     }
     else
@@ -3166,62 +3037,62 @@ bool Fields::validateJsonForCreation(const Json::Value &pJson, std::string &err)
     }
     if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(11, "status", pJson["status"], err, true))
+        if(!validJsonOfField(10, "status", pJson["status"], err, true))
             return false;
     }
     if(pJson.isMember("required"))
     {
-        if(!validJsonOfField(12, "required", pJson["required"], err, true))
+        if(!validJsonOfField(11, "required", pJson["required"], err, true))
             return false;
     }
     if(pJson.isMember("only_use_in_subform"))
     {
-        if(!validJsonOfField(13, "only_use_in_subform", pJson["only_use_in_subform"], err, true))
+        if(!validJsonOfField(12, "only_use_in_subform", pJson["only_use_in_subform"], err, true))
             return false;
     }
     if(pJson.isMember("ordering"))
     {
-        if(!validJsonOfField(14, "ordering", pJson["ordering"], err, true))
+        if(!validJsonOfField(13, "ordering", pJson["ordering"], err, true))
             return false;
     }
     if(pJson.isMember("params"))
     {
-        if(!validJsonOfField(15, "params", pJson["params"], err, true))
+        if(!validJsonOfField(14, "params", pJson["params"], err, true))
             return false;
     }
     if(pJson.isMember("fieldparams"))
     {
-        if(!validJsonOfField(16, "fieldparams", pJson["fieldparams"], err, true))
+        if(!validJsonOfField(15, "fieldparams", pJson["fieldparams"], err, true))
             return false;
     }
     if(pJson.isMember("language"))
     {
-        if(!validJsonOfField(17, "language", pJson["language"], err, true))
+        if(!validJsonOfField(16, "language", pJson["language"], err, true))
             return false;
     }
     if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(18, "created_by", pJson["created_by"], err, true))
+        if(!validJsonOfField(17, "created_by", pJson["created_by"], err, true))
             return false;
     }
     if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(19, "created_at", pJson["created_at"], err, true))
+        if(!validJsonOfField(18, "created_at", pJson["created_at"], err, true))
             return false;
     }
     if(pJson.isMember("modified_by"))
     {
-        if(!validJsonOfField(20, "modified_by", pJson["modified_by"], err, true))
+        if(!validJsonOfField(19, "modified_by", pJson["modified_by"], err, true))
             return false;
     }
     if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(21, "modified_at", pJson["modified_at"], err, true))
+        if(!validJsonOfField(20, "modified_at", pJson["modified_at"], err, true))
             return false;
     }
     if(pJson.isMember("access_level"))
     {
-        if(!validJsonOfField(22, "access_level", pJson["access_level"], err, true))
+        if(!validJsonOfField(21, "access_level", pJson["access_level"], err, true))
             return false;
     }
     return true;
@@ -3230,7 +3101,7 @@ bool Fields::validateMasqueradedJsonForCreation(const Json::Value &pJson,
                                                 const std::vector<std::string> &pMasqueradingVector,
                                                 std::string &err)
 {
-    if(pMasqueradingVector.size() != 23)
+    if(pMasqueradingVector.size() != 22)
     {
         err = "Bad masquerading vector";
         return false;
@@ -3315,6 +3186,11 @@ bool Fields::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(9, pMasqueradingVector[9], pJson[pMasqueradingVector[9]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[9] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[10].empty())
       {
@@ -3323,11 +3199,6 @@ bool Fields::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(10, pMasqueradingVector[10], pJson[pMasqueradingVector[10]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[10] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[11].empty())
       {
@@ -3417,14 +3288,6 @@ bool Fields::validateMasqueradedJsonForCreation(const Json::Value &pJson,
                   return false;
           }
       }
-      if(!pMasqueradingVector[22].empty())
-      {
-          if(pJson.isMember(pMasqueradingVector[22]))
-          {
-              if(!validJsonOfField(22, pMasqueradingVector[22], pJson[pMasqueradingVector[22]], err, true))
-                  return false;
-          }
-      }
     }
     catch(const Json::LogicError &e)
     {
@@ -3445,114 +3308,109 @@ bool Fields::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("asset_id"))
-    {
-        if(!validJsonOfField(1, "asset_id", pJson["asset_id"], err, false))
-            return false;
-    }
     if(pJson.isMember("context"))
     {
-        if(!validJsonOfField(2, "context", pJson["context"], err, false))
+        if(!validJsonOfField(1, "context", pJson["context"], err, false))
             return false;
     }
     if(pJson.isMember("group_id"))
     {
-        if(!validJsonOfField(3, "group_id", pJson["group_id"], err, false))
+        if(!validJsonOfField(2, "group_id", pJson["group_id"], err, false))
             return false;
     }
     if(pJson.isMember("title"))
     {
-        if(!validJsonOfField(4, "title", pJson["title"], err, false))
+        if(!validJsonOfField(3, "title", pJson["title"], err, false))
             return false;
     }
     if(pJson.isMember("name"))
     {
-        if(!validJsonOfField(5, "name", pJson["name"], err, false))
+        if(!validJsonOfField(4, "name", pJson["name"], err, false))
             return false;
     }
     if(pJson.isMember("label"))
     {
-        if(!validJsonOfField(6, "label", pJson["label"], err, false))
+        if(!validJsonOfField(5, "label", pJson["label"], err, false))
             return false;
     }
     if(pJson.isMember("default_value"))
     {
-        if(!validJsonOfField(7, "default_value", pJson["default_value"], err, false))
+        if(!validJsonOfField(6, "default_value", pJson["default_value"], err, false))
             return false;
     }
     if(pJson.isMember("type"))
     {
-        if(!validJsonOfField(8, "type", pJson["type"], err, false))
+        if(!validJsonOfField(7, "type", pJson["type"], err, false))
             return false;
     }
     if(pJson.isMember("note"))
     {
-        if(!validJsonOfField(9, "note", pJson["note"], err, false))
+        if(!validJsonOfField(8, "note", pJson["note"], err, false))
             return false;
     }
     if(pJson.isMember("description"))
     {
-        if(!validJsonOfField(10, "description", pJson["description"], err, false))
+        if(!validJsonOfField(9, "description", pJson["description"], err, false))
             return false;
     }
     if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(11, "status", pJson["status"], err, false))
+        if(!validJsonOfField(10, "status", pJson["status"], err, false))
             return false;
     }
     if(pJson.isMember("required"))
     {
-        if(!validJsonOfField(12, "required", pJson["required"], err, false))
+        if(!validJsonOfField(11, "required", pJson["required"], err, false))
             return false;
     }
     if(pJson.isMember("only_use_in_subform"))
     {
-        if(!validJsonOfField(13, "only_use_in_subform", pJson["only_use_in_subform"], err, false))
+        if(!validJsonOfField(12, "only_use_in_subform", pJson["only_use_in_subform"], err, false))
             return false;
     }
     if(pJson.isMember("ordering"))
     {
-        if(!validJsonOfField(14, "ordering", pJson["ordering"], err, false))
+        if(!validJsonOfField(13, "ordering", pJson["ordering"], err, false))
             return false;
     }
     if(pJson.isMember("params"))
     {
-        if(!validJsonOfField(15, "params", pJson["params"], err, false))
+        if(!validJsonOfField(14, "params", pJson["params"], err, false))
             return false;
     }
     if(pJson.isMember("fieldparams"))
     {
-        if(!validJsonOfField(16, "fieldparams", pJson["fieldparams"], err, false))
+        if(!validJsonOfField(15, "fieldparams", pJson["fieldparams"], err, false))
             return false;
     }
     if(pJson.isMember("language"))
     {
-        if(!validJsonOfField(17, "language", pJson["language"], err, false))
+        if(!validJsonOfField(16, "language", pJson["language"], err, false))
             return false;
     }
     if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(18, "created_by", pJson["created_by"], err, false))
+        if(!validJsonOfField(17, "created_by", pJson["created_by"], err, false))
             return false;
     }
     if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(19, "created_at", pJson["created_at"], err, false))
+        if(!validJsonOfField(18, "created_at", pJson["created_at"], err, false))
             return false;
     }
     if(pJson.isMember("modified_by"))
     {
-        if(!validJsonOfField(20, "modified_by", pJson["modified_by"], err, false))
+        if(!validJsonOfField(19, "modified_by", pJson["modified_by"], err, false))
             return false;
     }
     if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(21, "modified_at", pJson["modified_at"], err, false))
+        if(!validJsonOfField(20, "modified_at", pJson["modified_at"], err, false))
             return false;
     }
     if(pJson.isMember("access_level"))
     {
-        if(!validJsonOfField(22, "access_level", pJson["access_level"], err, false))
+        if(!validJsonOfField(21, "access_level", pJson["access_level"], err, false))
             return false;
     }
     return true;
@@ -3561,7 +3419,7 @@ bool Fields::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
                                               const std::vector<std::string> &pMasqueradingVector,
                                               std::string &err)
 {
-    if(pMasqueradingVector.size() != 23)
+    if(pMasqueradingVector.size() != 22)
     {
         err = "Bad masquerading vector";
         return false;
@@ -3682,11 +3540,6 @@ bool Fields::validateMasqueradedJsonForUpdate(const Json::Value &pJson,
           if(!validJsonOfField(21, pMasqueradingVector[21], pJson[pMasqueradingVector[21]], err, false))
               return false;
       }
-      if(!pMasqueradingVector[22].empty() && pJson.isMember(pMasqueradingVector[22]))
-      {
-          if(!validJsonOfField(22, pMasqueradingVector[22], pJson[pMasqueradingVector[22]], err, false))
-              return false;
-      }
     }
     catch(const Json::LogicError &e)
     {
@@ -3718,17 +3571,6 @@ bool Fields::validJsonOfField(size_t index,
         case 1:
             if(pJson.isNull())
             {
-                return true;
-            }
-            if(!pJson.isString())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
-        case 2:
-            if(pJson.isNull())
-            {
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
@@ -3746,7 +3588,7 @@ bool Fields::validJsonOfField(size_t index,
                 return false;
             }
             break;
-        case 3:
+        case 2:
             if(pJson.isNull())
             {
                 return true;
@@ -3754,6 +3596,26 @@ bool Fields::validJsonOfField(size_t index,
             if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 3:
+            if(pJson.isNull())
+            {
+                err="The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
+                .from_bytes(pJson.asCString()).size() > 255)
+            {
+                err="String length exceeds limit for the " +
+                    fieldName +
+                    " field (the maximum value is 255)";
                 return false;
             }
             break;
@@ -3800,6 +3662,17 @@ bool Fields::validJsonOfField(size_t index,
         case 6:
             if(pJson.isNull())
             {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 7:
+            if(pJson.isNull())
+            {
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
@@ -3814,17 +3687,6 @@ bool Fields::validJsonOfField(size_t index,
                 err="String length exceeds limit for the " +
                     fieldName +
                     " field (the maximum value is 255)";
-                return false;
-            }
-            break;
-        case 7:
-            if(pJson.isNull())
-            {
-                return true;
-            }
-            if(!pJson.isString())
-            {
-                err="Type error in the "+fieldName+" field";
                 return false;
             }
             break;
@@ -3859,14 +3721,6 @@ bool Fields::validJsonOfField(size_t index,
                 err="Type error in the "+fieldName+" field";
                 return false;
             }
-            if(pJson.isString() && std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}
-                .from_bytes(pJson.asCString()).size() > 255)
-            {
-                err="String length exceeds limit for the " +
-                    fieldName +
-                    " field (the maximum value is 255)";
-                return false;
-            }
             break;
         case 10:
             if(pJson.isNull())
@@ -3874,7 +3728,7 @@ bool Fields::validJsonOfField(size_t index,
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3883,10 +3737,9 @@ bool Fields::validJsonOfField(size_t index,
         case 11:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
-            if(!pJson.isInt())
+            if(!pJson.isBool())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3906,9 +3759,10 @@ bool Fields::validJsonOfField(size_t index,
         case 13:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isBool())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3917,10 +3771,9 @@ bool Fields::validJsonOfField(size_t index,
         case 14:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
-            if(!pJson.isInt())
+            if(!pJson.isString())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -3940,7 +3793,8 @@ bool Fields::validJsonOfField(size_t index,
         case 16:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
             if(!pJson.isString())
             {
@@ -3951,8 +3805,7 @@ bool Fields::validJsonOfField(size_t index,
         case 17:
             if(pJson.isNull())
             {
-                err="The " + fieldName + " column cannot be null";
-                return false;
+                return true;
             }
             if(!pJson.isString())
             {
@@ -3994,17 +3847,6 @@ bool Fields::validJsonOfField(size_t index,
             }
             break;
         case 21:
-            if(pJson.isNull())
-            {
-                return true;
-            }
-            if(!pJson.isString())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
-        case 22:
             if(pJson.isNull())
             {
                 return true;

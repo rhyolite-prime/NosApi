@@ -9,6 +9,10 @@
 #include <drogon/plugins/Plugin.h>
 
 #include "services/access_levels/AccessLevelService.h"
+#include "services/categories/CategoryService.h"
+#include "services/content/DigitalContentService.h"
+#include "services/content_types/ContentTypeService.h"
+#include "services/email/EmailService.h"
 #include "services/roles/RoleService.h"
 #include "services/users/UserService.h"
 #include "services/user_groups/UserGroupService.h"
@@ -35,6 +39,10 @@ namespace nos::plugins {
         ::nos::services::UserGroupService &getUserGroupService() { return userGroupService_; }
         ::nos::services::AccessLevelService &getAccessLevelService() { return accessLevelService_; }
         ::nos::services::WorkflowService &getWorkflowService() { return workflowService_; }
+        ::nos::services::EmailService &getEmailService() { return emailService_; }
+        ::nos::services::ContentTypeService &getContentTypeService() { return contentTypeService_; }
+        ::nos::services::CategoryService &getCategoryService() { return categoryService_; }
+        ::nos::services::DigitalContentService &getDigitalContentService() { return digitalContentService_; }
 
     private:
         ::nos::services::RoleService roleService_;
@@ -42,6 +50,10 @@ namespace nos::plugins {
         ::nos::services::UserGroupService userGroupService_;
         ::nos::services::AccessLevelService accessLevelService_;
         ::nos::services::WorkflowService workflowService_;
+        ::nos::services::EmailService emailService_;
+        ::nos::services::ContentTypeService contentTypeService_;
+        ::nos::services::CategoryService categoryService_;
+        ::nos::services::DigitalContentService digitalContentService_;
 
     };
 

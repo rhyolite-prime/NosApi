@@ -12,7 +12,7 @@ class RolesController : public drogon::HttpController<RolesController>
     ADD_METHOD_TO(RolesController::getAll, std::string(PREFIX) + "get-all", Get, Options,);
     ADD_METHOD_TO(RolesController::createRole, std::string(PREFIX) + "create", Post, Options, "JwtAuthFilter");
     ADD_METHOD_TO(RolesController::updateRole,std::string(PREFIX) + "update/{1}", Put, Options, "JwtAuthFilter");
-    ADD_METHOD_TO(RolesController::deleteRole, std::string(PREFIX) + "delete/{1}", Delete, Options);
+    ADD_METHOD_TO(RolesController::deleteRole, std::string(PREFIX) + "delete/{1}", Delete, Options, "JwtAuthFilter");
     METHOD_LIST_END
 
     Task<HttpResponsePtr> getAll(HttpRequestPtr req);

@@ -48,29 +48,33 @@ class DigitalContents
         static const std::string _title;
         static const std::string _alias;
         static const std::string _content_type_id;
-        static const std::string _content_type;
+        static const std::string _content_type_name;
         static const std::string _introtext;
         static const std::string _fulltext;
-        static const std::string _primary_resource_id;
-        static const std::string _state;
+        static const std::string _status;
         static const std::string _category_id;
+        static const std::string _category_name;
         static const std::string _ordering;
-        static const std::string _featured;
+        static const std::string _is_featured;
         static const std::string _access_level_id;
+        static const std::string _access_level_name;
+        static const std::string _current_workflow_id;
+        static const std::string _current_workflow_name;
+        static const std::string _current_workflow_stage_id;
+        static const std::string _current_workflow_stage_name;
+        static const std::string _next_workflow_stage_id;
+        static const std::string _next_workflow_stage_name;
         static const std::string _metakey;
         static const std::string _metadesc;
         static const std::string _metadata;
         static const std::string _presentation_config;
-        static const std::string _display_overrides;
-        static const std::string _publish_up;
-        static const std::string _publish_down;
         static const std::string _version;
         static const std::string _language;
+        static const std::string _views;
         static const std::string _created_by;
         static const std::string _created_at;
         static const std::string _modified_by;
         static const std::string _modified_at;
-        static const std::string _hits;
     };
 
     static const int primaryKeyNumber;
@@ -159,15 +163,15 @@ class DigitalContents
     void setContentTypeId(std::string &&pContentTypeId) noexcept;
     void setContentTypeIdToNull() noexcept;
 
-    /**  For column content_type  */
-    ///Get the value of the column content_type, returns the default value if the column is null
-    const std::string &getValueOfContentType() const noexcept;
+    /**  For column content_type_name  */
+    ///Get the value of the column content_type_name, returns the default value if the column is null
+    const std::string &getValueOfContentTypeName() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getContentType() const noexcept;
-    ///Set the value of the column content_type
-    void setContentType(const std::string &pContentType) noexcept;
-    void setContentType(std::string &&pContentType) noexcept;
-    void setContentTypeToNull() noexcept;
+    const std::shared_ptr<std::string> &getContentTypeName() const noexcept;
+    ///Set the value of the column content_type_name
+    void setContentTypeName(const std::string &pContentTypeName) noexcept;
+    void setContentTypeName(std::string &&pContentTypeName) noexcept;
+    void setContentTypeNameToNull() noexcept;
 
     /**  For column introtext  */
     ///Get the value of the column introtext, returns the default value if the column is null
@@ -189,23 +193,13 @@ class DigitalContents
     void setFulltext(std::string &&pFulltext) noexcept;
     void setFulltextToNull() noexcept;
 
-    /**  For column primary_resource_id  */
-    ///Get the value of the column primary_resource_id, returns the default value if the column is null
-    const std::string &getValueOfPrimaryResourceId() const noexcept;
+    /**  For column status  */
+    ///Get the value of the column status, returns the default value if the column is null
+    const int32_t &getValueOfStatus() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getPrimaryResourceId() const noexcept;
-    ///Set the value of the column primary_resource_id
-    void setPrimaryResourceId(const std::string &pPrimaryResourceId) noexcept;
-    void setPrimaryResourceId(std::string &&pPrimaryResourceId) noexcept;
-    void setPrimaryResourceIdToNull() noexcept;
-
-    /**  For column state  */
-    ///Get the value of the column state, returns the default value if the column is null
-    const short &getValueOfState() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<short> &getState() const noexcept;
-    ///Set the value of the column state
-    void setState(const short &pState) noexcept;
+    const std::shared_ptr<int32_t> &getStatus() const noexcept;
+    ///Set the value of the column status
+    void setStatus(const int32_t &pStatus) noexcept;
 
     /**  For column category_id  */
     ///Get the value of the column category_id, returns the default value if the column is null
@@ -217,6 +211,16 @@ class DigitalContents
     void setCategoryId(std::string &&pCategoryId) noexcept;
     void setCategoryIdToNull() noexcept;
 
+    /**  For column category_name  */
+    ///Get the value of the column category_name, returns the default value if the column is null
+    const std::string &getValueOfCategoryName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getCategoryName() const noexcept;
+    ///Set the value of the column category_name
+    void setCategoryName(const std::string &pCategoryName) noexcept;
+    void setCategoryName(std::string &&pCategoryName) noexcept;
+    void setCategoryNameToNull() noexcept;
+
     /**  For column ordering  */
     ///Get the value of the column ordering, returns the default value if the column is null
     const int32_t &getValueOfOrdering() const noexcept;
@@ -225,13 +229,13 @@ class DigitalContents
     ///Set the value of the column ordering
     void setOrdering(const int32_t &pOrdering) noexcept;
 
-    /**  For column featured  */
-    ///Get the value of the column featured, returns the default value if the column is null
-    const short &getValueOfFeatured() const noexcept;
+    /**  For column is_featured  */
+    ///Get the value of the column is_featured, returns the default value if the column is null
+    const bool &getValueOfIsFeatured() const noexcept;
     ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<short> &getFeatured() const noexcept;
-    ///Set the value of the column featured
-    void setFeatured(const short &pFeatured) noexcept;
+    const std::shared_ptr<bool> &getIsFeatured() const noexcept;
+    ///Set the value of the column is_featured
+    void setIsFeatured(const bool &pIsFeatured) noexcept;
 
     /**  For column access_level_id  */
     ///Get the value of the column access_level_id, returns the default value if the column is null
@@ -242,6 +246,72 @@ class DigitalContents
     void setAccessLevelId(const std::string &pAccessLevelId) noexcept;
     void setAccessLevelId(std::string &&pAccessLevelId) noexcept;
     void setAccessLevelIdToNull() noexcept;
+
+    /**  For column access_level_name  */
+    ///Get the value of the column access_level_name, returns the default value if the column is null
+    const std::string &getValueOfAccessLevelName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getAccessLevelName() const noexcept;
+    ///Set the value of the column access_level_name
+    void setAccessLevelName(const std::string &pAccessLevelName) noexcept;
+    void setAccessLevelName(std::string &&pAccessLevelName) noexcept;
+
+    /**  For column current_workflow_id  */
+    ///Get the value of the column current_workflow_id, returns the default value if the column is null
+    const std::string &getValueOfCurrentWorkflowId() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getCurrentWorkflowId() const noexcept;
+    ///Set the value of the column current_workflow_id
+    void setCurrentWorkflowId(const std::string &pCurrentWorkflowId) noexcept;
+    void setCurrentWorkflowId(std::string &&pCurrentWorkflowId) noexcept;
+    void setCurrentWorkflowIdToNull() noexcept;
+
+    /**  For column current_workflow_name  */
+    ///Get the value of the column current_workflow_name, returns the default value if the column is null
+    const std::string &getValueOfCurrentWorkflowName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getCurrentWorkflowName() const noexcept;
+    ///Set the value of the column current_workflow_name
+    void setCurrentWorkflowName(const std::string &pCurrentWorkflowName) noexcept;
+    void setCurrentWorkflowName(std::string &&pCurrentWorkflowName) noexcept;
+
+    /**  For column current_workflow_stage_id  */
+    ///Get the value of the column current_workflow_stage_id, returns the default value if the column is null
+    const std::string &getValueOfCurrentWorkflowStageId() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getCurrentWorkflowStageId() const noexcept;
+    ///Set the value of the column current_workflow_stage_id
+    void setCurrentWorkflowStageId(const std::string &pCurrentWorkflowStageId) noexcept;
+    void setCurrentWorkflowStageId(std::string &&pCurrentWorkflowStageId) noexcept;
+    void setCurrentWorkflowStageIdToNull() noexcept;
+
+    /**  For column current_workflow_stage_name  */
+    ///Get the value of the column current_workflow_stage_name, returns the default value if the column is null
+    const std::string &getValueOfCurrentWorkflowStageName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getCurrentWorkflowStageName() const noexcept;
+    ///Set the value of the column current_workflow_stage_name
+    void setCurrentWorkflowStageName(const std::string &pCurrentWorkflowStageName) noexcept;
+    void setCurrentWorkflowStageName(std::string &&pCurrentWorkflowStageName) noexcept;
+
+    /**  For column next_workflow_stage_id  */
+    ///Get the value of the column next_workflow_stage_id, returns the default value if the column is null
+    const std::string &getValueOfNextWorkflowStageId() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getNextWorkflowStageId() const noexcept;
+    ///Set the value of the column next_workflow_stage_id
+    void setNextWorkflowStageId(const std::string &pNextWorkflowStageId) noexcept;
+    void setNextWorkflowStageId(std::string &&pNextWorkflowStageId) noexcept;
+    void setNextWorkflowStageIdToNull() noexcept;
+
+    /**  For column next_workflow_stage_name  */
+    ///Get the value of the column next_workflow_stage_name, returns the default value if the column is null
+    const std::string &getValueOfNextWorkflowStageName() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getNextWorkflowStageName() const noexcept;
+    ///Set the value of the column next_workflow_stage_name
+    void setNextWorkflowStageName(const std::string &pNextWorkflowStageName) noexcept;
+    void setNextWorkflowStageName(std::string &&pNextWorkflowStageName) noexcept;
 
     /**  For column metakey  */
     ///Get the value of the column metakey, returns the default value if the column is null
@@ -283,34 +353,6 @@ class DigitalContents
     void setPresentationConfig(std::string &&pPresentationConfig) noexcept;
     void setPresentationConfigToNull() noexcept;
 
-    /**  For column display_overrides  */
-    ///Get the value of the column display_overrides, returns the default value if the column is null
-    const std::string &getValueOfDisplayOverrides() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<std::string> &getDisplayOverrides() const noexcept;
-    ///Set the value of the column display_overrides
-    void setDisplayOverrides(const std::string &pDisplayOverrides) noexcept;
-    void setDisplayOverrides(std::string &&pDisplayOverrides) noexcept;
-    void setDisplayOverridesToNull() noexcept;
-
-    /**  For column publish_up  */
-    ///Get the value of the column publish_up, returns the default value if the column is null
-    const ::trantor::Date &getValueOfPublishUp() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getPublishUp() const noexcept;
-    ///Set the value of the column publish_up
-    void setPublishUp(const ::trantor::Date &pPublishUp) noexcept;
-    void setPublishUpToNull() noexcept;
-
-    /**  For column publish_down  */
-    ///Get the value of the column publish_down, returns the default value if the column is null
-    const ::trantor::Date &getValueOfPublishDown() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<::trantor::Date> &getPublishDown() const noexcept;
-    ///Set the value of the column publish_down
-    void setPublishDown(const ::trantor::Date &pPublishDown) noexcept;
-    void setPublishDownToNull() noexcept;
-
     /**  For column version  */
     ///Get the value of the column version, returns the default value if the column is null
     const int32_t &getValueOfVersion() const noexcept;
@@ -327,6 +369,14 @@ class DigitalContents
     ///Set the value of the column language
     void setLanguage(const std::string &pLanguage) noexcept;
     void setLanguage(std::string &&pLanguage) noexcept;
+
+    /**  For column views  */
+    ///Get the value of the column views, returns the default value if the column is null
+    const int32_t &getValueOfViews() const noexcept;
+    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getViews() const noexcept;
+    ///Set the value of the column views
+    void setViews(const int32_t &pViews) noexcept;
 
     /**  For column created_by  */
     ///Get the value of the column created_by, returns the default value if the column is null
@@ -366,16 +416,8 @@ class DigitalContents
     void setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept;
     void setModifiedAtToNull() noexcept;
 
-    /**  For column hits  */
-    ///Get the value of the column hits, returns the default value if the column is null
-    const int32_t &getValueOfHits() const noexcept;
-    ///Return a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    const std::shared_ptr<int32_t> &getHits() const noexcept;
-    ///Set the value of the column hits
-    void setHits(const int32_t &pHits) noexcept;
 
-
-    static size_t getColumnNumber() noexcept {  return 27;  }
+    static size_t getColumnNumber() noexcept {  return 31;  }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -401,29 +443,33 @@ class DigitalContents
     std::shared_ptr<std::string> title_;
     std::shared_ptr<std::string> alias_;
     std::shared_ptr<std::string> contentTypeId_;
-    std::shared_ptr<std::string> contentType_;
+    std::shared_ptr<std::string> contentTypeName_;
     std::shared_ptr<std::string> introtext_;
     std::shared_ptr<std::string> fulltext_;
-    std::shared_ptr<std::string> primaryResourceId_;
-    std::shared_ptr<short> state_;
+    std::shared_ptr<int32_t> status_;
     std::shared_ptr<std::string> categoryId_;
+    std::shared_ptr<std::string> categoryName_;
     std::shared_ptr<int32_t> ordering_;
-    std::shared_ptr<short> featured_;
+    std::shared_ptr<bool> isFeatured_;
     std::shared_ptr<std::string> accessLevelId_;
+    std::shared_ptr<std::string> accessLevelName_;
+    std::shared_ptr<std::string> currentWorkflowId_;
+    std::shared_ptr<std::string> currentWorkflowName_;
+    std::shared_ptr<std::string> currentWorkflowStageId_;
+    std::shared_ptr<std::string> currentWorkflowStageName_;
+    std::shared_ptr<std::string> nextWorkflowStageId_;
+    std::shared_ptr<std::string> nextWorkflowStageName_;
     std::shared_ptr<std::string> metakey_;
     std::shared_ptr<std::string> metadesc_;
     std::shared_ptr<std::string> metadata_;
     std::shared_ptr<std::string> presentationConfig_;
-    std::shared_ptr<std::string> displayOverrides_;
-    std::shared_ptr<::trantor::Date> publishUp_;
-    std::shared_ptr<::trantor::Date> publishDown_;
     std::shared_ptr<int32_t> version_;
     std::shared_ptr<std::string> language_;
+    std::shared_ptr<int32_t> views_;
     std::shared_ptr<std::string> createdBy_;
     std::shared_ptr<::trantor::Date> createdAt_;
     std::shared_ptr<std::string> modifiedBy_;
     std::shared_ptr<::trantor::Date> modifiedAt_;
-    std::shared_ptr<int32_t> hits_;
     struct MetaData
     {
         const std::string colName_;
@@ -435,7 +481,7 @@ class DigitalContents
         const bool notNull_;
     };
     static const std::vector<MetaData> metaData_;
-    bool dirtyFlag_[27]={ false };
+    bool dirtyFlag_[31]={ false };
   public:
     static const std::string &sqlForFindingByPrimaryKey()
     {
@@ -476,7 +522,7 @@ class DigitalContents
         }
         if(dirtyFlag_[4])
         {
-            sql += "content_type,";
+            sql += "content_type_name,";
             ++parametersCount;
         }
         if(dirtyFlag_[5])
@@ -489,20 +535,20 @@ class DigitalContents
             sql += "fulltext,";
             ++parametersCount;
         }
-        if(dirtyFlag_[7])
-        {
-            sql += "primary_resource_id,";
-            ++parametersCount;
-        }
-        sql += "state,";
+        sql += "status,";
         ++parametersCount;
-        if(!dirtyFlag_[8])
+        if(!dirtyFlag_[7])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[9])
+        if(dirtyFlag_[8])
         {
             sql += "category_id,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[9])
+        {
+            sql += "category_name,";
             ++parametersCount;
         }
         sql += "ordering,";
@@ -511,7 +557,7 @@ class DigitalContents
         {
             needSelection=true;
         }
-        sql += "featured,";
+        sql += "is_featured,";
         ++parametersCount;
         if(!dirtyFlag_[11])
         {
@@ -524,79 +570,98 @@ class DigitalContents
         }
         if(dirtyFlag_[13])
         {
-            sql += "metakey,";
+            sql += "access_level_name,";
             ++parametersCount;
         }
         if(dirtyFlag_[14])
+        {
+            sql += "current_workflow_id,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[15])
+        {
+            sql += "current_workflow_name,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[16])
+        {
+            sql += "current_workflow_stage_id,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[17])
+        {
+            sql += "current_workflow_stage_name,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[18])
+        {
+            sql += "next_workflow_stage_id,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[19])
+        {
+            sql += "next_workflow_stage_name,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[20])
+        {
+            sql += "metakey,";
+            ++parametersCount;
+        }
+        if(dirtyFlag_[21])
         {
             sql += "metadesc,";
             ++parametersCount;
         }
         sql += "metadata,";
         ++parametersCount;
-        if(!dirtyFlag_[15])
+        if(!dirtyFlag_[22])
         {
             needSelection=true;
         }
         sql += "presentation_config,";
         ++parametersCount;
-        if(!dirtyFlag_[16])
+        if(!dirtyFlag_[23])
         {
             needSelection=true;
-        }
-        sql += "display_overrides,";
-        ++parametersCount;
-        if(!dirtyFlag_[17])
-        {
-            needSelection=true;
-        }
-        if(dirtyFlag_[18])
-        {
-            sql += "publish_up,";
-            ++parametersCount;
-        }
-        if(dirtyFlag_[19])
-        {
-            sql += "publish_down,";
-            ++parametersCount;
         }
         sql += "version,";
         ++parametersCount;
-        if(!dirtyFlag_[20])
+        if(!dirtyFlag_[24])
         {
             needSelection=true;
         }
         sql += "language,";
         ++parametersCount;
-        if(!dirtyFlag_[21])
+        if(!dirtyFlag_[25])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[22])
+        sql += "views,";
+        ++parametersCount;
+        if(!dirtyFlag_[26])
+        {
+            needSelection=true;
+        }
+        if(dirtyFlag_[27])
         {
             sql += "created_by,";
             ++parametersCount;
         }
         sql += "created_at,";
         ++parametersCount;
-        if(!dirtyFlag_[23])
+        if(!dirtyFlag_[28])
         {
             needSelection=true;
         }
-        if(dirtyFlag_[24])
+        if(dirtyFlag_[29])
         {
             sql += "modified_by,";
             ++parametersCount;
         }
         sql += "modified_at,";
         ++parametersCount;
-        if(!dirtyFlag_[25])
-        {
-            needSelection=true;
-        }
-        sql += "hits,";
-        ++parametersCount;
-        if(!dirtyFlag_[26])
+        if(!dirtyFlag_[30])
         {
             needSelection=true;
         }
@@ -655,14 +720,14 @@ class DigitalContents
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[8])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[9])
         {
@@ -707,27 +772,15 @@ class DigitalContents
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[16])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[17])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
-        }
-        else
-        {
-            sql +="default,";
         }
         if(dirtyFlag_[18])
         {
@@ -744,23 +797,19 @@ class DigitalContents
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[21])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
-        else
-        {
-            sql +="default,";
-        }
         if(dirtyFlag_[22])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
         }
         if(dirtyFlag_[23])
         {
@@ -776,6 +825,10 @@ class DigitalContents
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);
         }
+        else
+        {
+            sql +="default,";
+        }
         if(dirtyFlag_[25])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
@@ -786,6 +839,34 @@ class DigitalContents
             sql +="default,";
         }
         if(dirtyFlag_[26])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
+        }
+        if(dirtyFlag_[27])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[28])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql +="default,";
+        }
+        if(dirtyFlag_[29])
+        {
+            n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if(dirtyFlag_[30])
         {
             n = snprintf(placeholderStr,sizeof(placeholderStr),"$%d,",placeholder++);
             sql.append(placeholderStr, n);

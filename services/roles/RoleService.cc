@@ -63,10 +63,10 @@ drogon::Task<dto::BaseApiResponse> RoleService::getAll(int pageNo, int pageSize,
             }
             camelCaseRole["permissions"] = permissionsArray.isArray() ? permissionsArray : Json::arrayValue;
             
-            camelCaseRole["createdBy"] = roleJson["created_by"];
-            camelCaseRole["createdAt"] = roleJson["created_at"];
-            camelCaseRole["modifiedBy"] = roleJson["modified_by"];
-            camelCaseRole["modifiedAt"] = roleJson["modified_at"];
+            // camelCaseRole["createdBy"] = roleJson["created_by"];
+            // camelCaseRole["createdAt"] = roleJson["created_at"];
+            // camelCaseRole["modifiedBy"] = roleJson["modified_by"];
+            // camelCaseRole["modifiedAt"] = roleJson["modified_at"];
             data.append(camelCaseRole);
         }
         response.result["data"] = data;

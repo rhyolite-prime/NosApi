@@ -8,20 +8,21 @@
 #include "WorkflowTransitions.h"
 #include <drogon/utils/Utilities.h>
 #include <string>
-#include <codecvt>
+
 using namespace drogon;
 using namespace drogon::orm;
 using namespace drogon_model::Nos;
 
 const std::string WorkflowTransitions::Cols::_id = "\"id\"";
-const std::string WorkflowTransitions::Cols::_asset_id = "\"asset_id\"";
-const std::string WorkflowTransitions::Cols::_ordering = "\"ordering\"";
 const std::string WorkflowTransitions::Cols::_workflow_id = "\"workflow_id\"";
-const std::string WorkflowTransitions::Cols::_published = "\"published\"";
+const std::string WorkflowTransitions::Cols::_status = "\"status\"";
 const std::string WorkflowTransitions::Cols::_title = "\"title\"";
 const std::string WorkflowTransitions::Cols::_description = "\"description\"";
-const std::string WorkflowTransitions::Cols::_from_stage_id = "\"from_stage_id\"";
-const std::string WorkflowTransitions::Cols::_to_stage_id = "\"to_stage_id\"";
+const std::string WorkflowTransitions::Cols::_current_stage_id = "\"current_stage_id\"";
+const std::string WorkflowTransitions::Cols::_target_stage_id = "\"target_stage_id\"";
+const std::string WorkflowTransitions::Cols::_target_users = "\"target_users\"";
+const std::string WorkflowTransitions::Cols::_target_groups = "\"target_groups\"";
+const std::string WorkflowTransitions::Cols::_ordering = "\"ordering\"";
 const std::string WorkflowTransitions::Cols::_options = "\"options\"";
 const std::string WorkflowTransitions::Cols::_created_by = "\"created_by\"";
 const std::string WorkflowTransitions::Cols::_created_at = "\"created_at\"";
@@ -33,14 +34,15 @@ const std::string WorkflowTransitions::tableName = "\"workflow_transitions\"";
 
 const std::vector<typename WorkflowTransitions::MetaData> WorkflowTransitions::metaData_={
 {"id","std::string","uuid",0,0,1,1},
-{"asset_id","std::string","uuid",0,0,0,0},
-{"ordering","int32_t","integer",4,0,0,1},
 {"workflow_id","std::string","uuid",0,0,0,0},
-{"published","int32_t","integer",4,0,0,1},
+{"status","int32_t","integer",4,0,0,1},
 {"title","std::string","character varying",255,0,0,1},
 {"description","std::string","text",0,0,0,1},
-{"from_stage_id","std::string","uuid",0,0,0,0},
-{"to_stage_id","std::string","uuid",0,0,0,0},
+{"current_stage_id","std::string","uuid",0,0,0,0},
+{"target_stage_id","std::string","uuid",0,0,0,0},
+{"target_users","std::string","jsonb",0,0,0,0},
+{"target_groups","std::string","jsonb",0,0,0,0},
+{"ordering","int32_t","integer",4,0,0,1},
 {"options","std::string","jsonb",0,0,0,0},
 {"created_by","std::string","uuid",0,0,0,0},
 {"created_at","::trantor::Date","timestamp with time zone",0,0,0,0},
@@ -60,21 +62,13 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
         {
             id_=std::make_shared<std::string>(r["id"].as<std::string>());
         }
-        if(!r["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(r["asset_id"].as<std::string>());
-        }
-        if(!r["ordering"].isNull())
-        {
-            ordering_=std::make_shared<int32_t>(r["ordering"].as<int32_t>());
-        }
         if(!r["workflow_id"].isNull())
         {
             workflowId_=std::make_shared<std::string>(r["workflow_id"].as<std::string>());
         }
-        if(!r["published"].isNull())
+        if(!r["status"].isNull())
         {
-            published_=std::make_shared<int32_t>(r["published"].as<int32_t>());
+            status_=std::make_shared<int32_t>(r["status"].as<int32_t>());
         }
         if(!r["title"].isNull())
         {
@@ -84,13 +78,25 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
         {
             description_=std::make_shared<std::string>(r["description"].as<std::string>());
         }
-        if(!r["from_stage_id"].isNull())
+        if(!r["current_stage_id"].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(r["from_stage_id"].as<std::string>());
+            currentStageId_=std::make_shared<std::string>(r["current_stage_id"].as<std::string>());
         }
-        if(!r["to_stage_id"].isNull())
+        if(!r["target_stage_id"].isNull())
         {
-            toStageId_=std::make_shared<std::string>(r["to_stage_id"].as<std::string>());
+            targetStageId_=std::make_shared<std::string>(r["target_stage_id"].as<std::string>());
+        }
+        if(!r["target_users"].isNull())
+        {
+            targetUsers_=std::make_shared<std::string>(r["target_users"].as<std::string>());
+        }
+        if(!r["target_groups"].isNull())
+        {
+            targetGroups_=std::make_shared<std::string>(r["target_groups"].as<std::string>());
+        }
+        if(!r["ordering"].isNull())
+        {
+            ordering_=std::make_shared<int32_t>(r["ordering"].as<int32_t>());
         }
         if(!r["options"].isNull())
         {
@@ -152,7 +158,7 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
     else
     {
         size_t offset = (size_t)indexOffset;
-        if(offset + 14 > r.size())
+        if(offset + 15 > r.size())
         {
             LOG_FATAL << "Invalid SQL result for this model";
             return;
@@ -166,54 +172,59 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
         index = offset + 1;
         if(!r[index].isNull())
         {
-            assetId_=std::make_shared<std::string>(r[index].as<std::string>());
+            workflowId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 2;
         if(!r[index].isNull())
         {
-            ordering_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            status_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 3;
         if(!r[index].isNull())
         {
-            workflowId_=std::make_shared<std::string>(r[index].as<std::string>());
+            title_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 4;
         if(!r[index].isNull())
         {
-            published_=std::make_shared<int32_t>(r[index].as<int32_t>());
+            description_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 5;
         if(!r[index].isNull())
         {
-            title_=std::make_shared<std::string>(r[index].as<std::string>());
+            currentStageId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 6;
         if(!r[index].isNull())
         {
-            description_=std::make_shared<std::string>(r[index].as<std::string>());
+            targetStageId_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 7;
         if(!r[index].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(r[index].as<std::string>());
+            targetUsers_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 8;
         if(!r[index].isNull())
         {
-            toStageId_=std::make_shared<std::string>(r[index].as<std::string>());
+            targetGroups_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 9;
         if(!r[index].isNull())
         {
-            options_=std::make_shared<std::string>(r[index].as<std::string>());
+            ordering_=std::make_shared<int32_t>(r[index].as<int32_t>());
         }
         index = offset + 10;
         if(!r[index].isNull())
         {
-            createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
+            options_=std::make_shared<std::string>(r[index].as<std::string>());
         }
         index = offset + 11;
+        if(!r[index].isNull())
+        {
+            createdBy_=std::make_shared<std::string>(r[index].as<std::string>());
+        }
+        index = offset + 12;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -236,12 +247,12 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
                 createdAt_=std::make_shared<::trantor::Date>(t*1000000+decimalNum);
             }
         }
-        index = offset + 12;
+        index = offset + 13;
         if(!r[index].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(r[index].as<std::string>());
         }
-        index = offset + 13;
+        index = offset + 14;
         if(!r[index].isNull())
         {
             auto timeStr = r[index].as<std::string>();
@@ -270,7 +281,7 @@ WorkflowTransitions::WorkflowTransitions(const Row &r, const ssize_t indexOffset
 
 WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 14)
+    if(pMasqueradingVector.size() != 15)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -288,7 +299,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            assetId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            workflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -296,7 +307,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -304,7 +315,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            workflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -312,7 +323,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            published_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[4]].asInt64());
+            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -320,7 +331,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
+            currentStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -328,7 +339,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            targetStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -336,7 +347,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            targetUsers_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -344,7 +355,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            toStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            targetGroups_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -352,7 +363,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            options_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -360,7 +371,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            options_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -368,7 +379,15 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[11]].asString();
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
+        }
+    }
+    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
+    {
+        dirtyFlag_[12] = true;
+        if(!pJson[pMasqueradingVector[12]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[12]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -389,20 +408,20 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson, const std::ve
             }
         }
     }
-    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
-    {
-        dirtyFlag_[12] = true;
-        if(!pJson[pMasqueradingVector[12]].isNull())
-        {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
-        }
-    }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
     {
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[13]].asString();
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+        }
+    }
+    if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
+    {
+        dirtyFlag_[14] = true;
+        if(!pJson[pMasqueradingVector[14]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[14]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -435,41 +454,25 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
             id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("asset_id"))
-    {
-        dirtyFlag_[1]=true;
-        if(!pJson["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(pJson["asset_id"].asString());
-        }
-    }
-    if(pJson.isMember("ordering"))
-    {
-        dirtyFlag_[2]=true;
-        if(!pJson["ordering"].isNull())
-        {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
-        }
-    }
     if(pJson.isMember("workflow_id"))
     {
-        dirtyFlag_[3]=true;
+        dirtyFlag_[1]=true;
         if(!pJson["workflow_id"].isNull())
         {
             workflowId_=std::make_shared<std::string>(pJson["workflow_id"].asString());
         }
     }
-    if(pJson.isMember("published"))
+    if(pJson.isMember("status"))
     {
-        dirtyFlag_[4]=true;
-        if(!pJson["published"].isNull())
+        dirtyFlag_[2]=true;
+        if(!pJson["status"].isNull())
         {
-            published_=std::make_shared<int32_t>((int32_t)pJson["published"].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("title"))
     {
-        dirtyFlag_[5]=true;
+        dirtyFlag_[3]=true;
         if(!pJson["title"].isNull())
         {
             title_=std::make_shared<std::string>(pJson["title"].asString());
@@ -477,31 +480,55 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
     }
     if(pJson.isMember("description"))
     {
-        dirtyFlag_[6]=true;
+        dirtyFlag_[4]=true;
         if(!pJson["description"].isNull())
         {
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("from_stage_id"))
+    if(pJson.isMember("current_stage_id"))
     {
-        dirtyFlag_[7]=true;
-        if(!pJson["from_stage_id"].isNull())
+        dirtyFlag_[5]=true;
+        if(!pJson["current_stage_id"].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(pJson["from_stage_id"].asString());
+            currentStageId_=std::make_shared<std::string>(pJson["current_stage_id"].asString());
         }
     }
-    if(pJson.isMember("to_stage_id"))
+    if(pJson.isMember("target_stage_id"))
+    {
+        dirtyFlag_[6]=true;
+        if(!pJson["target_stage_id"].isNull())
+        {
+            targetStageId_=std::make_shared<std::string>(pJson["target_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("target_users"))
+    {
+        dirtyFlag_[7]=true;
+        if(!pJson["target_users"].isNull())
+        {
+            targetUsers_=std::make_shared<std::string>(pJson["target_users"].asString());
+        }
+    }
+    if(pJson.isMember("target_groups"))
     {
         dirtyFlag_[8]=true;
-        if(!pJson["to_stage_id"].isNull())
+        if(!pJson["target_groups"].isNull())
         {
-            toStageId_=std::make_shared<std::string>(pJson["to_stage_id"].asString());
+            targetGroups_=std::make_shared<std::string>(pJson["target_groups"].asString());
+        }
+    }
+    if(pJson.isMember("ordering"))
+    {
+        dirtyFlag_[9]=true;
+        if(!pJson["ordering"].isNull())
+        {
+            ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
         }
     }
     if(pJson.isMember("options"))
     {
-        dirtyFlag_[9]=true;
+        dirtyFlag_[10]=true;
         if(!pJson["options"].isNull())
         {
             options_=std::make_shared<std::string>(pJson["options"].asString());
@@ -509,7 +536,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
     }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[10]=true;
+        dirtyFlag_[11]=true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -517,7 +544,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[11]=true;
+        dirtyFlag_[12]=true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -543,7 +570,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[12]=true;
+        dirtyFlag_[13]=true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -551,7 +578,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[13]=true;
+        dirtyFlag_[14]=true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -580,7 +607,7 @@ WorkflowTransitions::WorkflowTransitions(const Json::Value &pJson) noexcept(fals
 void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
                                             const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(pMasqueradingVector.size() != 14)
+    if(pMasqueradingVector.size() != 15)
     {
         LOG_ERROR << "Bad masquerading vector";
         return;
@@ -597,7 +624,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[1] = true;
         if(!pJson[pMasqueradingVector[1]].isNull())
         {
-            assetId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
+            workflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[1]].asString());
         }
     }
     if(!pMasqueradingVector[2].empty() && pJson.isMember(pMasqueradingVector[2]))
@@ -605,7 +632,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[2] = true;
         if(!pJson[pMasqueradingVector[2]].isNull())
         {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[2]].asInt64());
         }
     }
     if(!pMasqueradingVector[3].empty() && pJson.isMember(pMasqueradingVector[3]))
@@ -613,7 +640,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[3] = true;
         if(!pJson[pMasqueradingVector[3]].isNull())
         {
-            workflowId_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
+            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[3]].asString());
         }
     }
     if(!pMasqueradingVector[4].empty() && pJson.isMember(pMasqueradingVector[4]))
@@ -621,7 +648,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[4] = true;
         if(!pJson[pMasqueradingVector[4]].isNull())
         {
-            published_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[4]].asInt64());
+            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[4]].asString());
         }
     }
     if(!pMasqueradingVector[5].empty() && pJson.isMember(pMasqueradingVector[5]))
@@ -629,7 +656,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[5] = true;
         if(!pJson[pMasqueradingVector[5]].isNull())
         {
-            title_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
+            currentStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[5]].asString());
         }
     }
     if(!pMasqueradingVector[6].empty() && pJson.isMember(pMasqueradingVector[6]))
@@ -637,7 +664,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[6] = true;
         if(!pJson[pMasqueradingVector[6]].isNull())
         {
-            description_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
+            targetStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[6]].asString());
         }
     }
     if(!pMasqueradingVector[7].empty() && pJson.isMember(pMasqueradingVector[7]))
@@ -645,7 +672,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[7] = true;
         if(!pJson[pMasqueradingVector[7]].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
+            targetUsers_=std::make_shared<std::string>(pJson[pMasqueradingVector[7]].asString());
         }
     }
     if(!pMasqueradingVector[8].empty() && pJson.isMember(pMasqueradingVector[8]))
@@ -653,7 +680,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[8] = true;
         if(!pJson[pMasqueradingVector[8]].isNull())
         {
-            toStageId_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
+            targetGroups_=std::make_shared<std::string>(pJson[pMasqueradingVector[8]].asString());
         }
     }
     if(!pMasqueradingVector[9].empty() && pJson.isMember(pMasqueradingVector[9]))
@@ -661,7 +688,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[9] = true;
         if(!pJson[pMasqueradingVector[9]].isNull())
         {
-            options_=std::make_shared<std::string>(pJson[pMasqueradingVector[9]].asString());
+            ordering_=std::make_shared<int32_t>((int32_t)pJson[pMasqueradingVector[9]].asInt64());
         }
     }
     if(!pMasqueradingVector[10].empty() && pJson.isMember(pMasqueradingVector[10]))
@@ -669,7 +696,7 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[10] = true;
         if(!pJson[pMasqueradingVector[10]].isNull())
         {
-            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
+            options_=std::make_shared<std::string>(pJson[pMasqueradingVector[10]].asString());
         }
     }
     if(!pMasqueradingVector[11].empty() && pJson.isMember(pMasqueradingVector[11]))
@@ -677,7 +704,15 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
         dirtyFlag_[11] = true;
         if(!pJson[pMasqueradingVector[11]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[11]].asString();
+            createdBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[11]].asString());
+        }
+    }
+    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
+    {
+        dirtyFlag_[12] = true;
+        if(!pJson[pMasqueradingVector[12]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[12]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -698,20 +733,20 @@ void WorkflowTransitions::updateByMasqueradedJson(const Json::Value &pJson,
             }
         }
     }
-    if(!pMasqueradingVector[12].empty() && pJson.isMember(pMasqueradingVector[12]))
-    {
-        dirtyFlag_[12] = true;
-        if(!pJson[pMasqueradingVector[12]].isNull())
-        {
-            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[12]].asString());
-        }
-    }
     if(!pMasqueradingVector[13].empty() && pJson.isMember(pMasqueradingVector[13]))
     {
         dirtyFlag_[13] = true;
         if(!pJson[pMasqueradingVector[13]].isNull())
         {
-            auto timeStr = pJson[pMasqueradingVector[13]].asString();
+            modifiedBy_=std::make_shared<std::string>(pJson[pMasqueradingVector[13]].asString());
+        }
+    }
+    if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
+    {
+        dirtyFlag_[14] = true;
+        if(!pJson[pMasqueradingVector[14]].isNull())
+        {
+            auto timeStr = pJson[pMasqueradingVector[14]].asString();
             struct tm stm;
             memset(&stm,0,sizeof(stm));
             auto p = strptime(timeStr.c_str(),"%Y-%m-%d %H:%M:%S",&stm);
@@ -743,41 +778,25 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
             id_=std::make_shared<std::string>(pJson["id"].asString());
         }
     }
-    if(pJson.isMember("asset_id"))
-    {
-        dirtyFlag_[1] = true;
-        if(!pJson["asset_id"].isNull())
-        {
-            assetId_=std::make_shared<std::string>(pJson["asset_id"].asString());
-        }
-    }
-    if(pJson.isMember("ordering"))
-    {
-        dirtyFlag_[2] = true;
-        if(!pJson["ordering"].isNull())
-        {
-            ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
-        }
-    }
     if(pJson.isMember("workflow_id"))
     {
-        dirtyFlag_[3] = true;
+        dirtyFlag_[1] = true;
         if(!pJson["workflow_id"].isNull())
         {
             workflowId_=std::make_shared<std::string>(pJson["workflow_id"].asString());
         }
     }
-    if(pJson.isMember("published"))
+    if(pJson.isMember("status"))
     {
-        dirtyFlag_[4] = true;
-        if(!pJson["published"].isNull())
+        dirtyFlag_[2] = true;
+        if(!pJson["status"].isNull())
         {
-            published_=std::make_shared<int32_t>((int32_t)pJson["published"].asInt64());
+            status_=std::make_shared<int32_t>((int32_t)pJson["status"].asInt64());
         }
     }
     if(pJson.isMember("title"))
     {
-        dirtyFlag_[5] = true;
+        dirtyFlag_[3] = true;
         if(!pJson["title"].isNull())
         {
             title_=std::make_shared<std::string>(pJson["title"].asString());
@@ -785,31 +804,55 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("description"))
     {
-        dirtyFlag_[6] = true;
+        dirtyFlag_[4] = true;
         if(!pJson["description"].isNull())
         {
             description_=std::make_shared<std::string>(pJson["description"].asString());
         }
     }
-    if(pJson.isMember("from_stage_id"))
+    if(pJson.isMember("current_stage_id"))
     {
-        dirtyFlag_[7] = true;
-        if(!pJson["from_stage_id"].isNull())
+        dirtyFlag_[5] = true;
+        if(!pJson["current_stage_id"].isNull())
         {
-            fromStageId_=std::make_shared<std::string>(pJson["from_stage_id"].asString());
+            currentStageId_=std::make_shared<std::string>(pJson["current_stage_id"].asString());
         }
     }
-    if(pJson.isMember("to_stage_id"))
+    if(pJson.isMember("target_stage_id"))
+    {
+        dirtyFlag_[6] = true;
+        if(!pJson["target_stage_id"].isNull())
+        {
+            targetStageId_=std::make_shared<std::string>(pJson["target_stage_id"].asString());
+        }
+    }
+    if(pJson.isMember("target_users"))
+    {
+        dirtyFlag_[7] = true;
+        if(!pJson["target_users"].isNull())
+        {
+            targetUsers_=std::make_shared<std::string>(pJson["target_users"].asString());
+        }
+    }
+    if(pJson.isMember("target_groups"))
     {
         dirtyFlag_[8] = true;
-        if(!pJson["to_stage_id"].isNull())
+        if(!pJson["target_groups"].isNull())
         {
-            toStageId_=std::make_shared<std::string>(pJson["to_stage_id"].asString());
+            targetGroups_=std::make_shared<std::string>(pJson["target_groups"].asString());
+        }
+    }
+    if(pJson.isMember("ordering"))
+    {
+        dirtyFlag_[9] = true;
+        if(!pJson["ordering"].isNull())
+        {
+            ordering_=std::make_shared<int32_t>((int32_t)pJson["ordering"].asInt64());
         }
     }
     if(pJson.isMember("options"))
     {
-        dirtyFlag_[9] = true;
+        dirtyFlag_[10] = true;
         if(!pJson["options"].isNull())
         {
             options_=std::make_shared<std::string>(pJson["options"].asString());
@@ -817,7 +860,7 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_by"))
     {
-        dirtyFlag_[10] = true;
+        dirtyFlag_[11] = true;
         if(!pJson["created_by"].isNull())
         {
             createdBy_=std::make_shared<std::string>(pJson["created_by"].asString());
@@ -825,7 +868,7 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("created_at"))
     {
-        dirtyFlag_[11] = true;
+        dirtyFlag_[12] = true;
         if(!pJson["created_at"].isNull())
         {
             auto timeStr = pJson["created_at"].asString();
@@ -851,7 +894,7 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_by"))
     {
-        dirtyFlag_[12] = true;
+        dirtyFlag_[13] = true;
         if(!pJson["modified_by"].isNull())
         {
             modifiedBy_=std::make_shared<std::string>(pJson["modified_by"].asString());
@@ -859,7 +902,7 @@ void WorkflowTransitions::updateByJson(const Json::Value &pJson) noexcept(false)
     }
     if(pJson.isMember("modified_at"))
     {
-        dirtyFlag_[13] = true;
+        dirtyFlag_[14] = true;
         if(!pJson["modified_at"].isNull())
         {
             auto timeStr = pJson["modified_at"].asString();
@@ -912,50 +955,6 @@ const typename WorkflowTransitions::PrimaryKeyType & WorkflowTransitions::getPri
     return *id_;
 }
 
-const std::string &WorkflowTransitions::getValueOfAssetId() const noexcept
-{
-    static const std::string defaultValue = std::string();
-    if(assetId_)
-        return *assetId_;
-    return defaultValue;
-}
-const std::shared_ptr<std::string> &WorkflowTransitions::getAssetId() const noexcept
-{
-    return assetId_;
-}
-void WorkflowTransitions::setAssetId(const std::string &pAssetId) noexcept
-{
-    assetId_ = std::make_shared<std::string>(pAssetId);
-    dirtyFlag_[1] = true;
-}
-void WorkflowTransitions::setAssetId(std::string &&pAssetId) noexcept
-{
-    assetId_ = std::make_shared<std::string>(std::move(pAssetId));
-    dirtyFlag_[1] = true;
-}
-void WorkflowTransitions::setAssetIdToNull() noexcept
-{
-    assetId_.reset();
-    dirtyFlag_[1] = true;
-}
-
-const int32_t &WorkflowTransitions::getValueOfOrdering() const noexcept
-{
-    static const int32_t defaultValue = int32_t();
-    if(ordering_)
-        return *ordering_;
-    return defaultValue;
-}
-const std::shared_ptr<int32_t> &WorkflowTransitions::getOrdering() const noexcept
-{
-    return ordering_;
-}
-void WorkflowTransitions::setOrdering(const int32_t &pOrdering) noexcept
-{
-    ordering_ = std::make_shared<int32_t>(pOrdering);
-    dirtyFlag_[2] = true;
-}
-
 const std::string &WorkflowTransitions::getValueOfWorkflowId() const noexcept
 {
     static const std::string defaultValue = std::string();
@@ -970,34 +969,34 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getWorkflowId() const n
 void WorkflowTransitions::setWorkflowId(const std::string &pWorkflowId) noexcept
 {
     workflowId_ = std::make_shared<std::string>(pWorkflowId);
-    dirtyFlag_[3] = true;
+    dirtyFlag_[1] = true;
 }
 void WorkflowTransitions::setWorkflowId(std::string &&pWorkflowId) noexcept
 {
     workflowId_ = std::make_shared<std::string>(std::move(pWorkflowId));
-    dirtyFlag_[3] = true;
+    dirtyFlag_[1] = true;
 }
 void WorkflowTransitions::setWorkflowIdToNull() noexcept
 {
     workflowId_.reset();
-    dirtyFlag_[3] = true;
+    dirtyFlag_[1] = true;
 }
 
-const int32_t &WorkflowTransitions::getValueOfPublished() const noexcept
+const int32_t &WorkflowTransitions::getValueOfStatus() const noexcept
 {
     static const int32_t defaultValue = int32_t();
-    if(published_)
-        return *published_;
+    if(status_)
+        return *status_;
     return defaultValue;
 }
-const std::shared_ptr<int32_t> &WorkflowTransitions::getPublished() const noexcept
+const std::shared_ptr<int32_t> &WorkflowTransitions::getStatus() const noexcept
 {
-    return published_;
+    return status_;
 }
-void WorkflowTransitions::setPublished(const int32_t &pPublished) noexcept
+void WorkflowTransitions::setStatus(const int32_t &pStatus) noexcept
 {
-    published_ = std::make_shared<int32_t>(pPublished);
-    dirtyFlag_[4] = true;
+    status_ = std::make_shared<int32_t>(pStatus);
+    dirtyFlag_[2] = true;
 }
 
 const std::string &WorkflowTransitions::getValueOfTitle() const noexcept
@@ -1014,12 +1013,12 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getTitle() const noexce
 void WorkflowTransitions::setTitle(const std::string &pTitle) noexcept
 {
     title_ = std::make_shared<std::string>(pTitle);
-    dirtyFlag_[5] = true;
+    dirtyFlag_[3] = true;
 }
 void WorkflowTransitions::setTitle(std::string &&pTitle) noexcept
 {
     title_ = std::make_shared<std::string>(std::move(pTitle));
-    dirtyFlag_[5] = true;
+    dirtyFlag_[3] = true;
 }
 
 const std::string &WorkflowTransitions::getValueOfDescription() const noexcept
@@ -1036,66 +1035,137 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getDescription() const 
 void WorkflowTransitions::setDescription(const std::string &pDescription) noexcept
 {
     description_ = std::make_shared<std::string>(pDescription);
-    dirtyFlag_[6] = true;
+    dirtyFlag_[4] = true;
 }
 void WorkflowTransitions::setDescription(std::string &&pDescription) noexcept
 {
     description_ = std::make_shared<std::string>(std::move(pDescription));
+    dirtyFlag_[4] = true;
+}
+
+const std::string &WorkflowTransitions::getValueOfCurrentStageId() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(currentStageId_)
+        return *currentStageId_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &WorkflowTransitions::getCurrentStageId() const noexcept
+{
+    return currentStageId_;
+}
+void WorkflowTransitions::setCurrentStageId(const std::string &pCurrentStageId) noexcept
+{
+    currentStageId_ = std::make_shared<std::string>(pCurrentStageId);
+    dirtyFlag_[5] = true;
+}
+void WorkflowTransitions::setCurrentStageId(std::string &&pCurrentStageId) noexcept
+{
+    currentStageId_ = std::make_shared<std::string>(std::move(pCurrentStageId));
+    dirtyFlag_[5] = true;
+}
+void WorkflowTransitions::setCurrentStageIdToNull() noexcept
+{
+    currentStageId_.reset();
+    dirtyFlag_[5] = true;
+}
+
+const std::string &WorkflowTransitions::getValueOfTargetStageId() const noexcept
+{
+    static const std::string defaultValue = std::string();
+    if(targetStageId_)
+        return *targetStageId_;
+    return defaultValue;
+}
+const std::shared_ptr<std::string> &WorkflowTransitions::getTargetStageId() const noexcept
+{
+    return targetStageId_;
+}
+void WorkflowTransitions::setTargetStageId(const std::string &pTargetStageId) noexcept
+{
+    targetStageId_ = std::make_shared<std::string>(pTargetStageId);
+    dirtyFlag_[6] = true;
+}
+void WorkflowTransitions::setTargetStageId(std::string &&pTargetStageId) noexcept
+{
+    targetStageId_ = std::make_shared<std::string>(std::move(pTargetStageId));
+    dirtyFlag_[6] = true;
+}
+void WorkflowTransitions::setTargetStageIdToNull() noexcept
+{
+    targetStageId_.reset();
     dirtyFlag_[6] = true;
 }
 
-const std::string &WorkflowTransitions::getValueOfFromStageId() const noexcept
+const std::string &WorkflowTransitions::getValueOfTargetUsers() const noexcept
 {
     static const std::string defaultValue = std::string();
-    if(fromStageId_)
-        return *fromStageId_;
+    if(targetUsers_)
+        return *targetUsers_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &WorkflowTransitions::getFromStageId() const noexcept
+const std::shared_ptr<std::string> &WorkflowTransitions::getTargetUsers() const noexcept
 {
-    return fromStageId_;
+    return targetUsers_;
 }
-void WorkflowTransitions::setFromStageId(const std::string &pFromStageId) noexcept
+void WorkflowTransitions::setTargetUsers(const std::string &pTargetUsers) noexcept
 {
-    fromStageId_ = std::make_shared<std::string>(pFromStageId);
+    targetUsers_ = std::make_shared<std::string>(pTargetUsers);
     dirtyFlag_[7] = true;
 }
-void WorkflowTransitions::setFromStageId(std::string &&pFromStageId) noexcept
+void WorkflowTransitions::setTargetUsers(std::string &&pTargetUsers) noexcept
 {
-    fromStageId_ = std::make_shared<std::string>(std::move(pFromStageId));
+    targetUsers_ = std::make_shared<std::string>(std::move(pTargetUsers));
     dirtyFlag_[7] = true;
 }
-void WorkflowTransitions::setFromStageIdToNull() noexcept
+void WorkflowTransitions::setTargetUsersToNull() noexcept
 {
-    fromStageId_.reset();
+    targetUsers_.reset();
     dirtyFlag_[7] = true;
 }
 
-const std::string &WorkflowTransitions::getValueOfToStageId() const noexcept
+const std::string &WorkflowTransitions::getValueOfTargetGroups() const noexcept
 {
     static const std::string defaultValue = std::string();
-    if(toStageId_)
-        return *toStageId_;
+    if(targetGroups_)
+        return *targetGroups_;
     return defaultValue;
 }
-const std::shared_ptr<std::string> &WorkflowTransitions::getToStageId() const noexcept
+const std::shared_ptr<std::string> &WorkflowTransitions::getTargetGroups() const noexcept
 {
-    return toStageId_;
+    return targetGroups_;
 }
-void WorkflowTransitions::setToStageId(const std::string &pToStageId) noexcept
+void WorkflowTransitions::setTargetGroups(const std::string &pTargetGroups) noexcept
 {
-    toStageId_ = std::make_shared<std::string>(pToStageId);
+    targetGroups_ = std::make_shared<std::string>(pTargetGroups);
     dirtyFlag_[8] = true;
 }
-void WorkflowTransitions::setToStageId(std::string &&pToStageId) noexcept
+void WorkflowTransitions::setTargetGroups(std::string &&pTargetGroups) noexcept
 {
-    toStageId_ = std::make_shared<std::string>(std::move(pToStageId));
+    targetGroups_ = std::make_shared<std::string>(std::move(pTargetGroups));
     dirtyFlag_[8] = true;
 }
-void WorkflowTransitions::setToStageIdToNull() noexcept
+void WorkflowTransitions::setTargetGroupsToNull() noexcept
 {
-    toStageId_.reset();
+    targetGroups_.reset();
     dirtyFlag_[8] = true;
+}
+
+const int32_t &WorkflowTransitions::getValueOfOrdering() const noexcept
+{
+    static const int32_t defaultValue = int32_t();
+    if(ordering_)
+        return *ordering_;
+    return defaultValue;
+}
+const std::shared_ptr<int32_t> &WorkflowTransitions::getOrdering() const noexcept
+{
+    return ordering_;
+}
+void WorkflowTransitions::setOrdering(const int32_t &pOrdering) noexcept
+{
+    ordering_ = std::make_shared<int32_t>(pOrdering);
+    dirtyFlag_[9] = true;
 }
 
 const std::string &WorkflowTransitions::getValueOfOptions() const noexcept
@@ -1112,17 +1182,17 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getOptions() const noex
 void WorkflowTransitions::setOptions(const std::string &pOptions) noexcept
 {
     options_ = std::make_shared<std::string>(pOptions);
-    dirtyFlag_[9] = true;
+    dirtyFlag_[10] = true;
 }
 void WorkflowTransitions::setOptions(std::string &&pOptions) noexcept
 {
     options_ = std::make_shared<std::string>(std::move(pOptions));
-    dirtyFlag_[9] = true;
+    dirtyFlag_[10] = true;
 }
 void WorkflowTransitions::setOptionsToNull() noexcept
 {
     options_.reset();
-    dirtyFlag_[9] = true;
+    dirtyFlag_[10] = true;
 }
 
 const std::string &WorkflowTransitions::getValueOfCreatedBy() const noexcept
@@ -1139,17 +1209,17 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getCreatedBy() const no
 void WorkflowTransitions::setCreatedBy(const std::string &pCreatedBy) noexcept
 {
     createdBy_ = std::make_shared<std::string>(pCreatedBy);
-    dirtyFlag_[10] = true;
+    dirtyFlag_[11] = true;
 }
 void WorkflowTransitions::setCreatedBy(std::string &&pCreatedBy) noexcept
 {
     createdBy_ = std::make_shared<std::string>(std::move(pCreatedBy));
-    dirtyFlag_[10] = true;
+    dirtyFlag_[11] = true;
 }
 void WorkflowTransitions::setCreatedByToNull() noexcept
 {
     createdBy_.reset();
-    dirtyFlag_[10] = true;
+    dirtyFlag_[11] = true;
 }
 
 const ::trantor::Date &WorkflowTransitions::getValueOfCreatedAt() const noexcept
@@ -1166,12 +1236,12 @@ const std::shared_ptr<::trantor::Date> &WorkflowTransitions::getCreatedAt() cons
 void WorkflowTransitions::setCreatedAt(const ::trantor::Date &pCreatedAt) noexcept
 {
     createdAt_ = std::make_shared<::trantor::Date>(pCreatedAt);
-    dirtyFlag_[11] = true;
+    dirtyFlag_[12] = true;
 }
 void WorkflowTransitions::setCreatedAtToNull() noexcept
 {
     createdAt_.reset();
-    dirtyFlag_[11] = true;
+    dirtyFlag_[12] = true;
 }
 
 const std::string &WorkflowTransitions::getValueOfModifiedBy() const noexcept
@@ -1188,17 +1258,17 @@ const std::shared_ptr<std::string> &WorkflowTransitions::getModifiedBy() const n
 void WorkflowTransitions::setModifiedBy(const std::string &pModifiedBy) noexcept
 {
     modifiedBy_ = std::make_shared<std::string>(pModifiedBy);
-    dirtyFlag_[12] = true;
+    dirtyFlag_[13] = true;
 }
 void WorkflowTransitions::setModifiedBy(std::string &&pModifiedBy) noexcept
 {
     modifiedBy_ = std::make_shared<std::string>(std::move(pModifiedBy));
-    dirtyFlag_[12] = true;
+    dirtyFlag_[13] = true;
 }
 void WorkflowTransitions::setModifiedByToNull() noexcept
 {
     modifiedBy_.reset();
-    dirtyFlag_[12] = true;
+    dirtyFlag_[13] = true;
 }
 
 const ::trantor::Date &WorkflowTransitions::getValueOfModifiedAt() const noexcept
@@ -1215,12 +1285,12 @@ const std::shared_ptr<::trantor::Date> &WorkflowTransitions::getModifiedAt() con
 void WorkflowTransitions::setModifiedAt(const ::trantor::Date &pModifiedAt) noexcept
 {
     modifiedAt_ = std::make_shared<::trantor::Date>(pModifiedAt);
-    dirtyFlag_[13] = true;
+    dirtyFlag_[14] = true;
 }
 void WorkflowTransitions::setModifiedAtToNull() noexcept
 {
     modifiedAt_.reset();
-    dirtyFlag_[13] = true;
+    dirtyFlag_[14] = true;
 }
 
 void WorkflowTransitions::updateId(const uint64_t id)
@@ -1231,14 +1301,15 @@ const std::vector<std::string> &WorkflowTransitions::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
         "id",
-        "asset_id",
-        "ordering",
         "workflow_id",
-        "published",
+        "status",
         "title",
         "description",
-        "from_stage_id",
-        "to_stage_id",
+        "current_stage_id",
+        "target_stage_id",
+        "target_users",
+        "target_groups",
+        "ordering",
         "options",
         "created_by",
         "created_at",
@@ -1263,28 +1334,6 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
     }
     if(dirtyFlag_[1])
     {
-        if(getAssetId())
-        {
-            binder << getValueOfAssetId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[2])
-    {
-        if(getOrdering())
-        {
-            binder << getValueOfOrdering();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[3])
-    {
         if(getWorkflowId())
         {
             binder << getValueOfWorkflowId();
@@ -1294,18 +1343,18 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[4])
+    if(dirtyFlag_[2])
     {
-        if(getPublished())
+        if(getStatus())
         {
-            binder << getValueOfPublished();
+            binder << getValueOfStatus();
         }
         else
         {
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[5])
+    if(dirtyFlag_[3])
     {
         if(getTitle())
         {
@@ -1316,7 +1365,7 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[6])
+    if(dirtyFlag_[4])
     {
         if(getDescription())
         {
@@ -1327,11 +1376,33 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
+    if(dirtyFlag_[5])
+    {
+        if(getCurrentStageId())
+        {
+            binder << getValueOfCurrentStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[6])
+    {
+        if(getTargetStageId())
+        {
+            binder << getValueOfTargetStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[7])
     {
-        if(getFromStageId())
+        if(getTargetUsers())
         {
-            binder << getValueOfFromStageId();
+            binder << getValueOfTargetUsers();
         }
         else
         {
@@ -1340,9 +1411,9 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
     }
     if(dirtyFlag_[8])
     {
-        if(getToStageId())
+        if(getTargetGroups())
         {
-            binder << getValueOfToStageId();
+            binder << getValueOfTargetGroups();
         }
         else
         {
@@ -1350,6 +1421,17 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
         }
     }
     if(dirtyFlag_[9])
+    {
+        if(getOrdering())
+        {
+            binder << getValueOfOrdering();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[10])
     {
         if(getOptions())
         {
@@ -1360,7 +1442,7 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[11])
     {
         if(getCreatedBy())
         {
@@ -1371,7 +1453,7 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[12])
     {
         if(getCreatedAt())
         {
@@ -1382,7 +1464,7 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[13])
     {
         if(getModifiedBy())
         {
@@ -1393,7 +1475,7 @@ void WorkflowTransitions::outputArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[14])
     {
         if(getModifiedAt())
         {
@@ -1465,6 +1547,10 @@ const std::vector<std::string> WorkflowTransitions::updateColumns() const
     {
         ret.push_back(getColumnName(13));
     }
+    if(dirtyFlag_[14])
+    {
+        ret.push_back(getColumnName(14));
+    }
     return ret;
 }
 
@@ -1483,28 +1569,6 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
     }
     if(dirtyFlag_[1])
     {
-        if(getAssetId())
-        {
-            binder << getValueOfAssetId();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[2])
-    {
-        if(getOrdering())
-        {
-            binder << getValueOfOrdering();
-        }
-        else
-        {
-            binder << nullptr;
-        }
-    }
-    if(dirtyFlag_[3])
-    {
         if(getWorkflowId())
         {
             binder << getValueOfWorkflowId();
@@ -1514,18 +1578,18 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[4])
+    if(dirtyFlag_[2])
     {
-        if(getPublished())
+        if(getStatus())
         {
-            binder << getValueOfPublished();
+            binder << getValueOfStatus();
         }
         else
         {
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[5])
+    if(dirtyFlag_[3])
     {
         if(getTitle())
         {
@@ -1536,7 +1600,7 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[6])
+    if(dirtyFlag_[4])
     {
         if(getDescription())
         {
@@ -1547,11 +1611,33 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
+    if(dirtyFlag_[5])
+    {
+        if(getCurrentStageId())
+        {
+            binder << getValueOfCurrentStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[6])
+    {
+        if(getTargetStageId())
+        {
+            binder << getValueOfTargetStageId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[7])
     {
-        if(getFromStageId())
+        if(getTargetUsers())
         {
-            binder << getValueOfFromStageId();
+            binder << getValueOfTargetUsers();
         }
         else
         {
@@ -1560,9 +1646,9 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
     }
     if(dirtyFlag_[8])
     {
-        if(getToStageId())
+        if(getTargetGroups())
         {
-            binder << getValueOfToStageId();
+            binder << getValueOfTargetGroups();
         }
         else
         {
@@ -1570,6 +1656,17 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
         }
     }
     if(dirtyFlag_[9])
+    {
+        if(getOrdering())
+        {
+            binder << getValueOfOrdering();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
+    if(dirtyFlag_[10])
     {
         if(getOptions())
         {
@@ -1580,7 +1677,7 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[10])
+    if(dirtyFlag_[11])
     {
         if(getCreatedBy())
         {
@@ -1591,7 +1688,7 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[11])
+    if(dirtyFlag_[12])
     {
         if(getCreatedAt())
         {
@@ -1602,7 +1699,7 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[12])
+    if(dirtyFlag_[13])
     {
         if(getModifiedBy())
         {
@@ -1613,7 +1710,7 @@ void WorkflowTransitions::updateArgs(drogon::orm::internal::SqlBinder &binder) c
             binder << nullptr;
         }
     }
-    if(dirtyFlag_[13])
+    if(dirtyFlag_[14])
     {
         if(getModifiedAt())
         {
@@ -1636,22 +1733,6 @@ Json::Value WorkflowTransitions::toJson() const
     {
         ret["id"]=Json::Value();
     }
-    if(getAssetId())
-    {
-        ret["asset_id"]=getValueOfAssetId();
-    }
-    else
-    {
-        ret["asset_id"]=Json::Value();
-    }
-    if(getOrdering())
-    {
-        ret["ordering"]=getValueOfOrdering();
-    }
-    else
-    {
-        ret["ordering"]=Json::Value();
-    }
     if(getWorkflowId())
     {
         ret["workflow_id"]=getValueOfWorkflowId();
@@ -1660,13 +1741,13 @@ Json::Value WorkflowTransitions::toJson() const
     {
         ret["workflow_id"]=Json::Value();
     }
-    if(getPublished())
+    if(getStatus())
     {
-        ret["published"]=getValueOfPublished();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["published"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getTitle())
     {
@@ -1684,21 +1765,45 @@ Json::Value WorkflowTransitions::toJson() const
     {
         ret["description"]=Json::Value();
     }
-    if(getFromStageId())
+    if(getCurrentStageId())
     {
-        ret["from_stage_id"]=getValueOfFromStageId();
+        ret["current_stage_id"]=getValueOfCurrentStageId();
     }
     else
     {
-        ret["from_stage_id"]=Json::Value();
+        ret["current_stage_id"]=Json::Value();
     }
-    if(getToStageId())
+    if(getTargetStageId())
     {
-        ret["to_stage_id"]=getValueOfToStageId();
+        ret["target_stage_id"]=getValueOfTargetStageId();
     }
     else
     {
-        ret["to_stage_id"]=Json::Value();
+        ret["target_stage_id"]=Json::Value();
+    }
+    if(getTargetUsers())
+    {
+        ret["target_users"]=getValueOfTargetUsers();
+    }
+    else
+    {
+        ret["target_users"]=Json::Value();
+    }
+    if(getTargetGroups())
+    {
+        ret["target_groups"]=getValueOfTargetGroups();
+    }
+    else
+    {
+        ret["target_groups"]=Json::Value();
+    }
+    if(getOrdering())
+    {
+        ret["ordering"]=getValueOfOrdering();
+    }
+    else
+    {
+        ret["ordering"]=Json::Value();
     }
     if(getOptions())
     {
@@ -1752,7 +1857,7 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
     const std::vector<std::string> &pMasqueradingVector) const
 {
     Json::Value ret;
-    if(pMasqueradingVector.size() == 14)
+    if(pMasqueradingVector.size() == 15)
     {
         if(!pMasqueradingVector[0].empty())
         {
@@ -1767,9 +1872,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[1].empty())
         {
-            if(getAssetId())
+            if(getWorkflowId())
             {
-                ret[pMasqueradingVector[1]]=getValueOfAssetId();
+                ret[pMasqueradingVector[1]]=getValueOfWorkflowId();
             }
             else
             {
@@ -1778,9 +1883,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[2].empty())
         {
-            if(getOrdering())
+            if(getStatus())
             {
-                ret[pMasqueradingVector[2]]=getValueOfOrdering();
+                ret[pMasqueradingVector[2]]=getValueOfStatus();
             }
             else
             {
@@ -1789,9 +1894,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[3].empty())
         {
-            if(getWorkflowId())
+            if(getTitle())
             {
-                ret[pMasqueradingVector[3]]=getValueOfWorkflowId();
+                ret[pMasqueradingVector[3]]=getValueOfTitle();
             }
             else
             {
@@ -1800,9 +1905,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[4].empty())
         {
-            if(getPublished())
+            if(getDescription())
             {
-                ret[pMasqueradingVector[4]]=getValueOfPublished();
+                ret[pMasqueradingVector[4]]=getValueOfDescription();
             }
             else
             {
@@ -1811,9 +1916,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[5].empty())
         {
-            if(getTitle())
+            if(getCurrentStageId())
             {
-                ret[pMasqueradingVector[5]]=getValueOfTitle();
+                ret[pMasqueradingVector[5]]=getValueOfCurrentStageId();
             }
             else
             {
@@ -1822,9 +1927,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[6].empty())
         {
-            if(getDescription())
+            if(getTargetStageId())
             {
-                ret[pMasqueradingVector[6]]=getValueOfDescription();
+                ret[pMasqueradingVector[6]]=getValueOfTargetStageId();
             }
             else
             {
@@ -1833,9 +1938,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[7].empty())
         {
-            if(getFromStageId())
+            if(getTargetUsers())
             {
-                ret[pMasqueradingVector[7]]=getValueOfFromStageId();
+                ret[pMasqueradingVector[7]]=getValueOfTargetUsers();
             }
             else
             {
@@ -1844,9 +1949,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[8].empty())
         {
-            if(getToStageId())
+            if(getTargetGroups())
             {
-                ret[pMasqueradingVector[8]]=getValueOfToStageId();
+                ret[pMasqueradingVector[8]]=getValueOfTargetGroups();
             }
             else
             {
@@ -1855,9 +1960,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[9].empty())
         {
-            if(getOptions())
+            if(getOrdering())
             {
-                ret[pMasqueradingVector[9]]=getValueOfOptions();
+                ret[pMasqueradingVector[9]]=getValueOfOrdering();
             }
             else
             {
@@ -1866,9 +1971,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[10].empty())
         {
-            if(getCreatedBy())
+            if(getOptions())
             {
-                ret[pMasqueradingVector[10]]=getValueOfCreatedBy();
+                ret[pMasqueradingVector[10]]=getValueOfOptions();
             }
             else
             {
@@ -1877,9 +1982,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[11].empty())
         {
-            if(getCreatedAt())
+            if(getCreatedBy())
             {
-                ret[pMasqueradingVector[11]]=getCreatedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[11]]=getValueOfCreatedBy();
             }
             else
             {
@@ -1888,9 +1993,9 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[12].empty())
         {
-            if(getModifiedBy())
+            if(getCreatedAt())
             {
-                ret[pMasqueradingVector[12]]=getValueOfModifiedBy();
+                ret[pMasqueradingVector[12]]=getCreatedAt()->toDbStringLocal();
             }
             else
             {
@@ -1899,13 +2004,24 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
         }
         if(!pMasqueradingVector[13].empty())
         {
-            if(getModifiedAt())
+            if(getModifiedBy())
             {
-                ret[pMasqueradingVector[13]]=getModifiedAt()->toDbStringLocal();
+                ret[pMasqueradingVector[13]]=getValueOfModifiedBy();
             }
             else
             {
                 ret[pMasqueradingVector[13]]=Json::Value();
+            }
+        }
+        if(!pMasqueradingVector[14].empty())
+        {
+            if(getModifiedAt())
+            {
+                ret[pMasqueradingVector[14]]=getModifiedAt()->toDbStringLocal();
+            }
+            else
+            {
+                ret[pMasqueradingVector[14]]=Json::Value();
             }
         }
         return ret;
@@ -1919,22 +2035,6 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
     {
         ret["id"]=Json::Value();
     }
-    if(getAssetId())
-    {
-        ret["asset_id"]=getValueOfAssetId();
-    }
-    else
-    {
-        ret["asset_id"]=Json::Value();
-    }
-    if(getOrdering())
-    {
-        ret["ordering"]=getValueOfOrdering();
-    }
-    else
-    {
-        ret["ordering"]=Json::Value();
-    }
     if(getWorkflowId())
     {
         ret["workflow_id"]=getValueOfWorkflowId();
@@ -1943,13 +2043,13 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
     {
         ret["workflow_id"]=Json::Value();
     }
-    if(getPublished())
+    if(getStatus())
     {
-        ret["published"]=getValueOfPublished();
+        ret["status"]=getValueOfStatus();
     }
     else
     {
-        ret["published"]=Json::Value();
+        ret["status"]=Json::Value();
     }
     if(getTitle())
     {
@@ -1967,21 +2067,45 @@ Json::Value WorkflowTransitions::toMasqueradedJson(
     {
         ret["description"]=Json::Value();
     }
-    if(getFromStageId())
+    if(getCurrentStageId())
     {
-        ret["from_stage_id"]=getValueOfFromStageId();
+        ret["current_stage_id"]=getValueOfCurrentStageId();
     }
     else
     {
-        ret["from_stage_id"]=Json::Value();
+        ret["current_stage_id"]=Json::Value();
     }
-    if(getToStageId())
+    if(getTargetStageId())
     {
-        ret["to_stage_id"]=getValueOfToStageId();
+        ret["target_stage_id"]=getValueOfTargetStageId();
     }
     else
     {
-        ret["to_stage_id"]=Json::Value();
+        ret["target_stage_id"]=Json::Value();
+    }
+    if(getTargetUsers())
+    {
+        ret["target_users"]=getValueOfTargetUsers();
+    }
+    else
+    {
+        ret["target_users"]=Json::Value();
+    }
+    if(getTargetGroups())
+    {
+        ret["target_groups"]=getValueOfTargetGroups();
+    }
+    else
+    {
+        ret["target_groups"]=Json::Value();
+    }
+    if(getOrdering())
+    {
+        ret["ordering"]=getValueOfOrdering();
+    }
+    else
+    {
+        ret["ordering"]=Json::Value();
     }
     if(getOptions())
     {
@@ -2033,29 +2157,19 @@ bool WorkflowTransitions::validateJsonForCreation(const Json::Value &pJson, std:
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
-    if(pJson.isMember("asset_id"))
-    {
-        if(!validJsonOfField(1, "asset_id", pJson["asset_id"], err, true))
-            return false;
-    }
-    if(pJson.isMember("ordering"))
-    {
-        if(!validJsonOfField(2, "ordering", pJson["ordering"], err, true))
-            return false;
-    }
     if(pJson.isMember("workflow_id"))
     {
-        if(!validJsonOfField(3, "workflow_id", pJson["workflow_id"], err, true))
+        if(!validJsonOfField(1, "workflow_id", pJson["workflow_id"], err, true))
             return false;
     }
-    if(pJson.isMember("published"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(4, "published", pJson["published"], err, true))
+        if(!validJsonOfField(2, "status", pJson["status"], err, true))
             return false;
     }
     if(pJson.isMember("title"))
     {
-        if(!validJsonOfField(5, "title", pJson["title"], err, true))
+        if(!validJsonOfField(3, "title", pJson["title"], err, true))
             return false;
     }
     else
@@ -2065,7 +2179,7 @@ bool WorkflowTransitions::validateJsonForCreation(const Json::Value &pJson, std:
     }
     if(pJson.isMember("description"))
     {
-        if(!validJsonOfField(6, "description", pJson["description"], err, true))
+        if(!validJsonOfField(4, "description", pJson["description"], err, true))
             return false;
     }
     else
@@ -2073,39 +2187,54 @@ bool WorkflowTransitions::validateJsonForCreation(const Json::Value &pJson, std:
         err="The description column cannot be null";
         return false;
     }
-    if(pJson.isMember("from_stage_id"))
+    if(pJson.isMember("current_stage_id"))
     {
-        if(!validJsonOfField(7, "from_stage_id", pJson["from_stage_id"], err, true))
+        if(!validJsonOfField(5, "current_stage_id", pJson["current_stage_id"], err, true))
             return false;
     }
-    if(pJson.isMember("to_stage_id"))
+    if(pJson.isMember("target_stage_id"))
     {
-        if(!validJsonOfField(8, "to_stage_id", pJson["to_stage_id"], err, true))
+        if(!validJsonOfField(6, "target_stage_id", pJson["target_stage_id"], err, true))
+            return false;
+    }
+    if(pJson.isMember("target_users"))
+    {
+        if(!validJsonOfField(7, "target_users", pJson["target_users"], err, true))
+            return false;
+    }
+    if(pJson.isMember("target_groups"))
+    {
+        if(!validJsonOfField(8, "target_groups", pJson["target_groups"], err, true))
+            return false;
+    }
+    if(pJson.isMember("ordering"))
+    {
+        if(!validJsonOfField(9, "ordering", pJson["ordering"], err, true))
             return false;
     }
     if(pJson.isMember("options"))
     {
-        if(!validJsonOfField(9, "options", pJson["options"], err, true))
+        if(!validJsonOfField(10, "options", pJson["options"], err, true))
             return false;
     }
     if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(10, "created_by", pJson["created_by"], err, true))
+        if(!validJsonOfField(11, "created_by", pJson["created_by"], err, true))
             return false;
     }
     if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(11, "created_at", pJson["created_at"], err, true))
+        if(!validJsonOfField(12, "created_at", pJson["created_at"], err, true))
             return false;
     }
     if(pJson.isMember("modified_by"))
     {
-        if(!validJsonOfField(12, "modified_by", pJson["modified_by"], err, true))
+        if(!validJsonOfField(13, "modified_by", pJson["modified_by"], err, true))
             return false;
     }
     if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(13, "modified_at", pJson["modified_at"], err, true))
+        if(!validJsonOfField(14, "modified_at", pJson["modified_at"], err, true))
             return false;
     }
     return true;
@@ -2114,7 +2243,7 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
                                                              const std::vector<std::string> &pMasqueradingVector,
                                                              std::string &err)
 {
-    if(pMasqueradingVector.size() != 14)
+    if(pMasqueradingVector.size() != 15)
     {
         err = "Bad masquerading vector";
         return false;
@@ -2151,6 +2280,11 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
               if(!validJsonOfField(3, pMasqueradingVector[3], pJson[pMasqueradingVector[3]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[3] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[4].empty())
       {
@@ -2159,6 +2293,11 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
               if(!validJsonOfField(4, pMasqueradingVector[4], pJson[pMasqueradingVector[4]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[4] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[5].empty())
       {
@@ -2167,11 +2306,6 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
               if(!validJsonOfField(5, pMasqueradingVector[5], pJson[pMasqueradingVector[5]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[5] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[6].empty())
       {
@@ -2180,11 +2314,6 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
               if(!validJsonOfField(6, pMasqueradingVector[6], pJson[pMasqueradingVector[6]], err, true))
                   return false;
           }
-        else
-        {
-            err="The " + pMasqueradingVector[6] + " column cannot be null";
-            return false;
-        }
       }
       if(!pMasqueradingVector[7].empty())
       {
@@ -2242,6 +2371,14 @@ bool WorkflowTransitions::validateMasqueradedJsonForCreation(const Json::Value &
                   return false;
           }
       }
+      if(!pMasqueradingVector[14].empty())
+      {
+          if(pJson.isMember(pMasqueradingVector[14]))
+          {
+              if(!validJsonOfField(14, pMasqueradingVector[14], pJson[pMasqueradingVector[14]], err, true))
+                  return false;
+          }
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -2262,69 +2399,74 @@ bool WorkflowTransitions::validateJsonForUpdate(const Json::Value &pJson, std::s
         err = "The value of primary key must be set in the json object for update";
         return false;
     }
-    if(pJson.isMember("asset_id"))
-    {
-        if(!validJsonOfField(1, "asset_id", pJson["asset_id"], err, false))
-            return false;
-    }
-    if(pJson.isMember("ordering"))
-    {
-        if(!validJsonOfField(2, "ordering", pJson["ordering"], err, false))
-            return false;
-    }
     if(pJson.isMember("workflow_id"))
     {
-        if(!validJsonOfField(3, "workflow_id", pJson["workflow_id"], err, false))
+        if(!validJsonOfField(1, "workflow_id", pJson["workflow_id"], err, false))
             return false;
     }
-    if(pJson.isMember("published"))
+    if(pJson.isMember("status"))
     {
-        if(!validJsonOfField(4, "published", pJson["published"], err, false))
+        if(!validJsonOfField(2, "status", pJson["status"], err, false))
             return false;
     }
     if(pJson.isMember("title"))
     {
-        if(!validJsonOfField(5, "title", pJson["title"], err, false))
+        if(!validJsonOfField(3, "title", pJson["title"], err, false))
             return false;
     }
     if(pJson.isMember("description"))
     {
-        if(!validJsonOfField(6, "description", pJson["description"], err, false))
+        if(!validJsonOfField(4, "description", pJson["description"], err, false))
             return false;
     }
-    if(pJson.isMember("from_stage_id"))
+    if(pJson.isMember("current_stage_id"))
     {
-        if(!validJsonOfField(7, "from_stage_id", pJson["from_stage_id"], err, false))
+        if(!validJsonOfField(5, "current_stage_id", pJson["current_stage_id"], err, false))
             return false;
     }
-    if(pJson.isMember("to_stage_id"))
+    if(pJson.isMember("target_stage_id"))
     {
-        if(!validJsonOfField(8, "to_stage_id", pJson["to_stage_id"], err, false))
+        if(!validJsonOfField(6, "target_stage_id", pJson["target_stage_id"], err, false))
+            return false;
+    }
+    if(pJson.isMember("target_users"))
+    {
+        if(!validJsonOfField(7, "target_users", pJson["target_users"], err, false))
+            return false;
+    }
+    if(pJson.isMember("target_groups"))
+    {
+        if(!validJsonOfField(8, "target_groups", pJson["target_groups"], err, false))
+            return false;
+    }
+    if(pJson.isMember("ordering"))
+    {
+        if(!validJsonOfField(9, "ordering", pJson["ordering"], err, false))
             return false;
     }
     if(pJson.isMember("options"))
     {
-        if(!validJsonOfField(9, "options", pJson["options"], err, false))
+        if(!validJsonOfField(10, "options", pJson["options"], err, false))
             return false;
     }
     if(pJson.isMember("created_by"))
     {
-        if(!validJsonOfField(10, "created_by", pJson["created_by"], err, false))
+        if(!validJsonOfField(11, "created_by", pJson["created_by"], err, false))
             return false;
     }
     if(pJson.isMember("created_at"))
     {
-        if(!validJsonOfField(11, "created_at", pJson["created_at"], err, false))
+        if(!validJsonOfField(12, "created_at", pJson["created_at"], err, false))
             return false;
     }
     if(pJson.isMember("modified_by"))
     {
-        if(!validJsonOfField(12, "modified_by", pJson["modified_by"], err, false))
+        if(!validJsonOfField(13, "modified_by", pJson["modified_by"], err, false))
             return false;
     }
     if(pJson.isMember("modified_at"))
     {
-        if(!validJsonOfField(13, "modified_at", pJson["modified_at"], err, false))
+        if(!validJsonOfField(14, "modified_at", pJson["modified_at"], err, false))
             return false;
     }
     return true;
@@ -2333,7 +2475,7 @@ bool WorkflowTransitions::validateMasqueradedJsonForUpdate(const Json::Value &pJ
                                                            const std::vector<std::string> &pMasqueradingVector,
                                                            std::string &err)
 {
-    if(pMasqueradingVector.size() != 14)
+    if(pMasqueradingVector.size() != 15)
     {
         err = "Bad masquerading vector";
         return false;
@@ -2414,6 +2556,11 @@ bool WorkflowTransitions::validateMasqueradedJsonForUpdate(const Json::Value &pJ
           if(!validJsonOfField(13, pMasqueradingVector[13], pJson[pMasqueradingVector[13]], err, false))
               return false;
       }
+      if(!pMasqueradingVector[14].empty() && pJson.isMember(pMasqueradingVector[14]))
+      {
+          if(!validJsonOfField(14, pMasqueradingVector[14], pJson[pMasqueradingVector[14]], err, false))
+              return false;
+      }
     }
     catch(const Json::LogicError &e)
     {
@@ -2468,29 +2615,6 @@ bool WorkflowTransitions::validJsonOfField(size_t index,
         case 3:
             if(pJson.isNull())
             {
-                return true;
-            }
-            if(!pJson.isString())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
-        case 4:
-            if(pJson.isNull())
-            {
-                err="The " + fieldName + " column cannot be null";
-                return false;
-            }
-            if(!pJson.isInt())
-            {
-                err="Type error in the "+fieldName+" field";
-                return false;
-            }
-            break;
-        case 5:
-            if(pJson.isNull())
-            {
                 err="The " + fieldName + " column cannot be null";
                 return false;
             }
@@ -2508,11 +2632,33 @@ bool WorkflowTransitions::validJsonOfField(size_t index,
                 return false;
             }
             break;
-        case 6:
+        case 4:
             if(pJson.isNull())
             {
                 err="The " + fieldName + " column cannot be null";
                 return false;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 5:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 6:
+            if(pJson.isNull())
+            {
+                return true;
             }
             if(!pJson.isString())
             {
@@ -2545,9 +2691,10 @@ bool WorkflowTransitions::validJsonOfField(size_t index,
         case 9:
             if(pJson.isNull())
             {
-                return true;
+                err="The " + fieldName + " column cannot be null";
+                return false;
             }
-            if(!pJson.isString())
+            if(!pJson.isInt())
             {
                 err="Type error in the "+fieldName+" field";
                 return false;
@@ -2587,6 +2734,17 @@ bool WorkflowTransitions::validJsonOfField(size_t index,
             }
             break;
         case 13:
+            if(pJson.isNull())
+            {
+                return true;
+            }
+            if(!pJson.isString())
+            {
+                err="Type error in the "+fieldName+" field";
+                return false;
+            }
+            break;
+        case 14:
             if(pJson.isNull())
             {
                 return true;
