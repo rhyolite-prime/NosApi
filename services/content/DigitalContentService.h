@@ -20,6 +20,7 @@ namespace nos::services {
         drogon::Task<dto::BaseApiResponse> create(const dto::DigitalContentDto &digitalContentDto);
         drogon::Task<dto::BaseApiResponse> update(const dto::DigitalContentDto &digitalContentDto, const std::string &id);
         drogon::Task<dto::BaseApiResponse> deleteContent(const std::string &digitalContentId);
+        drogon::Task<dto::BaseApiResponse> transitionContent(const std::string &contentId, const std::string &targetStageId);
 
     };
 

@@ -12,6 +12,7 @@ class DigitalContentController : public drogon::HttpController<DigitalContentCon
     ADD_METHOD_TO(DigitalContentController::getAll, std::string(PREFIX) + "get-all", Get, Options, "JwtAuthFilter");
     ADD_METHOD_TO(DigitalContentController::getContentDetails, std::string(PREFIX) + "{1}", Get, Options, "JwtAuthFilter");
     ADD_METHOD_TO(DigitalContentController::createDigitalContent, std::string(PREFIX) + "create", Post, Options, "JwtAuthFilter");
+    ADD_METHOD_TO(DigitalContentController::transitionContent, std::string(PREFIX) + "transition/{1}", Get, Options, "JwtAuthFilter");
     ADD_METHOD_TO(DigitalContentController::updateDigitalContent,std::string(PREFIX) + "update/{1}", Put, Options, "JwtAuthFilter");
     ADD_METHOD_TO(DigitalContentController::deleteDigitalContent, std::string(PREFIX) + "delete/{1}", Delete, Options, "JwtAuthFilter");
     METHOD_LIST_END
@@ -19,6 +20,7 @@ class DigitalContentController : public drogon::HttpController<DigitalContentCon
     Task<HttpResponsePtr> getAll(HttpRequestPtr req);
     Task<HttpResponsePtr> getContentDetails(HttpRequestPtr req, std::string id);
     Task<HttpResponsePtr> createDigitalContent(HttpRequestPtr req);
+    Task<HttpResponsePtr> transitionContent(HttpRequestPtr req, std::string id);
     Task<HttpResponsePtr> updateDigitalContent(HttpRequestPtr req, std::string id);
     Task<HttpResponsePtr> deleteDigitalContent(HttpRequestPtr req, std::string id);
 };

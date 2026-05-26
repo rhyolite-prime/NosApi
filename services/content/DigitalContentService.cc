@@ -7,6 +7,7 @@
 #include "Workflows.h"
 #include "WorkflowStages.h"
 #include "WorkflowTransitions.h"
+#include "Users.h"
 #include "constants/ErrorCodes.h"
 #include <algorithm>
 #include "constants/StatusTypes.h"
@@ -21,6 +22,7 @@ using drogon_model::Nos::DigitalContents;
 using drogon_model::Nos::Workflows;
 using drogon_model::Nos::WorkflowStages;
 using drogon_model::Nos::WorkflowTransitions;
+using drogon_model::Nos::Users;
 
 namespace nos::services {
 
@@ -110,6 +112,12 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::getAll(int pageNo, int
       camelCaseContent["accessLevelId"] = contentJson["access_level_id"];
       camelCaseContent["accessLevelName"] = contentJson["access_level_name"];
       camelCaseContent["author"] = contentJson["author"];
+      camelCaseContent["currentWorkflowId"] = contentJson["current_workflow_id"];
+      camelCaseContent["currentWorkflowName"] = contentJson["current_workflow_name"];
+      camelCaseContent["currentWorkflowStageId"] = contentJson["current_workflow_stage_id"];
+      camelCaseContent["currentWorkflowStageName"] = contentJson["current_workflow_stage_name"];
+      camelCaseContent["nextWorkflowStageId"] = contentJson["next_workflow_stage_id"];
+      camelCaseContent["nextWorkflowStageName"] = contentJson["next_workflow_stage_name"];
 
 
 
@@ -132,19 +140,14 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::getAll(int pageNo, int
       Json::Value displayOverridesJson = Json::objectValue;
       if (contentJson.isMember("display_overrides") &&
           contentJson["display_overrides"].isString()) {
-        reader.parse(contentJson["display_overrides"].asString(),
-                     displayOverridesJson);
+        reader.parse(contentJson["display_overrides"].asString(), displayOverridesJson);
       }
       camelCaseContent["displayOverrides"] = displayOverridesJson;
 
-      camelCaseContent["publishUp"] = contentJson["publish_up"];
-      camelCaseContent["publishDown"] = contentJson["publish_down"];
+
       camelCaseContent["version"] = contentJson["version"];
       camelCaseContent["language"] = contentJson["language"];
-      camelCaseContent["createdBy"] = contentJson["created_by"];
-      camelCaseContent["createdAt"] = contentJson["created_at"];
-      camelCaseContent["modifiedBy"] = contentJson["modified_by"];
-      camelCaseContent["modifiedAt"] = contentJson["modified_at"];
+
       camelCaseContent["views"] = contentJson["views"];
 
       data.append(camelCaseContent);
@@ -153,40 +156,46 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::getAll(int pageNo, int
 
   } catch (const DrogonDbException &e) {
     response.success = false;
-    response.error["message"] =
-        "Database error while fetching digital contents.";
+    response.error["message"] = "Database error while fetching digital contents.";
     response.error["detail"] = e.base().what();
   }
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-DigitalContentService::getDetails(const std::string &id) {
+drogon::Task<dto::BaseApiResponse> DigitalContentService::getDetails(const std::string &id) {
+
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<DigitalContents>(dbClient);
 
   dto::BaseApiResponse response;
   try {
-    auto content = co_await mp.findOne(
-        Criteria(DigitalContents::Cols::_id, CompareOperator::EQ, id));
+
+    auto content = co_await mp.findOne(Criteria(DigitalContents::Cols::_id, CompareOperator::EQ, id));
 
     Json::Value contentJson = content.toJson();
     Json::Value camelCaseContent;
+
     camelCaseContent["id"] = contentJson["id"];
     camelCaseContent["title"] = contentJson["title"];
     camelCaseContent["alias"] = contentJson["alias"];
     camelCaseContent["contentTypeId"] = contentJson["content_type_id"];
-    camelCaseContent["contentType"] = contentJson["content_type"];
+    camelCaseContent["contentTypeName"] = contentJson["content_type_name"];
     camelCaseContent["introtext"] = contentJson["introtext"];
     camelCaseContent["fulltext"] = contentJson["fulltext"];
-    camelCaseContent["primaryResourceId"] = contentJson["primary_resource_id"];
     camelCaseContent["status"] = contentJson["status"];
     camelCaseContent["categoryId"] = contentJson["category_id"];
+    camelCaseContent["categoryName"] = contentJson["category_name"];
     camelCaseContent["ordering"] = contentJson["ordering"];
     camelCaseContent["featured"] = contentJson["featured"];
     camelCaseContent["accessLevelId"] = contentJson["access_level_id"];
-    camelCaseContent["metakey"] = contentJson["metakey"];
-    camelCaseContent["metadesc"] = contentJson["metadesc"];
+    camelCaseContent["accessLevelName"] = contentJson["access_level_name"];
+    camelCaseContent["author"] = contentJson["author"];
+    camelCaseContent["currentWorkflowId"] = contentJson["current_workflow_id"];
+    camelCaseContent["currentWorkflowName"] = contentJson["current_workflow_name"];
+    camelCaseContent["currentWorkflowStageId"] = contentJson["current_workflow_stage_id"];
+    camelCaseContent["currentWorkflowStageName"] = contentJson["current_workflow_stage_name"];
+    camelCaseContent["nextWorkflowStageId"] = contentJson["next_workflow_stage_id"];
+    camelCaseContent["nextWorkflowStageName"] = contentJson["next_workflow_stage_name"];
 
     Json::Reader reader;
     Json::Value metadataJson = Json::objectValue;
@@ -212,14 +221,8 @@ DigitalContentService::getDetails(const std::string &id) {
     }
     camelCaseContent["displayOverrides"] = displayOverridesJson;
 
-    camelCaseContent["publishUp"] = contentJson["publish_up"];
-    camelCaseContent["publishDown"] = contentJson["publish_down"];
     camelCaseContent["version"] = contentJson["version"];
     camelCaseContent["language"] = contentJson["language"];
-    camelCaseContent["createdBy"] = contentJson["created_by"];
-    camelCaseContent["createdAt"] = contentJson["created_at"];
-    camelCaseContent["modifiedBy"] = contentJson["modified_by"];
-    camelCaseContent["modifiedAt"] = contentJson["modified_at"];
     camelCaseContent["views"] = contentJson["views"];
 
     response.success = true;
@@ -236,6 +239,7 @@ DigitalContentService::getDetails(const std::string &id) {
   }
   co_return response;
 }
+
 
 drogon::Task<dto::BaseApiResponse> DigitalContentService::create(const dto::DigitalContentDto &digitalContentDto) {
   auto dbClient = drogon::app().getDbClient();
@@ -464,4 +468,90 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::deleteContent(const st
   co_return response;
 }
 
+drogon::Task<dto::BaseApiResponse> DigitalContentService::transitionContent(const std::string &contentId, const std::string &targetStageId) {
+  auto dbClient = drogon::app().getDbClient();
+  auto mp = CoroMapper<DigitalContents>(dbClient);
+  auto stageMp = CoroMapper<WorkflowStages>(dbClient);
+  
+  dto::BaseApiResponse response;
+  try {
+    auto content = co_await mp.findOne(Criteria(DigitalContents::Cols::_id, CompareOperator::EQ, contentId));
+    auto targetStage = co_await stageMp.findOne(Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, targetStageId));
+
+    content.setCurrentWorkflowStageId(targetStage.getValueOfId());
+    content.setCurrentWorkflowStageName(targetStage.getValueOfTitle());
+
+    auto transitionMp = CoroMapper<WorkflowTransitions>(dbClient);
+    auto transitions = co_await transitionMp.orderBy(WorkflowTransitions::Cols::_ordering).limit(1).findBy(
+        Criteria(WorkflowTransitions::Cols::_current_stage_id, CompareOperator::EQ, targetStage.getValueOfId()) &&
+        Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, targetStage.getValueOfWorkflowId())
+    );
+
+    if (!transitions.empty()) {
+        auto nextTransition = transitions.front();
+        auto nextStageId = nextTransition.getValueOfTargetStageId();
+        content.setNextWorkflowStageId(nextStageId);
+        
+        auto nextStage = co_await stageMp.findOne(Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, nextStageId));
+        content.setNextWorkflowStageName(nextStage.getValueOfTitle());
+    } else {
+        content.setNextWorkflowStageIdToNull();
+        content.setNextWorkflowStageName("-");
+    }
+    
+    content.setModifiedAt(trantor::Date::now());
+
+    co_await mp.update(content);
+
+    // Try sending email notification if we can find the author
+    if (content.getCreatedBy() && !content.getValueOfCreatedBy().empty()) {
+      auto userMp = CoroMapper<Users>(dbClient);
+      try {
+        auto user = co_await userMp.findOne(Criteria(Users::Cols::_id, CompareOperator::EQ, content.getValueOfCreatedBy()));
+        if (user.getEmail() && !user.getValueOfEmail().empty()) {
+          auto plugin = drogon::app().getPlugin<nos::plugins::NosApiPlugin>();
+          auto &emailService = plugin->getEmailService();
+
+          dto::SendEmailDto emailDto;
+          emailDto.setTo(user.getValueOfEmail());
+          emailDto.setSubject("Content Workflow Transition: " + content.getValueOfTitle());
+          
+          std::string htmlBody = 
+              "<html><body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">"
+              "<div style=\"max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;\">"
+              "<h2 style=\"color: #0056b3;\">Workflow Transition Notification</h2>"
+              "<p>Hello,</p>"
+              "<p>The digital content <strong>" + content.getValueOfTitle() + "</strong> has been transitioned to a new stage.</p>"
+              "<div style=\"padding: 15px; background-color: #ffffff; border-left: 4px solid #0056b3; margin: 20px 0;\">"
+              "  <p style=\"margin: 0;\"><strong>New Stage:</strong> " + targetStage.getValueOfTitle() + "</p>"
+              "</div>"
+              "<p>Please log in to the system to review the content.</p>"
+              "<hr style=\"border: 0; border-top: 1px solid #eee; margin: 20px 0;\">"
+              "<p style=\"font-size: 0.9em; color: #777;\">This is an automated notification, please do not reply.</p>"
+              "</div></body></html>";
+              
+          emailDto.setBody(htmlBody);
+          co_await emailService.sendEmail(emailDto);
+        }
+      } catch (const UnexpectedRows &e) {
+        // User not found, ignore
+      }
+    }
+
+    response.success = true;
+    response.message = "Digital content transitioned successfully";
+    
+  } catch (const UnexpectedRows &e) {
+    response.success = false;
+    response.message = "Content or target stage not found";
+    response.error["code"] = constants::ERR_RESOURCE_NOT_FOUND;
+  } catch (const DrogonDbException &e) {
+    response.success = false;
+    response.message = "Database error while transitioning content";
+    response.error["detail"] = e.base().what();
+  }
+  
+  co_return response;
+}
+  
 } // namespace nos::services

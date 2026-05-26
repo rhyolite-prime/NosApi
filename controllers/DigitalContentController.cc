@@ -42,6 +42,7 @@ Task<HttpResponsePtr> DigitalContentController::getContentDetails(HttpRequestPtr
     co_return resp;
 }
 
+
 Task<HttpResponsePtr> DigitalContentController::createDigitalContent(HttpRequestPtr req) {
     auto jsonBody = req->getJsonObject();
     if (!jsonBody) {
@@ -74,6 +75,22 @@ Task<HttpResponsePtr> DigitalContentController::createDigitalContent(HttpRequest
     resp->setStatusCode(result.success ? k200OK : k500InternalServerError);
     co_return resp;
 }
+
+Task<HttpResponsePtr> DigitalContentController::transitionContent(HttpRequestPtr req, std::string id) {
+
+    auto targetStageId = req->getParameter("targetStageId");
+
+    auto plugin = app().getPlugin<nos::plugins::NosApiPlugin>();
+    auto &digitalContentService = plugin->getDigitalContentService();
+
+    auto result = co_await digitalContentService.transitionContent(id,targetStageId);
+
+    auto resp = HttpResponse::newHttpJsonResponse(result.toJson());
+    bool notFound = !result.success && result.error.isMember("code") && result.error["code"].asInt() == 1004;
+    resp->setStatusCode(result.success ? k200OK : (notFound ? k404NotFound : k500InternalServerError));
+    co_return resp;
+}
+
 
 Task<HttpResponsePtr> DigitalContentController::updateDigitalContent(HttpRequestPtr req, std::string id) {
     auto jsonBody = req->getJsonObject();

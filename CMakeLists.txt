@@ -59,7 +59,8 @@ add_executable(${PROJECT_NAME} main.cc
         services/content_types/ContentTypeService.cc
         dto/ContentTypeDto.h
         dto/CategoryDto.h
-        dto/SendEmailDto.h)
+        dto/SendEmailDto.h
+)
 
 # ##############################################################################
 # If you include the drogon source code locally in your project, use this method

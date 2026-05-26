@@ -85,8 +85,7 @@ WorkflowService::getAll(int pageNo, int pageSize, const std::string &query) {
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-WorkflowService::getDetails(const std::string &id) {
+drogon::Task<dto::BaseApiResponse> WorkflowService::getDetails(const std::string &id) {
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<Workflows>(dbClient);
 
@@ -124,8 +123,7 @@ WorkflowService::getDetails(const std::string &id) {
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-WorkflowService::create(const dto::WorkflowDto &workflowDto) {
+drogon::Task<dto::BaseApiResponse> WorkflowService::create(const dto::WorkflowDto &workflowDto) {
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<Workflows>(dbClient);
 
@@ -167,8 +165,7 @@ WorkflowService::create(const dto::WorkflowDto &workflowDto) {
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-WorkflowService::update(const dto::WorkflowDto &workflowDto,
+drogon::Task<dto::BaseApiResponse> WorkflowService::update(const dto::WorkflowDto &workflowDto,
                         const std::string &workflowId) {
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<Workflows>(dbClient);
@@ -228,8 +225,7 @@ WorkflowService::update(const dto::WorkflowDto &workflowDto,
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-WorkflowService::deleteWorkflow(const std::string &workflowId) {
+drogon::Task<dto::BaseApiResponse> WorkflowService::deleteWorkflow(const std::string &workflowId) {
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<Workflows>(dbClient);
 
@@ -255,8 +251,7 @@ WorkflowService::deleteWorkflow(const std::string &workflowId) {
   co_return response;
 }
 
-drogon::Task<dto::BaseApiResponse>
-WorkflowService::getWorkflowStages(const std::string &workflowId) {
+drogon::Task<dto::BaseApiResponse> WorkflowService::getWorkflowStages(const std::string &workflowId) {
 
   auto dbClient = drogon::app().getDbClient();
   auto mp = CoroMapper<WorkflowStages>(dbClient);

@@ -12,7 +12,7 @@
 namespace nos::services {
 
     class EmailService {
-
+    public:
         drogon::Task<dto::BaseApiResponse> sendEmail(const dto::SendEmailDto &dto);
 
     };
