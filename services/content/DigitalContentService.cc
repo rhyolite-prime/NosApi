@@ -6,17 +6,21 @@
 #include "DigitalContents.h"
 #include "Workflows.h"
 #include "WorkflowStages.h"
-#include "../work_flows/WorkflowService.h"
+#include "WorkflowTransitions.h"
 #include "constants/ErrorCodes.h"
 #include <algorithm>
+#include "constants/StatusTypes.h"
 #include <cctype>
 #include <cstring>
 #include <json/json.h>
+
+#include "plugins/NosApiPlugin.h"
 
 using namespace drogon::orm;
 using drogon_model::Nos::DigitalContents;
 using drogon_model::Nos::Workflows;
 using drogon_model::Nos::WorkflowStages;
+using drogon_model::Nos::WorkflowTransitions;
 
 namespace nos::services {
 
@@ -90,18 +94,23 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::getAll(int pageNo, int
     for (const auto &content : contents) {
       Json::Value contentJson = content.toJson();
       Json::Value camelCaseContent;
+
       camelCaseContent["id"] = contentJson["id"];
       camelCaseContent["title"] = contentJson["title"];
       camelCaseContent["alias"] = contentJson["alias"];
       camelCaseContent["contentTypeId"] = contentJson["content_type_id"];
-      camelCaseContent["contentType"] = contentJson["content_type"];
+      camelCaseContent["contentTypeName"] = contentJson["content_type_name"];
       camelCaseContent["introtext"] = contentJson["introtext"];
       camelCaseContent["fulltext"] = contentJson["fulltext"];
       camelCaseContent["status"] = contentJson["status"];
       camelCaseContent["categoryId"] = contentJson["category_id"];
+      camelCaseContent["categoryName"] = contentJson["category_name"];
       camelCaseContent["ordering"] = contentJson["ordering"];
       camelCaseContent["featured"] = contentJson["featured"];
       camelCaseContent["accessLevelId"] = contentJson["access_level_id"];
+      camelCaseContent["accessLevelName"] = contentJson["access_level_name"];
+      camelCaseContent["author"] = contentJson["author"];
+
 
 
       Json::Reader reader;
@@ -250,49 +259,50 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::create(const dto::Digi
     content.setAlias(alias);
 
     content.setContentTypeId(digitalContentDto.getContentTypeId());
-
     content.setContentTypeName(digitalContentDto.getContentTypeName());
 
     content.setIntrotext(digitalContentDto.getIntrotext());
 
     content.setFulltext(digitalContentDto.getFulltext());
-
     content.setStatus(digitalContentDto.getStatus());
 
     content.setCategoryId(digitalContentDto.getCategoryId());
+    content.setCategoryName(digitalContentDto.getCategoryName());
 
     content.setOrdering(digitalContentDto.getOrdering());
     content.setIsFeatured(digitalContentDto.getFeatured());
 
     content.setAccessLevelId(digitalContentDto.getAccessLevelId());
+    content.setAccessLevelName(digitalContentDto.getAccessLevelName());
 
-    // Json::FastWriter writer;
-    // if (digitalContentDto.getMetadata()) {
-    //   std::string metadataStr = writer.write(digitalContentDto.getMetadata());
-    //   if (!metadataStr.empty() && metadataStr.back() == '\n')
-    //     metadataStr.pop_back();
-    //   content.setMetadata(metadataStr);
-    // } else {
-    //   content.setMetadata("{}");
-    // }
+    Json::FastWriter writer;
+    if (digitalContentDto.getMetadata()) {
+      std::string metadataStr = writer.write(digitalContentDto.getMetadata());
+      if (!metadataStr.empty() && metadataStr.back() == '\n')
+        metadataStr.pop_back();
+      content.setMetadata(metadataStr);
+    } else {
+      content.setMetadata("{}");
+    }
 
     content.setLanguage(digitalContentDto.getLanguage());
 
     content.setCreatedAt(trantor::Date::now());
 
     content.setModifiedAt(trantor::Date::now());
-    content.setViews(digitalContentDto.getViews());
+    content.setViews(0);
 
     // scan for the default, enabled workflow for that entity context
     auto workflowMp = CoroMapper<Workflows>(dbClient);
     auto workflows = co_await workflowMp.findBy(
         Criteria(Workflows::Cols::_context, CompareOperator::EQ, "com.digitalcontent.article") &&
         Criteria(Workflows::Cols::_is_default, CompareOperator::EQ, true) &&
-        Criteria(Workflows::Cols::_status, CompareOperator::EQ, 1)
+        Criteria(Workflows::Cols::_status, CompareOperator::EQ, static_cast<int32_t>(constants::Enabled))
     );
 
     if (!workflows.empty()) {
         auto defaultWorkflow = workflows.front();
+
         content.setCurrentWorkflowId(defaultWorkflow.getValueOfId());
         content.setCurrentWorkflowName(defaultWorkflow.getValueOfTitle());
 
@@ -312,6 +322,23 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::create(const dto::Digi
             auto firstStage = stages.front();
             content.setCurrentWorkflowStageId(firstStage.getValueOfId());
             content.setCurrentWorkflowStageName(firstStage.getValueOfTitle());
+
+            auto transitionMp = CoroMapper<WorkflowTransitions>(dbClient);
+            auto transitions = co_await transitionMp.orderBy(WorkflowTransitions::Cols::_ordering).limit(1).findBy(
+                Criteria(WorkflowTransitions::Cols::_current_stage_id, CompareOperator::EQ, firstStage.getValueOfId()) &&
+                Criteria(WorkflowTransitions::Cols::_workflow_id, CompareOperator::EQ, defaultWorkflow.getValueOfId())
+            );
+
+            if (!transitions.empty()) {
+                auto firstTransition = transitions.front();
+                auto nextStageId = firstTransition.getValueOfTargetStageId();
+                content.setNextWorkflowStageId(nextStageId);
+                
+                auto nextStages = co_await stageMp.findBy(Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, nextStageId));
+                if (!nextStages.empty()) {
+                    content.setNextWorkflowStageName(nextStages.front().getValueOfTitle());
+                }
+            }
         }
     }
 
@@ -319,12 +346,10 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::create(const dto::Digi
 
     if (!workflows.empty()) {
         // handover to the workflow service to continue from here by passing the necessary params for code consistency
-        WorkflowService workflowService;
-        co_await workflowService.triggerWorkflow(
-            content.getValueOfId(),
-            content.getValueOfCurrentWorkflowId(),
-            content.getValueOfCurrentWorkflowStageId()
-        );
+      auto plugin = drogon::app().getPlugin<nos::plugins::NosApiPlugin>();
+      auto &workflowService = plugin->getWorkflowService();
+
+        co_await workflowService.triggerWorkflow(content.getValueOfId(), content.getValueOfCurrentWorkflowId(), content.getValueOfCurrentWorkflowStageId());
     }
 
     response.success = true;
