@@ -7,6 +7,7 @@
 #include "Workflows.h"
 #include "WorkflowStages.h"
 #include "WorkflowTransitions.h"
+#include "WorkflowHistory.h"
 #include "Users.h"
 #include "constants/ErrorCodes.h"
 #include <algorithm>
@@ -22,6 +23,7 @@ using drogon_model::Nos::DigitalContents;
 using drogon_model::Nos::Workflows;
 using drogon_model::Nos::WorkflowStages;
 using drogon_model::Nos::WorkflowTransitions;
+using drogon_model::Nos::WorkflowHistory;
 using drogon_model::Nos::Users;
 
 namespace nos::services {
@@ -478,6 +480,8 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::transitionContent(cons
     auto content = co_await mp.findOne(Criteria(DigitalContents::Cols::_id, CompareOperator::EQ, contentId));
     auto targetStage = co_await stageMp.findOne(Criteria(WorkflowStages::Cols::_id, CompareOperator::EQ, targetStageId));
 
+    std::string previousStageId = content.getValueOfCurrentWorkflowStageId();
+
     content.setCurrentWorkflowStageId(targetStage.getValueOfId());
     content.setCurrentWorkflowStageName(targetStage.getValueOfTitle());
 
@@ -502,6 +506,27 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::transitionContent(cons
     content.setModifiedAt(trantor::Date::now());
 
     co_await mp.update(content);
+
+    // Record workflow history
+    auto historyMp = CoroMapper<WorkflowHistory>(dbClient);
+    WorkflowHistory history;
+    history.setContentId(contentId);
+    if (!previousStageId.empty()) {
+        history.setCurrentStageId(previousStageId);
+    }
+    history.setTargetStageId(targetStageId);
+    
+    auto currentTransitions = co_await transitionMp.findBy(
+        Criteria(WorkflowTransitions::Cols::_current_stage_id, CompareOperator::EQ, previousStageId) &&
+        Criteria(WorkflowTransitions::Cols::_target_stage_id, CompareOperator::EQ, targetStageId)
+    );
+    if (!currentTransitions.empty()) {
+        history.setTransitionId(currentTransitions.front().getValueOfId());
+    }
+    
+    history.setCreatedAt(trantor::Date::now());
+    history.setModifiedAt(trantor::Date::now());
+    co_await historyMp.insert(history);
 
     // Try sending email notification if we can find the author
     if (content.getCreatedBy() && !content.getValueOfCreatedBy().empty()) {
@@ -531,7 +556,7 @@ drogon::Task<dto::BaseApiResponse> DigitalContentService::transitionContent(cons
               "</div></body></html>";
               
           emailDto.setBody(htmlBody);
-          co_await emailService.sendEmail(emailDto);
+          //co_await emailService.sendEmail(emailDto);
         }
       } catch (const UnexpectedRows &e) {
         // User not found, ignore
